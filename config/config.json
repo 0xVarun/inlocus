@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "phypixel",
+    "password": "beacon5791",
+    "database": "physdk",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "phypixel",
+    "password": "beacon5791",
+    "database": "physdk",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "phypixel",
+    "password": "beacon5791",
+    "database": "physdk",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

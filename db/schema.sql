@@ -1,0 +1,8 @@
+CREATE TABLE device (
+	_id serial PRIMARY KEY,
+	IMEI VARCHAR(32) UNIQUE NOT NULL,
+	GAID VARCHAR(64) UNIQUE NOT NULL,
+	device VARCHAR(64) UNIQUE NOT NULL,
+	createAt date,
+	updatedAt date
+);
