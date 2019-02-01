@@ -1,12 +1,12 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Device = sequelize.define('Device', {
+  const device = sequelize.define('device', {
     IMEI: DataTypes.STRING,
     GAID: DataTypes.STRING,
     deviceId: DataTypes.STRING
   }, {});
-  Device.associate = function(models) {
+  device.associate = function(models) {
     // associations can be defined here
   };
-  return Device;
+  return device;
 };

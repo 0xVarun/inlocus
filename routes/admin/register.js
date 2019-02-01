@@ -5,15 +5,13 @@ const LocalStrategy	= require('passport-local').Strategy;
 const User 			= require('../../utils/User');
 const _ 			= require('lodash');
 
-// router.get('/', async (req, res) => {
-// 	// res.render('admin/register');
-// 	let users = await User.findAll();
-// 	res.send(users);
-// });
-
 /**
-* Register Users only via API call
-*/
+ * Register Users only via API call
+ * url - /admin/register
+ * method - POST
+ * body - { name, username, email, password }
+ * returns - admin id in db
+ */
 router.post('/',async (req, res) => {
 
 	// check for valid authorization headers
@@ -39,7 +37,7 @@ router.post('/',async (req, res) => {
 			try {
 				u = await User.registerUser(payload['name'], payload['username'], payload['email'], payload['password']);
 			} catch(err) {
-				res.sendStatus(400);
+				res.send(400);
 				return;
 			}
 			if(!u.id) {

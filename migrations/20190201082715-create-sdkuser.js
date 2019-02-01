@@ -1,24 +1,33 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('devices', {
+    return queryInterface.createTable('sdkusers', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      IMEI: {
+      userId: {
         unique: true,
         type: Sequelize.STRING
       },
-      GAID: {
+      mobileNo: {
+        unique: true,
+        type: Sequelize.STRING
+      },
+      emailId: {
         unique: true,
         type: Sequelize.STRING
       },
       deviceId: {
-        unique: true,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        references: {
+          model: 'devices', 
+          key: 'deviceId', 
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +40,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Devices');
+    return queryInterface.dropTable('sdkusers');
   }
 };

@@ -2,9 +2,11 @@ const express 	= require('express');
 const router	= express.Router();
 
 // const login		= require('./login');
-const register	= require('./registerDevice');
+const api_register	= require('./api/device');
+const api_user	= require('./api/user');
 
 // router.use('/login', login);
-router.use('/registerDevice', register);
+router.use('/api/device', api_register);
+router.use('/api/user', api_user);
 
 module.exports = router;

@@ -82,6 +82,7 @@ app.use(function (req, res, next) {
 });
 
 // routes
+app.use('/', app_routes);
 app.use('/admin', admin_routes);
 
 // server
