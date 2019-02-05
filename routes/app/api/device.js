@@ -1,6 +1,6 @@
 const express 		= require('express');
 const router		= express.Router();
-const Device 		= require('../../utils/Device');
+const Device 		= require('../../../utils/Device');
 const passport		= require('passport');
 const LocalStrategy	= require('passport-local').Strategy;
 const _ 			= require('lodash');
