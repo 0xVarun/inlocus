@@ -10,13 +10,14 @@ router.get('/', (req, res) => {
 		res.redirect('/admin/home');
 		return;
 	}
+	req.flash('error_message', '');
 	res.render('admin/login');
 });
 
-passport.use(new LocalStrategy((email, password, done) => {
+passport.use(new LocalStrategy({usernameField: 'email'}, (email, password, done) => {
 	adminUser.getUserByEmail(email, (err, user) => {
 		if(err) throw err;
-		if(!user) return done(null, false, { message: 'Unknown User' });
+		if(!user) return done(null, false, {message: 'Unknown User'});
 		adminUser.authenticateUser(password, user.password, (err, isMatch) => {
 			if(err) throw err;
 			if(isMatch){
@@ -39,9 +40,14 @@ passport.deserializeUser((id, done) => {
 });
 
 router.post('/', 
-	passport.authenticate('local', { successRedirect:'/admin/home', failureRedirect:'/admin/register',failureFlash: true }) ,
+	passport.authenticate('local', { successRedirect:'/admin/home', failureRedirect:'/admin/login',failureFlash: true }) ,
 	(req, res) => {
 	res.redirect('/admin/home');
 });
+
+router.get('/logout', authMiddleware, (req, res) => {
+	req.logout();
+	res.redirect('/admin/login');
+})
 
 module.exports = router;

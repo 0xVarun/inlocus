@@ -4,14 +4,14 @@ const env			    = require('dotenv');
 const handlebars	   = require('express-handlebars');
 const session		     = require('express-session');
 const MemcachedStore = require('connect-memcached')(session);
-const validator		= require('express-validator');
-const cookieParser	= require('cookie-parser');
-const bodyParser	= require('body-parser');
-const flash 		= require('connect-flash');
-const passport		= require('passport');
-const LocalStrategy	= require('passport-local').Strategy;
-const logger		= require('morgan');
-const port 			= process.env.PORT || 3000;
+const validator		      = require('express-validator');
+const cookieParser	    = require('cookie-parser');
+const bodyParser	      = require('body-parser');
+const flash 		        = require('connect-flash');
+const passport		      = require('passport');
+const LocalStrategy	    = require('passport-local').Strategy;
+const logger            = require('morgan');
+const port 			        = process.env.PORT || 3000;
 
 // process environment initialize
 if(process.env.ENV === 'production') {
@@ -49,10 +49,10 @@ app.use(cookieParser());
 app.use(session({ 
 	secret:  'B2LrgoFLlkzr0mssrLAhz4Z11jfaW7JTaRijud9Q/j8lWdF1919+ruCOYcMH8+1/6p9BJDEmKoNVcWgmB81IoA==',
 	saveUninitialized: true,
-	resave: true,
-  store: new MemcachedStore({
-    hosts: ["127.0.0.1:11211"] 
-  })
+	resave: true
+  // store: new MemcachedStore({
+  //   hosts: ["127.0.0.1:11211"] 
+  // })
   // cookie: { secure: true }
 }));
 // flash
