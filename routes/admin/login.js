@@ -1,17 +1,47 @@
-const express 		= require('express');
-const router		= express.Router();
-const db			= require('../../db/postgres');
-const passport		= require('passport');
-const LocalStrategy	= require('passport-local').Strategy;
+const express 			= require('express');
+const router			= express.Router();
+const adminUser			= require('../../utils/User.js')
+const passport			= require('passport');
+const LocalStrategy		= require('passport-local').Strategy;
+const authMiddleware	= require('../../middleware/auth');
 
 router.get('/', (req, res) => {
+	if(req.isAuthenticated()) {
+		res.redirect('/admin/home');
+		return;
+	}
 	res.render('admin/login');
 });
 
-router.post('/', (req, res) => {
-	const email = req.body.email;
-	const password = req.body.password;
-	
+passport.use(new LocalStrategy((email, password, done) => {
+	adminUser.getUserByEmail(email, (err, user) => {
+		if(err) throw err;
+		if(!user) return done(null, false, { message: 'Unknown User' });
+		adminUser.authenticateUser(password, user.password, (err, isMatch) => {
+			if(err) throw err;
+			if(isMatch){
+   				return done(null, user);
+	   		} else {
+	   			return done(null, false, {message: 'Invalid password'});
+	   		}
+		});
+	})
+}));
+
+passport.serializeUser((user, done) => {
+	done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+	adminUser.getUserById(id, (err, user) => {
+		done(err, user);
+	});
+});
+
+router.post('/', 
+	passport.authenticate('local', { successRedirect:'/admin/home', failureRedirect:'/admin/register',failureFlash: true }) ,
+	(req, res) => {
+	res.redirect('/admin/home');
 });
 
 module.exports = router;

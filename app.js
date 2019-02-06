@@ -1,8 +1,9 @@
 const express 		= require('express');
 const path			= require('path');
-const env			= require('dotenv');
-const handlebars	= require('express-handlebars');
-const session		= require('express-session');
+const env			    = require('dotenv');
+const handlebars	   = require('express-handlebars');
+const session		     = require('express-session');
+const MemcachedStore = require('connect-memcached')(session);
 const validator		= require('express-validator');
 const cookieParser	= require('cookie-parser');
 const bodyParser	= require('body-parser');
@@ -27,7 +28,7 @@ const db			= require('./db/postgres');
 const app 			= express();
 
 // initialize logger
-app.use(logger(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
+// app.use(logger(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
 
 // import routes
 const admin_routes 	= require('./routes/admin/routes.js');
@@ -48,7 +49,11 @@ app.use(cookieParser());
 app.use(session({ 
 	secret:  'B2LrgoFLlkzr0mssrLAhz4Z11jfaW7JTaRijud9Q/j8lWdF1919+ruCOYcMH8+1/6p9BJDEmKoNVcWgmB81IoA==',
 	saveUninitialized: true,
-	resave: true
+	resave: true,
+  store: new MemcachedStore({
+    hosts: ["127.0.0.1:11211"] 
+  })
+  // cookie: { secure: true }
 }));
 // flash
 app.use(flash());

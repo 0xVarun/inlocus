@@ -15,22 +15,25 @@ module.exports.registerUser = function(name, username, email, password) {
 		.catch( err => { throw err; });
 }
 
-function getUserByEmail (email) {
-	model
-		.find( { where: { email: email }} )
-		.then( user => {return user;})
-		.catch(err => { throw err;});
+module.exports.getUserByEmail = function(email, callback) {
+	model.user
+		.findOne( { where: { email: email }} )
+		.then( user => { callback(null, user); })
+		.catch(err => { callback(err, null) });
 }
 
-module.exports.authenticateUser = function(email, password) {
-	let user = getUserByEmail(email);
-	if(user === null) {
-		return false;
-	}
-	bcrypt.compare(password, user.password, function(err, isMatch) {
+module.exports.getUserById = function(id, callback) {
+	model.user
+		.findByPk( id )
+		.then( user => {callback(null, user);})
+		.catch(err => { callback(err, null);});
+}
+
+module.exports.authenticateUser = async function(password, hash, callback) {
+	bcrypt.compare(password, hash, function(err, isMatch) {
 		if(err) {
 			throw err;
 		}
-		return isMatch;
+		callback(null, isMatch);
 	})
 }
