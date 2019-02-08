@@ -11,7 +11,7 @@ const flash 		        = require('connect-flash');
 const passport		      = require('passport');
 const LocalStrategy	    = require('passport-local').Strategy;
 const logger            = require('morgan');
-const port 			        = process.env.PORT || 3000;
+
 
 // process environment initialize
 if(process.env.ENV === 'production') {
@@ -19,6 +19,9 @@ if(process.env.ENV === 'production') {
 } else if(process.env.ENV === 'development') {
 	env.config({ path: path.join(__dirname, 'environments/development.env') });
 }
+
+// set port after env variables are loaded
+const port              = process.env.PORT || 3000;
 
 // db connection import
 const db			= require('./db/postgres');

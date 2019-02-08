@@ -42,8 +42,45 @@ router.post('/',async (req, res) => {
 			}
 			if(!u.id) {
 				res.sendStatus(500);
+				return;
 			}
 			res.status(201).send({'userId': u['id']});
+		}
+	}
+});
+
+router.post('/r', async (req, res) => {
+	let username = req.body.username;
+	let email = req.body.email;
+	let name = req.body.name;
+	let password = req.body.password;
+	let password2 = req.body.password2;
+
+	req.checkBody('password2', 'Passwords do not match').equals(password);
+	let errors = req.validationErrors();
+
+	if(errors) {
+		req.flash('error_msg', 'Passwords do not match');
+		res.redirect('/admin/login/register');
+		console.log('here');
+	} else {
+		let new_adminuser = undefined;
+		try {
+			new_adminuser = await User.registerUser(name, username, email, password);
+		} catch(err) {
+			console.log(err.errors[0].message);
+			let er = err.errors[0].message;
+			er = er.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+			req.flash('error_msg', er);
+			res.redirect('/admin/login/register');
+			return;
+		}
+		if(!new_adminuser.id) {
+			req.flash('error_msg', 'Unable to register user');
+			res.redirect('/admin/login/register')
+		} else {
+			req.flash('success_msg', 'User registered, please wait for account to be activated');
+			res.redirect('/admin/login');
 		}
 	}
 });

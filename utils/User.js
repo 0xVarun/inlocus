@@ -10,7 +10,7 @@ function gensaltedhash(password) {
 
 module.exports.registerUser = function(name, username, email, password) {
 	let hash = gensaltedhash(password);
-	return model.user.create({ name: name, username: username, email: email, password: hash, active: false })
+	return model.user.create({ name: name, username: username, email: email, password: hash, active: false, superadmin: false })
 		.then( user => { return user; })
 		.catch( err => { throw err; });
 }
@@ -27,6 +27,13 @@ module.exports.getUserById = function(id, callback) {
 		.findByPk( id )
 		.then( user => {callback(null, user);})
 		.catch(err => { callback(err, null);});
+}
+
+module.exports.getAll = function() {
+	return model.user
+		.findAll()
+		.then( user => { return user; } )
+		.catch( err => { throw err; })
 }
 
 module.exports.authenticateUser = async function(password, hash, callback) {

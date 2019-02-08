@@ -25,6 +25,9 @@ module.exports = {
       active: {
         type: Sequelize.BOOLEAN
       },
+      superadmin: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
