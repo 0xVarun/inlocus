@@ -27,10 +27,12 @@ router.post('/register', async (req, res) => {
 		} else {
 			let device = undefined;
 			try {
-				device = await Device.registerDevice(payload['IMEI'], payload['GAID'], payload['deviceId'])
+				device = await Device.registerDevice(payload['IMEI'], payload['GAID'], payload['deviceId']);
 			} catch (err) {
-				console.log('err');
-				res.sendStatus(400);
+				let er = err.name;
+				er = er.replace(/Sequelize/gi, '');
+				er = er.replace(/([A-Z])/g, ' $1').trim()
+				res.status(400).send({ 'code': 400, 'message': er });
 				return;
 			}
 			if(!device.id) {
