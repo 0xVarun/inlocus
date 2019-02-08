@@ -29,13 +29,14 @@ router.post('/register', async (req, res) => {
 			try {
 				device = await Device.registerDevice(payload['IMEI'], payload['GAID'], payload['deviceId'])
 			} catch (err) {
+				console.log('err');
 				res.sendStatus(400);
 				return;
 			}
 			if(!device.id) {
 				res.sendStatus(500);
 			}
-			res.status(201).send({'deviceId': device['id']});
+			res.status(201).send({'id': device['id'], 'deviceId': device['deviceId']});
 		}
 	}
 });

@@ -34,7 +34,10 @@ router.post('/register', async (req, res) => {
 		try {
 			appUser = await User.registerAppUser(payload['userId'], payload['mobileNo'], payload['emailId'], payload['deviceId']); 
 		} catch(err) {
-			res.sendStatus(500);
+			let er = err.name;
+			er = er.replace(/Sequelize/gi, '');
+			er = er.replace(/([A-Z])/g, ' $1').trim()
+			res.status(400).send({ 'code': 400, 'message': er });
 			return;
 		}
 		if(!appUser.id) {

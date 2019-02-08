@@ -14,6 +14,10 @@ router.get('/', (req, res) => {
 	res.render('admin/login');
 });
 
+router.get('/register', (req, res) => {
+	res.render('admin/register');
+});
+
 passport.use(new LocalStrategy({usernameField: 'email'}, (email, password, done) => {
 	adminUser.getUserByEmail(email, (err, user) => {
 		if(err) throw err;
