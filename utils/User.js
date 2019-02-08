@@ -10,7 +10,7 @@ function gensaltedhash(password) {
 
 module.exports.registerUser = function(name, username, email, password) {
 	let hash = gensaltedhash(password);
-	return model.user.create({ name: name, username: username, email: email, password: hash })
+	return model.user.create({ name: name, username: username, email: email, password: hash, active: false })
 		.then( user => { return user; })
 		.catch( err => { throw err; });
 }

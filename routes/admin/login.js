@@ -22,6 +22,7 @@ passport.use(new LocalStrategy({usernameField: 'email'}, (email, password, done)
 	adminUser.getUserByEmail(email, (err, user) => {
 		if(err) throw err;
 		if(!user) return done(null, false, {message: 'Unknown User'});
+		if(!user.active) return done(null, false, { message: 'User Account pending activation' });
 		adminUser.authenticateUser(password, user.password, (err, isMatch) => {
 			if(err) throw err;
 			if(isMatch){
