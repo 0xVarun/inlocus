@@ -49,10 +49,10 @@ app.use(cookieParser());
 app.use(session({ 
 	secret:  'B2LrgoFLlkzr0mssrLAhz4Z11jfaW7JTaRijud9Q/j8lWdF1919+ruCOYcMH8+1/6p9BJDEmKoNVcWgmB81IoA==',
 	saveUninitialized: true,
-	resave: true
-  // store: new MemcachedStore({
-  //   hosts: ["127.0.0.1:11211"] 
-  // })
+	resave: true,
+  store: new MemcachedStore({
+    hosts: ["127.0.0.1:11211"] 
+  })
   // cookie: { secure: true }
 }));
 // flash
