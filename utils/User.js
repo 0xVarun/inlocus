@@ -64,3 +64,8 @@ module.exports.rmSuperadmin = function(id) {
 	return model.user
 		.update({ superadmin: false }, { where: { id: id }, returning: true, plain: true });
 }
+
+module.exports.removeUser = function(id) {
+	return model.user
+		.destroy({ where: { id: id } });
+}

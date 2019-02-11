@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="/css/classic.css">
+<link rel="stylesheet" href="/css/classic.date.css">
+<script src="/js/picker.js"></script>
+<script src="/js/picker.date.js"></script>
+<div class="container-fluid">
+	<h1 class="h3 mb-2 text-gray-800">Campaigns</h1>
+
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Create New Campaign</h6>
+		</div>
+		
+		<div class="card-body">
+			<form class="user" action="/admin/home/app/new" method="post">
+				<div class="form-group">
+                    <input type="text" class="form-control form-control-user" name="cname" placeholder="Campagin Name" required>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="text" id="sdate" class="form-control form-control-user mdate" name="startdate" placeholder="Start Date">
+                    </div>	
+                    <div class="col-sm-6">
+                        <input type="text" id="edate" class="form-control form-control-user mdate" name="enddate" placeholder="End Date">
+                        <div class="input-group-addon">
+        					<span class="glyphicon glyphicon-th"></span>
+    					</div>
+                	</div>
+                </div>
+                <div class="form-group">
+                	<input type="text" name="Content" id="Content" class="form-control form-control-user">
+                </div>
+                <button id="submitBtn" type="submit" class="btn btn-primary btn-user btn-block" disabled="true">Create</button>
+            </form>
+		</div>
+	</div>
+</div>
+<script>
+	
+	let today = moment();
+	let nextDay = moment(today, "DD-MM-YYYY").add(1, 'days');
+	console.log(nextDay);
+
+	$('#sdate').pickadate({
+		min: today._d,
+		onSet: function(context) {
+			console.log(context);
+		}
+	});
+
+	$('#edate').pickadate({
+		min: nextDay._d
+	});
+</script>

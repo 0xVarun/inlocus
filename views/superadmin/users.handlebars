@@ -16,8 +16,8 @@
 							<th>Name</th>
 							<th>Username</th>
 							<th>Email</th>
-							<th>Active</th>
-							<th>SuperAdmin</th>
+							{{!-- <th>Active</th>
+							<th>SuperAdmin</th> --}}
 							<th>Activate</th>
 							<th>Make Superadmin</th>
 							<th>Delete</th>
@@ -28,8 +28,8 @@
 							<th>Name</th>
 							<th>Username</th>
 							<th>Email</th>
-							<th>Active</th>
-							<th>SuperAdmin</th>
+							{{!-- <th>Active</th>
+							<th>SuperAdmin</th> --}}
 							<th>Activate</th>
 							<th>Make Superadmin</th>
 							<th>Delete</th>
@@ -41,36 +41,36 @@
 								<td>{{name}}</td>
 								<td>{{username}}</td>
 								<td>{{email}}</td>
-								<td class="text-center">{{active}}</td>
-								<td class="text-center">{{superadmin}}</td>
+								{{!-- <td class="text-center">{{active}}</td>
+								<td class="text-center">{{superadmin}}</td> --}}
 								{{#if active}}
 									<td class="text-center">
-										<a href="/admin/api/deactivate/{{id}}" class="btn btn-success btn-circle">
+										<a href="/admin/api/user/deactivate/{{id}}" class="btn btn-success btn-circle">
 											<i class="fas fa-check"></i>
 										</a>
 									</td>
 								{{else}}
 									<td class="text-center">
-										<a href="/admin/api/activate/{{id}}" class="btn btn-danger btn-circle">
+										<a href="/admin/api/user/activate/{{id}}" class="btn btn-danger btn-circle">
 											<i class="fas fa-times"></i>
 										</a>
 									</td>
 								{{/if}}
 								{{#if superadmin}}
 									<td class="text-center">
-										<a href="/admin/api/rmsu/{{id}}" class="btn btn-success btn-circle">
+										<a href="/admin/api/user/rmsu/{{id}}" class="btn btn-success btn-circle">
 											<i class="fas fa-check"></i>
 										</a>
 									</td>
 								{{else}}
 									<td class="text-center">
-										<a href="/admin/api/mksu/{{id}}" class="btn btn-danger btn-circle">
+										<a href="/admin/api/user/mksu/{{id}}" class="btn btn-danger btn-circle">
 											<i class="fas fa-times"></i>
 										</a>
 									</td>
 								{{/if}}
 								<td>
-									<a href="/admin/api/mksu/{{id}}" class="btn btn-danger btn-circle">
+									<a href="/admin/api/user/delete/{{id}}" class="btn btn-danger btn-circle">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								</td>

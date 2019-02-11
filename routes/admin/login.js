@@ -18,6 +18,10 @@ router.get('/register', (req, res) => {
 	res.render('admin/register');
 });
 
+router.get('/forgot', (req, res) => {
+	res.render('admin/forgotpass');
+})
+
 passport.use(new LocalStrategy({usernameField: 'email'}, (email, password, done) => {
 	adminUser.getUserByEmail(email, (err, user) => {
 		if(err) throw err;
