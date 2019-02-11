@@ -1,23 +1,57 @@
-<style>.btn,.form-control,.login-form form{border-radius:2px}body{color:#fff;background:#d47677}.form-control{min-height:41px;background:#fff;box-shadow:none!important;border-color:#e3e3e3}.form-control:focus{border-color:#70c5c0}.login-form{width:350px;margin:0 auto;padding:100px 0 30px}.login-form form{color:#7a7a7a;margin-bottom:15px;font-size:13px;background:#ececec;box-shadow:0 2px 2px rgba(0,0,0,.3);padding:30px;position:relative}.login-form h2{font-size:22px;margin:35px 0 25px}.login-form .avatar{position:absolute;margin:0 auto;left:0;right:0;top:-50px;width:95px;height:95px;border-radius:50%;z-index:9;background:#70c5c0;padding:15px;box-shadow:0 2px 2px rgba(0,0,0,.1)}.login-form .avatar img{width:100%}.login-form input[type=checkbox]{margin-top:2px}.login-form .btn{font-size:16px;font-weight:700;background:#70c5c0;border:none;margin-bottom:20px}.login-form .btn:focus,.login-form .btn:hover{background:#50b8b3;outline:0!important}.login-form a{color:#fff;text-decoration:underline}.login-form a:hover,.login-form form a{text-decoration:none}.login-form form a{color:#7a7a7a}.login-form form a:hover{text-decoration:underline}</style>
-<div class="login-form">
-    <form action="/admin/login" method="post">
-    <div class="avatar">
-      <img src="/images/avatar.png" alt="Avatar">
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                </div>
+                                <form class="user" method="post" action="/admin/login">
+                                    <div class="form-group">
+                                        <input type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" name="email" placeholder="Enter Email Address...">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-user" id="exampleInputPassword" name="password" placeholder="Password">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox small">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck">
+                                            <label class="custom-control-label" for="customCheck">Remember Me</label>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
+                                    {{!-- <hr>
+                                    <a href="index.html" class="btn btn-google btn-user btn-block">
+                                        <i class="fab fa-google fa-fw"></i> Login with Google
+                                    </a>
+                                    <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                                        <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                                    </a> --}}
+                                </form>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                </div>
+                                <div class="text-center">
+                                    <a class="small" href="/admin/login/register">Create an Account!</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
-        <h2 class="text-center">Member Login</h2>   
-        <div class="form-group">
-          <input type="email" class="form-control" name="email" placeholder="Email" required="required">
-        </div>
-    <div class="form-group">
-            <input type="password" class="form-control" name="password" placeholder="Password" required="required">
-        </div>        
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
-        </div>
-    <div class="clearfix">
-            <label class="pull-left checkbox-inline"><input type="checkbox"> Remember me</label>
-            <a href="#" class="pull-right">Forgot Password?</a>
-        </div>
-    </form>
-    <p class="text-center small">Don't have an account? <a href="/admin/login/register">Sign up here!</a></p>
+
 </div>

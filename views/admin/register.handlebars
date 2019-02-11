@@ -1,28 +1,55 @@
-<style>.btn,.form-control,.login-form form{border-radius:2px}body{color:#fff;background:#d47677}.form-control{min-height:41px;background:#fff;box-shadow:none!important;border-color:#e3e3e3}.form-control:focus{border-color:#70c5c0}.login-form{width:350px;margin:0 auto;padding:100px 0 30px}.login-form form{color:#7a7a7a;margin-bottom:15px;font-size:13px;background:#ececec;box-shadow:0 2px 2px rgba(0,0,0,.3);padding:30px;position:relative}.login-form h2{font-size:22px;margin:35px 0 25px}.login-form .avatar{position:absolute;margin:0 auto;left:0;right:0;top:-50px;width:95px;height:95px;border-radius:50%;z-index:9;background:#70c5c0;padding:15px;box-shadow:0 2px 2px rgba(0,0,0,.1)}.login-form .avatar img{width:100%}.login-form input[type=checkbox]{margin-top:2px}.login-form .btn{font-size:16px;font-weight:700;background:#70c5c0;border:none;margin-bottom:20px}.login-form .btn:focus,.login-form .btn:hover{background:#50b8b3;outline:0!important}.login-form a{color:#fff;text-decoration:underline}.login-form a:hover,.login-form form a{text-decoration:none}.login-form form a{color:#7a7a7a}.login-form form a:hover{text-decoration:underline}</style>
-<div class="login-form">
-    <form action="/admin/register/r" method="post">
-    <div class="avatar">
-      <img src="/images/avatar.png" alt="Avatar">
+<div class="container">
+
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                <div class="col-lg-7">
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                        </div>
+                        <form class="user" action="/admin/register/r" method="post">
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" name="username" id="exampleFirstName" placeholder="Username">
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="text" name="name" class="form-control form-control-user" id="exampleLastName" placeholder="Name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control form-control-user" name="email" id="exampleInputEmail" placeholder="Email Address">
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="password" name="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="password" name="password2" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-user btn-block">Register Account</button>
+                            {{!-- <hr>
+                            <a href="index.html" class="btn btn-google btn-user btn-block">
+                                <i class="fab fa-google fa-fw"></i> Register with Google
+                            </a>
+                            <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                                <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
+                            </a> --}}
+                        </form>
+                        <hr>
+                        <div class="text-center">
+                            <a class="small" href="forgot-password.html">Forgot Password?</a>
+                        </div>
+                        <div class="text-center">
+                            <a class="small" href="login.html">Already have an account? Login!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-        <h2 class="text-center">Member Register</h2>   
-        <div class="form-group">
-          <input type="email" class="form-control" name="email" placeholder="Email" required="required">
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" name="username" placeholder="Username" required="required">
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" name="name" placeholder="Name" required="required">
-        </div>
-        <div class="form-group">
-            <input type="password" class="form-control" name="password" placeholder="Password" required="required">
-        </div>
-        <div class="form-group">
-            <input type="password" class="form-control" name="password2" placeholder="Re-enter Password" required="required">
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Register</button>
-        </div>
-    </form>
-    <p class="text-center small">Already have an account? <a href="/admin/login">login here!</a></p>
+
 </div>
