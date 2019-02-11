@@ -3,3 +3,26 @@ Location:
 	gps - lat / long
 	wifi - top 5/10 AP
 	Beacon - M / m / uuid
+
+
+-	Dwell time 
+-	Route taken 
+-	Heat maps of the area 
+-	Record new visitors 
+-	Identify repeat customers 
+o	Frequency of visit 
+o	Date & Time of visit 
+-	Push information 
+o	Track conversions/clicks
+-   Total Number of visitors
+-   Visitors today/this week
+-   Repeat visitors
+
+
+Timeline Chart 
+	total number of visitors / repeat visitors last week
+		- filter : 
+				1. time
+				2. way to remove all filters 
+				3. date filter
+				4. Hourly chart - date hours 
