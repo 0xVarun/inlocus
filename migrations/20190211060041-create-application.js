@@ -1,36 +1,27 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('beacons', {
+    return queryInterface.createTable('applications', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      major: {
+      name: {
         type: Sequelize.STRING
       },
-      minor: {
+      API_KEY: {
         type: Sequelize.STRING
       },
-      uuid: {
+      API_SECRET: {
         type: Sequelize.STRING
       },
-      rssi: {
-        type: Sequelize.DOUBLE
+      active: {
+        type: Sequelize.BOOLEAN
       },
-      distance: {
-        type: Sequelize.FLOAT
-      },
-      deviceId: {
-        type: Sequelize.STRING,
-        references: {
-          model: 'devices', 
-          key: 'deviceId', 
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+      cactive: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -43,6 +34,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('beacons');
+    return queryInterface.dropTable('applications');
   }
 };

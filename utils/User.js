@@ -44,3 +44,23 @@ module.exports.authenticateUser = async function(password, hash, callback) {
 		callback(null, isMatch);
 	})
 }
+
+module.exports.activateUser = async function(id) {
+	return model.user
+		.update({ active: true }, { where: { id: id }, returning: true, plain: true });
+}
+
+module.exports.deActivateUser = async function(id) {
+	return model.user
+		.update({ active: false }, { where: { id: id }, returning: true, plain: true });
+}
+
+module.exports.mkSuperadmin = function(id) {
+	return model.user
+		.update({ superadmin: true }, { where: { id: id }, returning: true, plain: true });
+}
+
+module.exports.rmSuperadmin = function(id) {
+	return model.user
+		.update({ superadmin: false }, { where: { id: id }, returning: true, plain: true });
+}

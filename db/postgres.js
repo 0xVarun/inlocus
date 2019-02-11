@@ -15,7 +15,7 @@ const db			= new Sequelize(dbName, username, password, {
 		idle: 10000
 	},
 	operatorsAliases: false,
-	logging: console.err
+	logging: false
 });
 
 db.authenticate()

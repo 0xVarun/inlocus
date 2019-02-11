@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Beacon = sequelize.define('Beacon', {
+  const Beacon = sequelize.define('beacon', {
     major: DataTypes.STRING,
     minor: DataTypes.STRING,
     uuid: DataTypes.STRING,

@@ -1,0 +1,52 @@
+<div class="container-fluid">
+	<h1 class="h3 mb-2 text-gray-800">New Applications</h1>
+
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Create New Application</h6>
+		</div>
+		
+		<div class="card-body">
+			<form class="user" action="/admin/home/app/new" method="post">
+				<div class="form-group">
+                    <input type="text" class="form-control form-control-user" name="app_name" placeholder="Application Name" required>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="text" id="key" class="form-control form-control-user" name="api_key" placeholder="API KEY" readonly="true">
+                    </div>	
+                    <div class="col-sm-6">
+                        <input name="api_secret" type="text" id="secret" class="form-control form-control-user"  placeholder="API SECRET"  readonly="true">
+                	</div>
+                </div>
+                {{!-- <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="checkbox" name="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="checkbox" name="password2" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password">
+                    </div>
+                </div> --}}
+                <button type="button" id="genkey" onclick="genkeys()" class="btn btn-primary btn-user btn-block" style="color: #fff;">Generate Keys</button>
+                <button id="submitBtn" type="submit" class="btn btn-primary btn-user btn-block" disabled="true">Register Application</button>
+            </form>
+		</div>
+	</div>
+</div>
+<script>
+function genkeys() {
+	let submitButton = document.getElementById('submitBtn');
+	let keys = document.getElementById('genkey');
+	let api_key = document.getElementById('key');
+	let api_secret = document.getElementById('secret');
+	$.ajax({
+    	method: 'GET',
+    	url: '/admin/api/genkeys'
+    }).done(response => {
+        submitButton.disabled = false;
+        keys.disabled = true;
+        api_key.value = JSON.parse(response).apiKey;
+        api_secret.value = JSON.parse(response).uuid;
+    })
+}
+</script>

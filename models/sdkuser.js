@@ -10,6 +10,13 @@ module.exports = (sequelize, DataTypes) => {
         key: 'deviceId',
       },
     },
+    appId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'application',
+        key: 'id'
+      }
+    },
     emailId: DataTypes.STRING
   }, {});
   sdkuser.associate = function(models) {
@@ -18,7 +25,14 @@ module.exports = (sequelize, DataTypes) => {
     	foreignKey: {
 		    name: 'deviceId',
 		    allowNull: false
-		}
+		  }
+    });
+
+    sdkuser.hasOne(models.application, {
+      foreignKey: {
+        name: 'id',
+        allowNull: false
+      }
     })
   };
   return sdkuser;
