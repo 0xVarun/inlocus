@@ -33,8 +33,8 @@
                         <input type="text" autocomplete="off" id="stime" class="form-control form-control-user" name="starttime" placeholder="Start Time">
                     </div>	
                     <div class="col-sm-6">
-                        <input type="text" autocomplete="off" id="etime" class="form-control form-control-user" name="endtime" placeholder="End Time">
-                        <div class="input-group-addon">
+                      <input type="text" autocomplete="off" id="etime" class="form-control form-control-user" name="endtime" placeholder="End Time">
+                    <div class="input-group-addon">
         					<span class="glyphicon glyphicon-th"></span>
     					</div>
                 	</div>
@@ -51,25 +51,45 @@
 	
 	let today = moment();
 	let nextDay = moment(today, "DD-MM-YYYY").add(1, 'days');
-	console.log(nextDay);
+	// console.log(today);
 
 	let minsTime = today.hour() + 1;
-	let mineTime = today.hour() + 2;
 
-	$('#sdate').pickadate({
-		min: today._d,
-		formatSubmit: 'yyyy/mm/dd',
-		hiddenName: true,
-		onSet: function(context) {
-			console.log(context);
-		}
-	});
+  let start_date = $('#sdate').pickadate();
+  let end_date = $('#edate').pickadate();
 
-	$('#edate').pickadate({
-		min: nextDay._d,
-		formatSubmit: 'yyyy/mm/dd',
-		hiddenName: true
-	});
+  let from_date = start_date.pickadate('picker');
+  from_date.set('min', today._d);
+  from_date.set('formatSubmit', 'yyyy/mm/dd');
+  from_date.set('hiddenName', true);
+
+  let to_date = end_date.pickadate('picker');
+  to_date.set('min', false);
+  to_date.set('formatSubmit', 'yyyy/mm/dd');
+  to_date.set('hiddenName', true);
+
+	// $('#sdate').pickadate({
+	// 	min: today._d,
+	// 	formatSubmit: 'yyyy/mm/dd',
+	// 	hiddenName: true,
+	// });
+
+	// $('#edate').pickadate({
+	// 	min: nextDay._d,
+	// 	formatSubmit: 'yyyy/mm/dd',
+	// 	hiddenName: true
+	// });
+
+  from_date.on('set', function(event) {
+    if(event.select) {
+      let mdate = from_date.get('select');
+      console.log('old' + mdate.date);
+      let temp = mdate.date + 1;
+      mdate['date'] = temp;
+      console.log(mdate);
+      to_date.set('min', mdate);
+    }
+  })
 
 	$('#stime').pickatime({
 		formatSubmit: 'HH:i',
@@ -82,7 +102,6 @@
 		formatSubmit: 'HH:i',
   		hiddenName: true,
   		interval: 60,
-  		min: [mineTime, 0],
   		hiddenSuffix: ':00'
 	});
 </script>
