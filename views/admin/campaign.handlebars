@@ -1,7 +1,9 @@
 <link rel="stylesheet" href="/css/classic.css">
 <link rel="stylesheet" href="/css/classic.date.css">
+<link rel="stylesheet" href="/css/classic.time.css">
 <script src="/js/picker.js"></script>
 <script src="/js/picker.date.js"></script>
+<script src="/js/picker.time.js"></script>
 <div class="container-fluid">
 	<h1 class="h3 mb-2 text-gray-800">Campaigns</h1>
 
@@ -11,16 +13,27 @@
 		</div>
 		
 		<div class="card-body">
-			<form class="user" action="/admin/home/app/new" method="post">
+			<form class="user" action="/admin/campaigns/create" method="post">
 				<div class="form-group">
                     <input type="text" class="form-control form-control-user" name="cname" placeholder="Campagin Name" required>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
-                        <input type="text" id="sdate" class="form-control form-control-user mdate" name="startdate" placeholder="Start Date">
+                        <input type="text" autocomplete="off" id="sdate" class="form-control form-control-user mdate" name="startdate" placeholder="Start Date">
                     </div>	
                     <div class="col-sm-6">
-                        <input type="text" id="edate" class="form-control form-control-user mdate" name="enddate" placeholder="End Date">
+                        <input type="text" autocomplete="off" id="edate" class="form-control form-control-user mdate" name="enddate" placeholder="End Date">
+                        <div class="input-group-addon">
+        					<span class="glyphicon glyphicon-th"></span>
+    					</div>
+                	</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="text" autocomplete="off" id="stime" class="form-control form-control-user" name="starttime" placeholder="Start Time">
+                    </div>	
+                    <div class="col-sm-6">
+                        <input type="text" autocomplete="off" id="etime" class="form-control form-control-user" name="endtime" placeholder="End Time">
                         <div class="input-group-addon">
         					<span class="glyphicon glyphicon-th"></span>
     					</div>
@@ -29,7 +42,7 @@
                 <div class="form-group">
                 	<input type="text" name="Content" id="Content" class="form-control form-control-user">
                 </div>
-                <button id="submitBtn" type="submit" class="btn btn-primary btn-user btn-block" disabled="true">Create</button>
+                <button id="submitBtn" type="submit" class="btn btn-primary btn-user btn-block">Create</button>
             </form>
 		</div>
 	</div>
@@ -40,14 +53,36 @@
 	let nextDay = moment(today, "DD-MM-YYYY").add(1, 'days');
 	console.log(nextDay);
 
+	let minsTime = today.hour() + 1;
+	let mineTime = today.hour() + 2;
+
 	$('#sdate').pickadate({
 		min: today._d,
+		formatSubmit: 'yyyy/mm/dd',
+		hiddenName: true,
 		onSet: function(context) {
 			console.log(context);
 		}
 	});
 
 	$('#edate').pickadate({
-		min: nextDay._d
+		min: nextDay._d,
+		formatSubmit: 'yyyy/mm/dd',
+		hiddenName: true
+	});
+
+	$('#stime').pickatime({
+		formatSubmit: 'HH:i',
+  		hiddenName: true,
+  		interval: 60,
+  		min: [minsTime, 0],
+  		hiddenSuffix: ':00'
+	});
+	$('#etime').pickatime({
+		formatSubmit: 'HH:i',
+  		hiddenName: true,
+  		interval: 60,
+  		min: [mineTime, 0],
+  		hiddenSuffix: ':00'
 	});
 </script>

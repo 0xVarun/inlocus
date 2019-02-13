@@ -17,8 +17,6 @@
 							<th>API SECRET</th>
 							<th>Active</th>
 							<th>Campaign Ready</th>
-							<th>Activate</th>
-							<th>Make Campaign Ready</th>
 							<th>Delete</th>
 						</tr>
 					</thead>
@@ -28,8 +26,6 @@
 								<td>{{name}}</td>
 								<td>{{API_KEY}}</td>
 								<td>{{API_SECRET}}</td>
-								<td class="text-center">{{active}}</td>
-								<td class="text-center">{{cactive}}</td>
 								{{#if active}}
 									<td class="text-center">
 										<a href="/admin/api/app/deactivate/{{id}}" class="btn btn-success btn-circle">

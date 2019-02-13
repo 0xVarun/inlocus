@@ -32,3 +32,10 @@ module.exports.rmCampaignReady = function(id) {
 	return model.application
 		.update({ cactive: false }, { where: { id: id }, returning: true, plain: true });
 }
+
+module.exports.isActive = function(key, secret) {
+	return model.application
+		.find({ where: { API_KEY: key, API_SECRET: secret } })
+		.then( app => { if( app.active ) return true; else return false })
+		.catch(err => { return err });
+}
