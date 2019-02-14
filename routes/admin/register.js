@@ -79,7 +79,7 @@ router.post('/r', async (req, res) => {
 			req.flash('error_msg', 'Unable to register user');
 			res.redirect('/admin/login/register')
 		} else {
-			req.flash('success_msg', 'User registered, please wait for account to be activated');
+			req.flash('success_msg', 'User registered');
 			res.redirect('/admin/login');
 		}
 	}
