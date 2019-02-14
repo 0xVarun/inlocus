@@ -8,6 +8,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      appId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'applications', 
+          key: 'id', 
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+      },
       name: {
         type: Sequelize.STRING
       },
