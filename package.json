@@ -8,7 +8,8 @@
     "dev": "ENV=development nodemon app.js",
     "migrate": "sequelize db:migrate",
     "migrate:undo": "sequelize db:migrate:undo:all",
-    "seed": "sequelize db:seed:all"
+    "seed": "sequelize db:seed:all",
+    "docs": "docsify start ./docs"
   },
   "author": "Varun Tewari",
   "license": "ISC",
