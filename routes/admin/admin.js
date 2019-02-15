@@ -12,7 +12,7 @@ router.get('/', authMiddleware, (req, res) => {
 
 router.get('/users', suMiddleware, async (req, res) => {
 	let Users = await User.getAll();
-	res.render('superadmin/users', { title: 'Admin', layout: 'home', adminuser: Users });
+	res.render('superadmin/users', { title: 'Admin', layout: 'home', adminuser: JSON.parse(Users) });
 });
 
 router.get('/app/new', suMiddleware, (req, res) => {

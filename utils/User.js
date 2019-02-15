@@ -31,8 +31,8 @@ module.exports.getUserById = function(id, callback) {
 
 module.exports.getAll = function() {
 	return model.user
-		.findAll()
-		.then( user => { return user; } )
+		.findAll({ include: [{ model: model.application }] })
+		.then( user => { return JSON.stringify(user); } )
 		.catch( err => { throw err; })
 }
 

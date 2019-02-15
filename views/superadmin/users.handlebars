@@ -18,6 +18,7 @@
 							<th>Email</th>
 							{{!-- <th>Active</th>
 							<th>SuperAdmin</th> --}}
+							<th>App</th>
 							<th>Activate</th>
 							<th>Make Superadmin</th>
 							<th>Delete</th>
@@ -30,6 +31,7 @@
 							<th>Email</th>
 							{{!-- <th>Active</th>
 							<th>SuperAdmin</th> --}}
+							<th>App</th>
 							<th>Activate</th>
 							<th>Make Superadmin</th>
 							<th>Delete</th>
@@ -43,6 +45,7 @@
 								<td>{{email}}</td>
 								{{!-- <td class="text-center">{{active}}</td>
 								<td class="text-center">{{superadmin}}</td> --}}
+								<td>{{application.name}}</td>
 								{{#if active}}
 									<td class="text-center">
 										<a href="/admin/api/user/deactivate/{{id}}" class="btn btn-success btn-circle">

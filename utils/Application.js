@@ -46,3 +46,10 @@ module.exports.getAppId = function(key) {
 		.then( app => { return app.id })
 		.catch(err => { throw err; });
 }
+
+module.exports.getAppName = function(id) {
+	return model.application
+		.findByPk(id)
+		.then( app => { return app.name })
+		.catch(err => { throw err; });
+}
