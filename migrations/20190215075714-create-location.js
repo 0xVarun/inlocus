@@ -1,42 +1,27 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('users', {
+    return queryInterface.createTable('locations', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      appId: {
-        allowNull: false,
+      latitude: {
+        type: Sequelize.DOUBLE
+      },
+      longitude: {
+        type: Sequelize.DOUBLE
+      },
+      userId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'applications', 
+          model: 'sdkusers', 
           key: 'id', 
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-      },
-      name: {
-        type: Sequelize.STRING
-      },
-      username: {
-        unique: true,
-        type: Sequelize.STRING
-      },
-      email: {
-        unique: true,
-        type: Sequelize.STRING
-      },
-      password: {
-        type: Sequelize.STRING
-      },
-      active: {
-        type: Sequelize.BOOLEAN
-      },
-      superadmin: {
-        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -49,6 +34,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('users');
+    return queryInterface.dropTable('locations');
   }
 };

@@ -1,8 +1,8 @@
 const App 	= require('../utils/Application');
 
 module.exports = async (req, res, next) => {
-	let key = req.headers['x-phy-api-key'];
-	let secret = req.headers['x-phy-api-secret'];
+	let key = req.headers['x-app-api-key'];
+	let secret = req.headers['x-app-api-secret'];
 	// console.log(req.headers);
 	let isActive = undefined;
 

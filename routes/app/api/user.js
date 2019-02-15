@@ -1,7 +1,10 @@
-const express 	= require('express');
-const router 	= express.Router();
-const User 		= require('../../../utils/SdkUser');
-const _ 		= require('lodash');
+const express 		= require('express');
+const router 		= express.Router();
+const User 			= require('../../../utils/SdkUser');
+const _ 			= require('lodash');
+const jwt			= require('jsonwebtoken');
+const Application 	= require('../../../utils/Application');
+const apiMiddleware = require('../../../middleware/api').apiAuth;
 
 /**
  * Registering a new user for SDK
@@ -22,6 +25,17 @@ router.post('/register', async (req, res) => {
 		return;
 	}	
 
+	let api_key = req.headers['x-app-api-key'];
+
+	let application_id = undefined
+
+	try {
+		application_id = await Application.getAppId(api_key);
+	} catch(err) {
+		res.sendStatus(500);
+	}
+
+
 	let expected_keys = ['userId', 'mobileNo', 'emailId', 'deviceId'];
 	let payload = req.body;
 	let actual_keys = Object.keys(payload);
@@ -32,8 +46,9 @@ router.post('/register', async (req, res) => {
 	} else {
 		let appUser = undefined;
 		try {
-			appUser = await User.registerAppUser(payload['userId'], payload['mobileNo'], payload['emailId'], payload['deviceId']); 
+			appUser = await User.registerAppUser(payload['userId'], payload['mobileNo'], payload['emailId'], payload['deviceId'], application_id); 
 		} catch(err) {
+			console.log(err);
 			let er = err.name;
 			er = er.replace(/Sequelize/gi, '');
 			er = er.replace(/([A-Z])/g, ' $1').trim()
@@ -48,5 +63,39 @@ router.post('/register', async (req, res) => {
 	
 });
 
+/**
+ * User Login .
+ * url - /api/user/login
+ * method - POST
+ * body - { userId, deviceId } 
+ */
+router.post('/login', async (req, res) => {
+	let userId = req.body.userId;
+	let appUser = undefined;
+	try {
+		appUser = await User.getUserById(userId);
+	} catch(err) {
+		let er = err.name;
+		er = er.replace(/Sequelize/gi, '');
+		er = er.replace(/([A-Z])/g, ' $1').trim()
+		res.status(400).send({ 'code': 400, 'message': er });
+		return;
+	}
+	if(!appUser) {
+		res.status(400).json({ message: 'Bad Request' });
+		return;
+	}
+
+	let payload = { 
+		id: appUser['id'],
+		userId: appUser['userId'],
+		mobileNo: appUser['mobileNo'],
+		deviceId: appUser['deviceId'],
+		appId: appUser['appId'],
+		emailId: appUser['emailId']
+	}
+	let token = jwt.sign(payload, "jcwirrxNiX3iyMQ075xr5k8vC6hQbiSwc5JsvJbQCfsS1gdF+hg7/qNe9duZP5dclypByeqPE18AaoDI+Ghmmw==", { expiresIn: 60 });
+	res.json({ token });
+});
 
 module.exports = router;

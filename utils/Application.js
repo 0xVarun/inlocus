@@ -39,3 +39,10 @@ module.exports.isActive = function(key, secret) {
 		.then( app => { if( app.active ) return true; else return false })
 		.catch(err => { return err });
 }
+
+module.exports.getAppId = function(key) {
+	return model.application
+		.find({ where: { API_KEY: key }})
+		.then( app => { return app.id })
+		.catch(err => { throw err; });
+}

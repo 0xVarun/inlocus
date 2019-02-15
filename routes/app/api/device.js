@@ -58,6 +58,8 @@ router.get('/', async (req, res) => {
 		return;
 	}
 	res.status(200).send(devices);
-})
+});
+
+
 
 module.exports = router;
