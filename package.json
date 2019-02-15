@@ -9,7 +9,7 @@
     "migrate": "sequelize db:migrate",
     "migrate:undo": "sequelize db:migrate:undo:all",
     "seed": "sequelize db:seed:all",
-    "docs": "docsify start ./docs"
+    "docs": "docsify serve ./docs"
   },
   "author": "Varun Tewari",
   "license": "ISC",
