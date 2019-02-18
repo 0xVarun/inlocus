@@ -10,6 +10,10 @@ router.get('/', authMiddleware, (req, res) => {
 	res.render('admin/home', { title: 'Admin', layout: 'home' });
 });
 
+router.get('/fence', authMiddleware, (req, res) => {
+	res.render('admin/geofence', { title: 'Geo Fence', layout: 'home' });
+})
+
 router.get('/users', suMiddleware, async (req, res) => {
 	let Users = await User.getAll();
 	res.render('superadmin/users', { title: 'Admin', layout: 'home', adminuser: JSON.parse(Users) });
