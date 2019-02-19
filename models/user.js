@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     active: DataTypes.BOOLEAN,
     superadmin: DataTypes.BOOLEAN,
+    appadmin: DataTypes.BOOLEAN,
+    staff: DataTypes.BOOLEAN,
     appId: {
       type: DataTypes.INTEGER,
       references: {
@@ -21,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: {
         name: 'id',
         allowNull: false
-      }
+      },
+      targetKey: 'id'
     })
   };
   return user;

@@ -10,7 +10,14 @@ function gensaltedhash(password) {
 
 module.exports.registerUser = function(name, username, email, password, appId) {
 	let hash = gensaltedhash(password);
-	return model.user.create({ name: name, username: username, email: email, password: hash, active: false, superadmin: false, appId: appId })
+	return model.user.create({ name: name, username: username, email: email, appadmin: true, staff: false, password: hash, active: false, superadmin: false, appId: appId })
+		.then( user => { return user; })
+		.catch( err => { throw err; });
+}
+
+module.exports.registerStaffUser = function(name, username, email, password, appId) {
+	let hash = gensaltedhash(password);
+	return model.user.create({ name: name, username: username, email: email, appadmin: false, staff: true, password: hash, active: false, superadmin: false, appId: appId })
 		.then( user => { return user; })
 		.catch( err => { throw err; });
 }
@@ -29,9 +36,23 @@ module.exports.getUserById = function(id, callback) {
 		.catch(err => { callback(err, null);});
 }
 
-module.exports.getAll = function() {
+module.exports.findAll = function() {
 	return model.user
-		.findAll({ include: [{ model: model.application }] })
+		.findAll({ where: { staff: false }, include: [ { model: model.application} ] })
+		.then( user => { return JSON.stringify(user); } )
+		.catch( err => { throw err; })
+}
+
+module.exports.findStaff = function() {
+	return model.user
+		.findAll({ where: { staff: true } })
+		.then( user => { return JSON.stringify(user); } )
+		.catch( err => { throw err; })
+}
+
+module.exports.getAll = function(appId) {
+	return model.user
+		.findAll({ where: { appId: appId, superadmin: false, appadmin: false } })
 		.then( user => { return JSON.stringify(user); } )
 		.catch( err => { throw err; })
 }
@@ -64,6 +85,26 @@ module.exports.rmSuperadmin = function(id) {
 	return model.user
 		.update({ superadmin: false }, { where: { id: id }, returning: true, plain: true });
 }
+
+module.exports.mkAppAdmin = function(id) {
+	return model.user
+		.update({ appadmin: true }, { where: { id: id }, returning: true, plain: true });
+}
+
+module.exports.rmAppAdmin = function(id) {
+	return model.user
+		.update({ appadmin: false }, { where: { id: id }, returning: true, plain: true });
+}
+
+/*module.exports.mkStaff = function(id) {
+	return model.user
+		.update({ staff: true }, { where: { id: id }, returning: true, plain: true });
+}
+
+module.exports.rmStaff = function(id) {
+	return model.user
+		.update({ staff: false }, { where: { id: id }, returning: true, plain: true });
+}*/
 
 module.exports.removeUser = function(id) {
 	return model.user

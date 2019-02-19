@@ -1,8 +1,10 @@
 const express 			= require('express');
 const router			= express.Router();
 const User				= require('../../utils/User');
+const Staff				= require('../../utils/Staff');
 const Application 		= require('../../utils/Application');
 const suMiddleware		= require('../../middleware/superadmin');
+const authMiddleware	= require('../../middleware/auth');
 const keys				= require('uuid-apikey');
 
 /**
@@ -36,6 +38,38 @@ router.get('/user/rmsu/:id', suMiddleware, async (req, res) => {
 	await User.rmSuperadmin(req.params.id);
 	res.redirect('/admin/home/users');
 });
+
+/**
+ * make App Admin User
+ */
+router.get('/user/appadmin/mk/:id', suMiddleware, async (req, res) => {
+	await User.mkAppAdmin(req.params.id);
+	res.redirect('/admin/home/users');
+})
+
+/**
+ * rm App Admin User
+ */
+router.get('/user/appadmin/rm/:id', suMiddleware, async (req, res) => {
+	await User.rmAppAdmin(req.params.id);
+	res.redirect('/admin/home/users');
+})
+
+/**
+ * make Staff User
+ */
+router.get('/user/staff/mk/:id', authMiddleware, async (req, res) => {
+	await User.activateUser(req.params.id);
+	res.redirect('/admin/staff')
+})
+
+/**
+ * rm Staff User
+ */
+router.get('/user/staff/rm/:id', authMiddleware, async (req, res) => {
+	await User.deActivateUser(req.params.id);
+	res.redirect('/admin/staff');
+})
 
 /**
  * Delete User

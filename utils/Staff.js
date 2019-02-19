@@ -29,10 +29,10 @@ module.exports.getUserById = function(id, callback) {
 		.catch(err => { callback(err, null);});
 }
 
-module.exports.getAll = function() {
+module.exports.getAll = function(appId) {
 	return model.staff
-		.findAll({ include: [{ model: model.application }] })
-		.then( user => { return JSON.stringify(user); } )
+		.findAll({ appId: appId })
+		.then( staffuser => { return JSON.stringify(staffuser); } )
 		.catch( err => { throw err; })
 }
 

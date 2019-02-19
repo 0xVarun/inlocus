@@ -15,9 +15,15 @@ router.get('/fence', authMiddleware, (req, res) => {
 })
 
 router.get('/users', suMiddleware, async (req, res) => {
-	let Users = await User.getAll();
+	let Users = await User.findAll();
+	console.log(JSON.stringify(Users));
 	res.render('superadmin/users', { title: 'Admin', layout: 'home', adminuser: JSON.parse(Users) });
 });
+
+router.get('/staffs', suMiddleware, async (req, res) => {
+	let staffUsers = await User.findStaff();
+	res.render('superadmin/staffs',  { title: 'Admin', layout: 'home', staffusers: JSON.parse(staffUsers) });
+})
 
 router.get('/app/new', suMiddleware, (req, res) => {
 	res.render('superadmin/application', { title: 'Admin', layout: 'home' })

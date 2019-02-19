@@ -38,6 +38,12 @@ module.exports = {
       superadmin: {
         type: Sequelize.BOOLEAN
       },
+      appadmin: {
+        type: Sequelize.BOOLEAN
+      },
+      staff: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

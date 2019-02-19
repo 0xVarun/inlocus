@@ -28,6 +28,8 @@ module.exports = {
       password: hashed_password,
       active: true,
       superadmin: true,
+      appadmin: false,
+      staff: false,
       appId: 1,
       createdAt: new Date(),
       updatedAt: new Date()
