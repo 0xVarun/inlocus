@@ -18,8 +18,19 @@
   <script src="/js/jquery.easing.min.js"></script>
   <script src="/js/sb-admin-2.min.js"></script>
   <script src="/js/Chart.min.js"></script>
-  
+  <style>#snackbar{visibility:hidden;min-width:250px;margin-left:-125px;background-color:#333;color:#fff;text-align:center;border-radius:2px;padding:16px;position:fixed;z-index:1;left:50%;bottom:30px}#snackbar.show{visibility:visible;-webkit-animation:fadein .5s,fadeout .5s 2.5s;animation:fadein .5s,fadeout .5s 2.5s}@-webkit-keyframes fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}@keyframes fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}@-webkit-keyframes fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}@keyframes fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}</style>
 </head>
+{{#if success_msg}}
+  <div id="snackbar">{{success_msg}}</div>
+{{/if}}
+
+{{#if error_msg}}
+  <div id="snackbar">{{error_msg}}</div>
+{{/if}}
+
+{{#if error}}
+  <div id="snackbar">{{error}}</div>
+{{/if}}
 <body id="page-top">
 
   <!-- Page Wrapper -->
@@ -88,6 +99,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">SuperAdmin Tools</h6>
             <a class="collapse-item" href="/admin/home/app/new">Create New App</a>
+            <a class="collapse-item" href="/admin/user/create">Create New User</a>
             <a class="collapse-item" href="/admin/home/users">Users</a>
             <a class="collapse-item" href="/admin/home/apps">Applications</a>
             {{!-- <a class="collapse-item" href="utilities-other.html">Other</a> --}}
@@ -104,11 +116,9 @@
         </a>
         <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Create Internal Users</h6>
-            <a class="collapse-item" href="/admin/home/app/new">New User</a>
-            <a class="collapse-item" href="/admin/home/users">Users</a>
-            {{!-- <a class="collapse-item" href="/admin/home/apps">Applications</a> --}}
-            {{!-- <a class="collapse-item" href="utilities-other.html">Other</a> --}}
+            <h6 class="collapse-header">Create Staff Users</h6>
+            <a class="collapse-item" href="/admin/staff/create">New User</a>
+            <a class="collapse-item" href="/admin/staff">Users</a>
           </div>
         </div>
       </li>
@@ -399,6 +409,14 @@
       </div>
     </div>
   </div>
-{{!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> --}}
+<script>
+  function myFunction() {
+    var x = document.getElementById("snackbar");
+    if(!x) return;
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+  }
+  myFunction();
+</script>
 </body>
 </html>

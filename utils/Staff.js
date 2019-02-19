@@ -10,27 +10,27 @@ function gensaltedhash(password) {
 
 module.exports.registerUser = function(name, username, email, password, appId) {
 	let hash = gensaltedhash(password);
-	return model.user.create({ name: name, username: username, email: email, password: hash, active: false, superadmin: false, appId: appId })
+	return model.staff.create({ username: username , emailId: email, name: name, password: hash, active: true, appId: appId })
 		.then( user => { return user; })
 		.catch( err => { throw err; });
 }
 
 module.exports.getUserByEmail = function(email, callback) {
-	model.user
+	model.staff
 		.findOne( { where: { email: email }} )
 		.then( user => { callback(null, user); })
 		.catch(err => { callback(err, null) });
 }
 
 module.exports.getUserById = function(id, callback) {
-	model.user
+	model.staff
 		.findByPk( id )
 		.then( user => {callback(null, user);})
 		.catch(err => { callback(err, null);});
 }
 
 module.exports.getAll = function() {
-	return model.user
+	return model.staff
 		.findAll({ include: [{ model: model.application }] })
 		.then( user => { return JSON.stringify(user); } )
 		.catch( err => { throw err; })
@@ -46,26 +46,11 @@ module.exports.authenticateUser = async function(password, hash, callback) {
 }
 
 module.exports.activateUser = async function(id) {
-	return model.user
+	return model.staff
 		.update({ active: true }, { where: { id: id }, returning: true, plain: true });
 }
 
 module.exports.deActivateUser = async function(id) {
-	return model.user
+	return model.staff
 		.update({ active: false }, { where: { id: id }, returning: true, plain: true });
-}
-
-module.exports.mkSuperadmin = function(id) {
-	return model.user
-		.update({ superadmin: true }, { where: { id: id }, returning: true, plain: true });
-}
-
-module.exports.rmSuperadmin = function(id) {
-	return model.user
-		.update({ superadmin: false }, { where: { id: id }, returning: true, plain: true });
-}
-
-module.exports.removeUser = function(id) {
-	return model.user
-		.destroy({ where: { id: id } });
 }
