@@ -1,7 +1,6 @@
 const express 			= require('express');
 const router			= express.Router();
 const User				= require('../../utils/User');
-const Staff				= require('../../utils/Staff');
 const Application 		= require('../../utils/Application');
 const suMiddleware		= require('../../middleware/superadmin');
 const authMiddleware	= require('../../middleware/auth');
