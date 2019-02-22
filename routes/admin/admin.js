@@ -1,19 +1,53 @@
 const express 			= require('express');
 const router			= express.Router();
-const User				= require('../../utils/User');
-const Application 		= require('../../utils/Application');
+const GeoFence 			= require('../../utils/GeoFence');
 const authMiddleware	= require('../../middleware/auth');
 const suMiddleware		= require('../../middleware/superadmin');
-
 
 router.get('/', authMiddleware, (req, res) => {
 	res.render('admin/home', { title: 'Admin', layout: 'home' });
 });
 
-router.get('/fence', authMiddleware, (req, res) => {
-	res.render('admin/geofence', { title: 'Geo Fence', layout: 'home' });
-})
+/**
+ * Create New Geo Fence
+ */
+router.get('/geofence/create', authMiddleware, (req, res) => {
+	res.render('admin/fence', { title: 'New Fence', layout: 'home' })
+});
 
+/**
+ * Save Geo Fence Name
+ */
+router.post('/geofence/create', authMiddleware, (req, res) => {
+	let name = req.body.fence;
+	let user = req.user.id;
+	let mGeofence = GeoFence.create(name, user);
+	if(!mGeofence.id) {
+		res.redirect('/admin/home/geofence/create');
+		return;
+	}
+	res.redirect(`/admin/home/fence/maps?id=${mGeofence.id}`)
+});
+
+/**
+ * Renders Maps
+ */
+router.get('/fence/maps', authMiddleware, (req, res) => {
+	res.render('admin/geofence', { title: 'Geo Fence', layout: 'geofence' });
+});
+
+/**
+ * Save All GeoFence
+ */
+router.post('/geofence', authMiddleware, (req, res) => {
+	let payload = req.body;
+	console.log(payload);
+	res.sendStatus(201);
+});
+
+/**
+ * View All Admin and SuperAdmin Users
+ */
 router.get('/users', suMiddleware, async (req, res) => {
 	let Users = await User.findAll();
 	console.log(JSON.stringify(Users));

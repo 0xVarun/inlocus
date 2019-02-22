@@ -1,24 +1,27 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const location = sequelize.define('location', {
-    latitude: DataTypes.DOUBLE,
-    longitude: DataTypes.DOUBLE,
+  const wifi = sequelize.define('wifi', {
+    macid: DataTypes.STRING,
+    ssid: DataTypes.STRING,
+    rssi: DataTypes.DOUBLE,
+    freq: DataTypes.STRING,
+    distance: DataTypes.FLOAT,
     deviceId: {
       type: DataTypes.STRING,
       references: {
         model: 'device',
         key: 'deviceId',
-      }
+      },
     }
   }, {});
-  location.associate = function(models) {
+  wifi.associate = function(models) {
     // associations can be defined here
-    location.hasOne(models.device, {
-    	foreignKey: {
+    wifi.hasOne(models.device, {
+      foreignKey: {
         name: 'deviceId',
         allowNull: false
     }
     });
   };
-  return location;
+  return wifi;
 };

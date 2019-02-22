@@ -29,6 +29,7 @@ router.post('/register', async (req, res) => {
 			try {
 				device = await Device.registerDevice(payload['IMEI'], payload['GAID'], payload['deviceId']);
 			} catch (err) {
+				console.log(err);
 				let er = err.name;
 				er = er.replace(/Sequelize/gi, '');
 				er = er.replace(/([A-Z])/g, ' $1').trim()

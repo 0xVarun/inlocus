@@ -33,6 +33,7 @@ router.post('/register', async (req, res) => {
 		application_id = await Application.getAppId(api_key);
 	} catch(err) {
 		res.sendStatus(500);
+		return;
 	}
 
 
@@ -48,7 +49,6 @@ router.post('/register', async (req, res) => {
 		try {
 			appUser = await User.registerAppUser(payload['userId'], payload['mobileNo'], payload['emailId'], payload['deviceId'], application_id); 
 		} catch(err) {
-			console.log(err);
 			let er = err.name;
 			er = er.replace(/Sequelize/gi, '');
 			er = er.replace(/([A-Z])/g, ' $1').trim()
@@ -95,6 +95,7 @@ router.post('/login', async (req, res) => {
 		emailId: appUser['emailId']
 	}
 	let token = jwt.sign(payload, "jcwirrxNiX3iyMQ075xr5k8vC6hQbiSwc5JsvJbQCfsS1gdF+hg7/qNe9duZP5dclypByeqPE18AaoDI+Ghmmw==", { expiresIn: 60 });
+	
 	res.json({ token });
 });
 

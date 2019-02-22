@@ -9,7 +9,7 @@
     "migrate": "sequelize db:migrate",
     "migrate:undo": "sequelize db:migrate:undo:all",
     "seed": "sequelize db:seed:all",
-    "docs": "docsify serve ./docs"
+    "docs": "docsify start ./docs"
   },
   "author": "Varun Tewari",
   "license": "ISC",
@@ -24,8 +24,10 @@
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
     "express-validator": "^5.3.1",
+    "geolib": "^2.0.24",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
+    "memcached": "^2.2.2",
     "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "node-schedule": "^1.3.1",

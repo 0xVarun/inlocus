@@ -65,7 +65,7 @@ x-app-api-secret: <YOUR-API-SECRET>
 }
 ```
 
-### App User Login
+
 
 #### App User Registration Endpoint
 > __/api/user/login__
@@ -80,13 +80,17 @@ x-app-api-secret: <YOUR-API-SECRET>
 }
 ```
 
-#### App User Registration Header
+## LOGIN
+
+### App User Login
+
+#### App User Login Header
 ```
 x-app-api-key: <YOUR-API-KEY>
 x-app-api-secret: <YOUR-API-SECRET>
 ```
 
-#### App User Registration Response
+#### App User Login Response
 
 ```json
 {
@@ -94,7 +98,7 @@ x-app-api-secret: <YOUR-API-SECRET>
 }
 ```
 
-##### Example
+#### Example
 
 > Request
 ```json
@@ -108,5 +112,79 @@ x-app-api-secret: <YOUR-API-SECRET>
 ```json
 {
 	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcklkIjoiVEVTVElORyIsIm1vYmlsZU5vIjoiVEVTVElORyIsImRldmljZUlkIjoiVEVTVElORyIsImFwcElkIjoyMiwiZW1haWxJZCI6IlRFU1RJTkciLCJpYXQiOjE1NTAyMjgzOTAsImV4cCI6MTU1MDIyODQ1MH0.S3GexIjIocQx_YF9D-Kzm47AVPYbiRMLHAf7uCHzo0k"
+}
+```
+
+# Sensors
+
+## Beacon
+
+### Scanning
+
+>__/api/sensor/beacon__
+
+![method](https://img.shields.io/badge/method-PUT-green.svg)
+
+#### Beacon Send Header
+```
+authorization: Bearer <JWT_TOKEN>
+```
+
+#### Beacon Send
+
+```json
+{
+	"rssi": "-86",
+	"major": "MAJOR",
+	"minor": "MINOR",
+	"uuid": "fnwk-48sd-do4e-48iw",
+	"distance": 2.5,
+}
+```
+
+## WiFi
+
+### Scanning
+
+>__/api/sensor/wifi__
+
+![method](https://img.shields.io/badge/method-PUT-green.svg)
+
+#### Wifi Send Header
+```
+authorization: Bearer <JWT_TOKEN>
+```
+
+#### WiFi Send Send
+
+```json
+{
+	"rssi": "-86",
+	"bssid": "macid",
+	"ssid": "ssid",
+	"freq": 2.5 / 5.0,
+	"distance": 15.5,
+}
+```
+
+## Location
+
+### Scanning
+
+>__/api/sensor/location__
+
+![method](https://img.shields.io/badge/method-PUT-green.svg)
+
+#### Location Send Header
+```
+authorization: Bearer <JWT_TOKEN>
+```
+
+#### Location Send Send
+
+```json
+{
+	"latitude": 19.134510,
+	"longitude": 72.911797,
 }
 ```

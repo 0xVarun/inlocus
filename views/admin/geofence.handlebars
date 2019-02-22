@@ -1,18 +1,6 @@
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgAjjr1VNy4zJCZEz-6FgIdkH3SVBS6jA&libraries=drawing"></script>
-<div class="container-fluid">
-	<h1 class="h3 mb-2 text-gray-800">GeoFence</h1>
-
-	<div class="card shadow mb-4">
-		<div class="card-header py-3">
-			<h6 class="m-0 font-weight-bold text-primary">Create New Geo Fence</h6>
-		</div>
-		<div class="card-body">
-			<div id="map" style="height: 70%;"></div>
-		</div>
-	</div>
-</div>
+<div id="map"></div>
 <script>
-var runMaps = function() {
+function runMaps() {
 if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
 
@@ -23,18 +11,7 @@ if (navigator.geolocation) {
                 },
                 zoom: 18
             });
-            google.maps.event.addListener(map, 'click', function(event) {
-                placeMarker(event.latLng);
-                console.log(event.latLng.toUrlValue(5));
-            });
 
-            function placeMarker(location) {
-                var marker = new google.maps.Marker({
-                    position: location,
-                    map: map
-                });
-
-            }
             var all_overlays = [];
             var selectedShape;
             var drawingManager = new google.maps.drawing.DrawingManager({
@@ -43,14 +20,11 @@ if (navigator.geolocation) {
                 drawingControlOptions: {
                     position: google.maps.ControlPosition.TOP_CENTER,
                     drawingModes: [
-                        //google.maps.drawing.OverlayType.MARKER,
+                        google.maps.drawing.OverlayType.MARKER,
                         google.maps.drawing.OverlayType.CIRCLE,
                         google.maps.drawing.OverlayType.POLYGON,
                         google.maps.drawing.OverlayType.RECTANGLE
                     ]
-                },
-                markerOptions: {
-                    icon: 'images/beachflag.png'
                 },
                 circleOptions: {
                     fillColor: '#ffff00',
@@ -77,6 +51,17 @@ if (navigator.geolocation) {
                 }
             });
 
+            google.maps.event.addListener(map, 'click', function(event) {
+                console.log('click');
+                placeMarker(map, event.latLng);
+            });
+
+            function placeMarker(map, location) {
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                });
+            }
             function clearSelection() {
                 if (selectedShape) {
                     selectedShape.setEditable(false);
@@ -84,17 +69,110 @@ if (navigator.geolocation) {
                 }
             }
 
+            function send_to_server(payload) {
+                // console.log(JSON.stringify(payload));
+                let params = window.location.search.substring(1);
+                let id = params.split("=")[1];
+                payload["id"] = id;
+                $.ajax({
+                    url: '/admin/home/geofence',
+                    type: 'POST',
+                    data: JSON.stringify(payload),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    success: function(msg) { console.log(msg) }
+                })
+            }
+
+            function translate_marker(pos) {
+                let marker_lat = pos.lat();
+                let marker_lng = pos.lng();
+                let params = window.location.search.substring(1);
+                let id = params.split("=")[1];
+                let payload = {
+                    "type": "marker",
+                    "position": {
+                        "latitude": marker_lat,
+                        "longitude": marker_lng
+                    },
+                    "id": id
+                }
+                $.ajax({
+                    url: '/admin/home/geofence',
+                    type: 'POST',
+                    data: JSON.stringify(payload),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    success: function(msg) { console.log(msg) }
+                })
+
+            }
+
+            function translate_to_lat_long() {
+                if(!selectedShape) {
+                    snackbarFunction('Please make a selection');
+                } else {
+                    snackbarFunction('Saving, Please wait...')
+                    if(selectedShape.type === 'circle') {
+                        let radius = selectedShape.radius;
+                        let center_lat = selectedShape.center.lat();
+                        let center_lng = selectedShape.center.lng();
+                        let payload = {
+                            "type": "circle",
+                            "position": {
+                                "center": {
+                                    "latitude": center_lat,
+                                    "longitude": center_lng
+                                },
+                                "radius": radius 
+                            }
+                        };
+                        send_to_server(payload);
+                    } else if(selectedShape.type === 'rectangle') {
+                        let ne_lng = selectedShape.bounds.getNorthEast().lng();
+                        let ne_lat = selectedShape.bounds.getNorthEast().lat();
+                        let sw_lng = selectedShape.bounds.getSouthWest().lng();
+                        let sw_lat = selectedShape.bounds.getSouthWest().lat();
+                        let payload = {
+                            "type": "rectangle",
+                            "position": {
+                                "top_right": {
+                                    "latitude": ne_lat,
+                                    "longitude": ne_lng
+                                },
+                                "bottom_left": {
+                                    "latitude": sw_lat,
+                                    "longitude": sw_lng
+                                }
+                            }
+                        };
+                        send_to_server(payload);
+                    } else if(selectedShape.type === 'polygon') {
+                        let coods = []
+                        for(let i = 0; i < selectedShape.getPath().getLength(); i++) {
+                            let xy = selectedShape.getPath().getAt(i);
+                            let point = { 'latitude': xy.lat(), 'longitude': xy.lng() };
+                            coods.push(point);
+                        }
+                        let payload = {
+                            "type": "polygon",
+                            "position": coods
+                        };
+                        send_to_server(payload);
+                    }
+                }
+            }
+
             function setSelection(shape) {
                 clearSelection();
                 selectedShape = shape;
                 shape.setEditable(true);
-                // google.maps.event.addListener(selectedShape.getPath(), 'insert_at', getPolygonCoords(shape));
-                // google.maps.event.addListener(selectedShape.getPath(), 'set_at', getPolygonCoords(shape));
             }
 
             function deleteSelectedShape() {
                 if (selectedShape) {
                     selectedShape.setMap(null);
+                    selectedShape = null;
                 }
             }
 
@@ -109,14 +187,10 @@ if (navigator.geolocation) {
 
                 // Set CSS for the control border.
                 var controlUI = document.createElement('div');
-                controlUI.style.backgroundColor = '#fff';
-                controlUI.style.border = '2px solid #fff';
-                controlUI.style.borderRadius = '3px';
-                controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
                 controlUI.style.cursor = 'pointer';
                 controlUI.style.marginBottom = '22px';
                 controlUI.style.textAlign = 'center';
-                controlUI.title = 'Select to delete the shape';
+                controlUI.style.display = 'flex';
                 controlDiv.appendChild(controlUI);
 
                 // Set CSS for the control interior.
@@ -126,15 +200,33 @@ if (navigator.geolocation) {
                 controlText.style.fontSize = '16px';
                 controlText.style.lineHeight = '38px';
                 controlText.style.paddingLeft = '5px';
+                controlText.style.marginRight = '5px';
                 controlText.style.paddingRight = '5px';
+                controlText.style.border = '1px black solid';
                 controlText.innerHTML = 'Delete Selected Area';
                 controlUI.appendChild(controlText);
 
+
+                var sendSelection = document.createElement('div');
+                sendSelection.style.color = 'rgb(25,25,25)';
+                sendSelection.style.fontFamily = 'Roboto,Arial,sans-serif';
+                sendSelection.style.fontSize = '16px';
+                sendSelection.style.lineHeight = '38px';
+                sendSelection.style.paddingLeft = '5px';
+                sendSelection.style.marginLeft = '5px';
+                sendSelection.style.paddingRight = '5px';
+                sendSelection.style.border = '1px black solid';
+                sendSelection.innerHTML = 'Save Selected Area';
+                controlUI.appendChild(sendSelection);
+
                 // Setup the click event listeners: simply set the map to Chicago.
-                controlUI.addEventListener('click', function() {
+                controlText.addEventListener('click', function() {
                     deleteSelectedShape();
                 });
 
+                sendSelection.addEventListener('click', function() {
+                    translate_to_lat_long();
+                })
             }
             drawingManager.setMap(map);
             var getPolygonCoords = function(newShape) {
@@ -163,7 +255,6 @@ if (navigator.geolocation) {
             });
 
             google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
-
                 all_overlays.push(event);
                 if (event.type !== google.maps.drawing.OverlayType.MARKER) {
                     drawingManager.setDrawingMode(null);
@@ -176,6 +267,8 @@ if (navigator.geolocation) {
                     });
 
                     setSelection(newShape);
+                } else {
+                    translate_marker(event.overlay.position);
                 }
             });
 
@@ -190,4 +283,3 @@ if (navigator.geolocation) {
 };
 runMaps();
 </script>
-{{!-- https://source.unsplash.com/K4mSJ7kc0As/600x800 --}}

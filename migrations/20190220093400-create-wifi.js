@@ -1,18 +1,27 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('locations', {
+    return queryInterface.createTable('wifis', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      latitude: {
+      macid: {
+        type: Sequelize.STRING
+      },
+      ssid: {
+        type: Sequelize.STRING
+      },
+      rssi: {
         type: Sequelize.DOUBLE
       },
-      longitude: {
-        type: Sequelize.DOUBLE
+      freq: {
+        type: Sequelize.STRING
+      },
+      distance: {
+        type: Sequelize.FLOAT
       },
       deviceId: {
         type: Sequelize.STRING,
@@ -34,6 +43,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('locations');
+    return queryInterface.dropTable('wifis');
   }
 };

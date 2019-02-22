@@ -1,24 +1,21 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('locations', {
+    return queryInterface.createTable('geofences', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      latitude: {
-        type: Sequelize.DOUBLE
+      name: {
+        type: Sequelize.STRING
       },
-      longitude: {
-        type: Sequelize.DOUBLE
-      },
-      deviceId: {
-        type: Sequelize.STRING,
+      userId: {
+        type: Sequelize.INTEGER,
         references: {
-          model: 'devices', 
-          key: 'deviceId', 
+          model: 'users', 
+          key: 'id', 
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
@@ -34,6 +31,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('locations');
+    return queryInterface.dropTable('geofences');
   }
 };
