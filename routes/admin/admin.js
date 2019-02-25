@@ -1,5 +1,6 @@
 const express 			= require('express');
 const router			= express.Router();
+const User				= require('../../utils/User');
 const GeoFence 			= require('../../utils/GeoFence');
 const authMiddleware	= require('../../middleware/auth');
 const suMiddleware		= require('../../middleware/superadmin');
