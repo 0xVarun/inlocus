@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const geofence = sequelize.define('geofence', {
     name: DataTypes.STRING,
     userId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       references: {
         model: 'user',
         key: 'id',
@@ -16,7 +16,9 @@ module.exports = (sequelize, DataTypes) => {
         name: 'id',
         allowNull: false
       },
-    })
+    });
+
+    geofence.hasMany(models.geoloc, { foreignKey: 'geofenceId' })
   };
   return geofence;
 };

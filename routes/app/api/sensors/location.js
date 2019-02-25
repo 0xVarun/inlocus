@@ -5,7 +5,7 @@ const apiMiddleware = require('../../../../middleware/api').apiAuth;
 const _				= require('lodash');
 
 /**
- * url /api/sendsor/location
+ * url /api/sensor/location
  * method PUT
  * header authorization: Bearer <TOKEN>
  * body latitude, longitude

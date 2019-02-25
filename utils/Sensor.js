@@ -14,8 +14,18 @@ module.exports.saveBeacon = (major, minor, uuid, rssi, distance, deviceId) => {
 		.catch( err => { throw err } );
 }	
 
-module.exports.saveWifi = (macId, ssid, rssi, distance, freq, deviceId) => {
-	return model.wifi.create({macid: macId, ssid: ssid, rssi: rssi, distance: distance, deviceId: deviceId})
+function saveWifi(macId, ssid, rssi, distance, freq, deviceId) {
+	return model.wifi.create({macid: macId, ssid: ssid, rssi: rssi, distance: distance, freq: freq, deviceId: deviceId})
 		.then( wifi => { return wifi })
 		.catch( err => { throw err });
 }
+
+module.exports.saveWifi = saveWifi;
+
+module.exports.saveMultiWifi = (payload, deviceId) => {
+	let returnValue = payload.map(async load => {
+		let data = await saveWifi(load["bssid"], load["ssid"], load["rssi"], load["distance"], load["freq"], deviceId);
+		return data;
+	});
+	return returnValue;
+};

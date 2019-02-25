@@ -42,4 +42,25 @@ router.put('/', apiMiddleware, async (req, res) => {
 	res.status(201).send({'title': "", 'body': {}})
 });
 
+/**
+ * url /api/sensor/wifi/multi
+ * method PUT
+ * header authorization: Bearer <TOKEN>
+ * body [{ssid, bssid, rssi, freq, distance}]
+ */ 
+router.put('/multi', apiMiddleware, async (req, res) => {
+	if(!req.is('application/json')){
+		res.sendStatus(400);
+		return;
+	}
+	
+	if(!Array.isArray(req.body)) {
+		res.sendStatus(400);
+		return;
+	}
+	let deviceId = res.locals.user['deviceId'];
+	let wifi = await Sensor.saveMultiWifi(req.body, deviceId);
+	res.status(201).send({ message: 'created' });
+});
+
 module.exports = router;

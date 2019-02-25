@@ -18,10 +18,11 @@ router.get('/geofence/create', authMiddleware, (req, res) => {
 /**
  * Save Geo Fence Name
  */
-router.post('/geofence/create', authMiddleware, (req, res) => {
+router.post('/geofence/create', authMiddleware, async (req, res) => {
 	let name = req.body.fence;
 	let user = req.user.id;
-	let mGeofence = GeoFence.create(name, user);
+	let mGeofence = await GeoFence.create(name, user);
+	console.log(mGeofence);
 	if(!mGeofence.id) {
 		res.redirect('/admin/home/geofence/create');
 		return;
