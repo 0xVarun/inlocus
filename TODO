@@ -34,7 +34,13 @@ superuser 2 passwords - login level and changes
 otp based email
 password should have standard restrictions
 
-geo fence
+BMS CALL
+	- SDK Size
+	- Storing Data locally (Size) 
+		- 4.5 MB over a month
+	- How SDK to App Data
+	- Sending all Sensor Data
 
-firebase 
-privacy 
+	- How to create campaigns
+	- How to set Action URI
+	- Coming Soon Page for Campaign Creation

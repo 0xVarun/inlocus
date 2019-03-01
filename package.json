@@ -6,9 +6,9 @@
   "scripts": {
     "start": "ENV=production node app.js",
     "dev": "ENV=development nodemon app.js",
-    "migrate": "sequelize db:migrate",
-    "migrate:undo": "sequelize db:migrate:undo:all",
-    "seed": "sequelize db:seed:all",
+    "migrate": "ENV=production sequelize db:migrate",
+    "migrate:undo": "ENV=production sequelize db:migrate:undo:all",
+    "seed": "ENV=production sequelize db:seed:all",
     "docs": "docsify start ./docs"
   },
   "author": "Varun Tewari",

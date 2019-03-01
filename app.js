@@ -1,9 +1,9 @@
-const express 		= require('express');
-const path			= require('path');
-const env			    = require('dotenv');
-const handlebars	   = require('express-handlebars');
-const session		     = require('express-session');
-const MemcachedStore = require('connect-memcached')(session);
+const express 		      = require('express');
+const path			        = require('path');
+const env			          = require('dotenv');
+const handlebars	      = require('express-handlebars');
+const session		        = require('express-session');
+const MemcachedStore    = require('connect-memcached')(session);
 const validator		      = require('express-validator');
 const cookieParser	    = require('cookie-parser');
 const bodyParser	      = require('body-parser');
@@ -11,7 +11,7 @@ const flash 		        = require('connect-flash');
 const passport		      = require('passport');
 const LocalStrategy	    = require('passport-local').Strategy;
 const logger            = require('morgan');
-
+const models            = require('./models');
 
 // process environment initialize
 if(process.env.ENV === 'production') {
@@ -94,6 +94,9 @@ app.use('/', app_routes);
 app.use('/admin', admin_routes);
 
 // server
-app.listen(port, () => {
-
+// db sync
+models.sequelize.sync(/*{ force: true }*/).then(() => {
+  app.listen(port, () => {
+    console.log(`Running on port ${port}`);
+  });
 });

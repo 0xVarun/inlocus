@@ -11,6 +11,16 @@ module.exports = {
       cactive: true,
       createdAt: new Date(),
       updatedAt: new Date()
+    },
+    {
+      id: 3,
+      name: "BookMyShow",
+      API_KEY: "KHK9J42-AGQ4BY7-K94B4G8-WQTFWGJ",
+      API_SECRET: "9c6699K2-542e-45f8-9a48-b241e5f4fe42",
+      active: true,
+      cactive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }], {})
   },
 

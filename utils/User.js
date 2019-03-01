@@ -8,16 +8,16 @@ function gensaltedhash(password) {
 	return hash;
 }
 
-module.exports.registerUser = function(name, username, email, password, appId) {
+module.exports.registerUser = function(name, username, email, password, applicationId) {
 	let hash = gensaltedhash(password);
-	return model.user.create({ name: name, username: username, email: email, appadmin: true, staff: false, password: hash, active: false, superadmin: false, appId: appId })
+	return model.user.create({ name: name, username: username, email: email, appadmin: true, staff: false, password: hash, active: false, superadmin: false, applicationId: applicationId })
 		.then( user => { return user; })
 		.catch( err => { throw err; });
 }
 
-module.exports.registerStaffUser = function(name, username, email, password, appId) {
+module.exports.registerStaffUser = function(name, username, email, password, applicationId) {
 	let hash = gensaltedhash(password);
-	return model.user.create({ name: name, username: username, email: email, appadmin: false, staff: true, password: hash, active: false, superadmin: false, appId: appId })
+	return model.user.create({ name: name, username: username, email: email, appadmin: false, staff: true, password: hash, active: false, superadmin: false, applicationId: applicationId })
 		.then( user => { return user; })
 		.catch( err => { throw err; });
 }
@@ -50,9 +50,9 @@ module.exports.findStaff = function() {
 		.catch( err => { throw err; })
 }
 
-module.exports.getAll = function(appId) {
+module.exports.getAll = function(applicationId) {
 	return model.user
-		.findAll({ where: { appId: appId, superadmin: false, appadmin: false } })
+		.findAll({ where: { applicationId: applicationId, superadmin: false, appadmin: false } })
 		.then( user => { return JSON.stringify(user); } )
 		.catch( err => { throw err; })
 }

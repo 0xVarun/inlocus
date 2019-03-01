@@ -30,7 +30,20 @@ module.exports = {
       superadmin: true,
       appadmin: false,
       staff: false,
-      appId: 1,
+      applicationId: 1,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      name: "BMS Admin",
+      username: "bms",
+      email: "admin@bookmyshow.com",
+      password: hashed_password,
+      active: true,
+      superadmin: true,
+      appadmin: false,
+      staff: false,
+      applicationId: 3,
       createdAt: new Date(),
       updatedAt: new Date()
     }], {});
