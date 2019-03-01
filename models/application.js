@@ -1,14 +1,15 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Application = sequelize.define('application', {
+  const application = sequelize.define('application', {
     name: DataTypes.STRING,
     API_KEY: DataTypes.STRING,
     API_SECRET: DataTypes.STRING,
     active: DataTypes.BOOLEAN,
     cactive: DataTypes.BOOLEAN
   }, {});
-  Application.associate = function(models) {
-    // associations can be defined here
+  application.associate = function(models) {
+    application.hasMany(models.user)
+    application.hasMany(models.appuser)
   };
-  return Application;
+  return application;
 };

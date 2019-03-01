@@ -2,23 +2,17 @@
 module.exports = (sequelize, DataTypes) => {
   const geofence = sequelize.define('geofence', {
     name: DataTypes.STRING,
-    userId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'user',
-        key: 'id',
-      },
-    }
   }, {});
   geofence.associate = function(models) {
-    geofence.hasOne(models.user, {
+    geofence.belongsTo(models.user, {
       foreignKey: {
-        name: 'id',
+        name: 'userId',
         allowNull: false
       },
+      targetKey: 'id'
     });
 
-    geofence.hasMany(models.geoloc, { foreignKey: 'geofenceId' })
+    geofence.hasMany(models.geolocation)
   };
   return geofence;
 };

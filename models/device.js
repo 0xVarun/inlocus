@@ -6,7 +6,11 @@ module.exports = (sequelize, DataTypes) => {
     deviceId: DataTypes.STRING
   }, {});
   device.associate = function(models) {
-    // associations can be defined here
+    device.hasMany(models.appuser);
+    device.hasMany(models.beacon);
+    device.hasMany(models.wifi);
+    device.hasMany(models.location);
+    // device.hasMany(models.beacon);
   };
   return device;
 };

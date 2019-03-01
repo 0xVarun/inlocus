@@ -5,22 +5,15 @@ module.exports = (sequelize, DataTypes) => {
     ssid: DataTypes.STRING,
     rssi: DataTypes.DOUBLE,
     freq: DataTypes.STRING,
-    distance: DataTypes.FLOAT,
-    deviceId: {
-      type: DataTypes.STRING,
-      references: {
-        model: 'device',
-        key: 'deviceId',
-      },
-    }
+    distance: DataTypes.FLOAT
   }, {});
   wifi.associate = function(models) {
-    // associations can be defined here
-    wifi.hasOne(models.device, {
+    wifi.belongsTo(models.device, {
       foreignKey: {
         name: 'deviceId',
         allowNull: false
-    }
+      },
+      targetKey: 'id'
     });
   };
   return wifi;

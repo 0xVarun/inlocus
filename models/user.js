@@ -8,24 +8,18 @@ module.exports = (sequelize, DataTypes) => {
     active: DataTypes.BOOLEAN,
     superadmin: DataTypes.BOOLEAN,
     appadmin: DataTypes.BOOLEAN,
-    staff: DataTypes.BOOLEAN,
-    appId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'application',
-        key: 'id'
-      }
-    }
+    staff: DataTypes.BOOLEAN
   }, {});
   user.associate = function(models) {
     // associations can be defined here
-    user.hasOne(models.application, {
+    user.belongsTo(models.application, {
       foreignKey: {
-        name: 'id',
+        name: 'applicationId',
         allowNull: false
       },
       targetKey: 'id'
-    })
+    });
+    user.hasMany(models.geolocation)
   };
   return user;
 };

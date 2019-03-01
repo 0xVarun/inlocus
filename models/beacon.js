@@ -1,27 +1,20 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Beacon = sequelize.define('beacon', {
+  const beacon = sequelize.define('beacon', {
     major: DataTypes.STRING,
     minor: DataTypes.STRING,
     uuid: DataTypes.STRING,
     rssi: DataTypes.DOUBLE,
-    distance: DataTypes.FLOAT,
-    deviceId: {
-      type: DataTypes.STRING,
-      references: {
-        model: 'device',
-        key: 'deviceId',
-      },
-    }
+    distance: DataTypes.FLOAT
   }, {});
-  Beacon.associate = function(models) {
-    // associations can be defined here
-    Beacon.hasOne(models.device, {
+  beacon.associate = function(models) {
+    beacon.belongsTo(models.device, {
       foreignKey: {
         name: 'deviceId',
         allowNull: false
-    }
-    })
+      },
+      targetKey: 'id'
+    });
   };
-  return Beacon;
+  return beacon;
 };

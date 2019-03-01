@@ -2,22 +2,15 @@
 module.exports = (sequelize, DataTypes) => {
   const location = sequelize.define('location', {
     latitude: DataTypes.DOUBLE,
-    longitude: DataTypes.DOUBLE,
-    deviceId: {
-      type: DataTypes.STRING,
-      references: {
-        model: 'device',
-        key: 'deviceId',
-      }
-    }
+    longitude: DataTypes.DOUBLE
   }, {});
   location.associate = function(models) {
-    // associations can be defined here
-    location.hasOne(models.device, {
+    location.belongsTo(models.device, {
     	foreignKey: {
         name: 'deviceId',
         allowNull: false
-    }
+      },
+      targetKey: 'id'
     });
   };
   return location;
