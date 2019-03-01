@@ -1,0 +1,22 @@
+version: '3'
+volumes:
+  beaconstalk:
+services:
+  inlocus:
+    build:
+      context: . 
+      dockerfile: docker/inlocus-backend/Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+  localhost1:
+    image: postgres:10.7
+    environment:
+      POSTGRES_USER: phypixel
+      POSTGRES_DB: physdk
+      POSTGRES_PASS: beacon5791
+    volumes:
+      - beaconstalk:/var/lib/postgresql/data
+    ports:
+      - 5430:5432
