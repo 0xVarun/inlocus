@@ -1,12 +1,12 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const geoloc = sequelize.define('geolocation', {
+  const geolocation = sequelize.define('geolocation', {
+    type: DataTypes.STRING,
     latitude: DataTypes.DOUBLE,
     longitude: DataTypes.DOUBLE,
   }, {});
-  geoloc.associate = function(models) {
-    // associations can be defined here
-    geoloc.belongsTo(models.geofence, {
+  geolocation.associate = function(models) {
+    geolocation.belongsTo(models.geofence, {
       foreignKey: {
         name: 'geofenceId',
         allowNull: false
@@ -14,5 +14,5 @@ module.exports = (sequelize, DataTypes) => {
       targetKey: 'id'
     })
   };
-  return geoloc;
+  return geolocation;
 };

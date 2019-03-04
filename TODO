@@ -44,3 +44,59 @@ BMS CALL
 	- How to create campaigns
 	- How to set Action URI
 	- Coming Soon Page for Campaign Creation
+
+{ 
+	type: 'circle',
+  	position: { 
+		center: { 
+			latitude: 19.11960811198216, 
+			longitude: 72.9127429158691 
+		},
+		radius: 47.63927526694979 
+	},
+  	id: '1' 
+},
+{ 
+	type: 'polygon',
+	position: [
+		{ 
+			latitude: 19.119957838109645, 
+			longitude: 72.91253906798397 
+		},
+     	{ 
+			latitude: 19.120196056932187, 
+			longitude: 72.91376215529476 
+		},
+    	{ 
+			latitude: 19.119516878957633, 
+			longitude: 72.91383189272915 
+		},
+     	{ 
+			latitude: 19.119243179581893, 
+			longitude: 72.91273755145107
+		} 
+	],
+  	id: '1' 
+},
+{ 
+	type: 'rectangle',
+  	position: { 
+		top_right: { 
+			latitude: 19.119425645882757, 
+			longitude: 72.9140571982864 
+		},
+     	bottom_left: { 
+			latitude: 19.11882249262065, 
+			longitude: 72.91354221415554 
+		} 
+	},
+  	id: '1' 
+},
+{ 
+	type: 'marker',
+  	position: { 
+		latitude: 19.119172220410494, 
+		longitude: 72.91362268042599 
+	},
+  	id: '1' 
+}

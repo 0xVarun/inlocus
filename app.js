@@ -18,6 +18,8 @@ if(process.env.ENV === 'production') {
 	env.config({ path: path.join(__dirname, 'environments/production.env') });
 } else if(process.env.ENV === 'development') {
 	env.config({ path: path.join(__dirname, 'environments/development.env') });
+} else if(process.env.ENV === 'docker') {
+	env.config({ path: path.join(__dirname, 'environments/docker.env') });
 }
 
 // set port after env variables are loaded
@@ -54,7 +56,7 @@ app.use(session({
 	saveUninitialized: true,
 	resave: true,
   store: new MemcachedStore({
-    hosts: ["127.0.0.1:11211"] 
+    hosts: [process.env.MEMCACHE] 
   })
   // cookie: { secure: true }
 }));
@@ -95,7 +97,7 @@ app.use('/admin', admin_routes);
 
 // server
 // db sync
-models.sequelize.sync(/*{ force: true }*/).then(() => {
+models.sequelize.sync({ force: true }).then(() => {
   app.listen(port, () => {
     console.log(`Running on port ${port}`);
   });
