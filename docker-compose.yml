@@ -10,7 +10,11 @@ services:
       - .:/app
     ports:
       - 8000:8000
-  localhost1:
+    container_name: inlocus
+    depends_on:
+      - db
+      - cache
+  db:
     image: postgres:10.7
     environment:
       POSTGRES_USER: phypixel
@@ -20,3 +24,5 @@ services:
       - beaconstalk:/var/lib/postgresql/data
     ports:
       - 5430:5432
+  cache:
+    image: memcached:1.5-alpine
