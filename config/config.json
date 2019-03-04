@@ -7,6 +7,14 @@
     "dialect": "postgres",
     "logging": false
   },
+  "docker": {
+    "username": "phypixel",
+    "password": "beacon5791",
+    "database": "physdk",
+    "host": "db",
+    "dialect": "postgres",
+    "logging": false
+  },
   "test": {
     "username": "phypixel",
     "password": "beacon5791",
