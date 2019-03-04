@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/css/lightbox.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/js/lightbox-plus-jquery.min.js"></script>
+<div class="container-fluid">
+	<h1 class="h3 mb-2 text-gray-800">Campaigns</h1>
+	<p class="mb-4">Campaign list</p>
+
+	{{!-- TABLES --}}
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Campaign Table</h6>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-bordered table-dark" id="dataTable" width="100%" cellspacing="0">
+					<thead>
+						<tr class="text-center">
+							<th>Sr No</th>
+                            <th>Name</th>
+							<th>Start</th>
+							<th>End</th>
+							<th>Content</th>
+							<th>Action</th>
+                            <th>File</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each campaigns}}
+							<tr class="text-center">
+								<td>{{@index}}</td>
+								<td>{{name}}</td>
+								<td>{{start_timestamp}}</td>
+                                <td>{{end_timestamp}}</td>
+                                <td>{{content}}</td>
+                                <td>{{action}}</td>
+                                <td><a href="{{file}}" data-lightbox="{{name}}-{{@index}}" data-title="{{name}}">Image</a></td>
+							</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+lightbox.option({
+    'resizeDuration': 200,
+    'wrapAround': true
+})
+</script>

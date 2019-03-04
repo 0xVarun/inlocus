@@ -2,6 +2,7 @@ const express 			= require('express');
 const router			= express.Router();
 const User				= require('../../utils/User');
 const Application 		= require('../../utils/Application');
+const LocationMaster	= require('../../utils/LocationMaster');	
 const suMiddleware		= require('../../middleware/superadmin');
 const authMiddleware	= require('../../middleware/auth');
 const keys				= require('uuid-apikey');
@@ -95,6 +96,7 @@ router.get('/app/activate/:id', async (req, res) => {
 
 /**
  * Deactivate Application
+ * URL: /admin/api/app/deactivate/:id
  */
 router.get('/app/deactivate/:id', async (req, res) => {
 	await Application.deactivateApp(req.params.id);
@@ -103,6 +105,7 @@ router.get('/app/deactivate/:id', async (req, res) => {
 
 /**
  * Activate campaign creation on application
+ * URL: /admin/api/app/cactivate/:id
  */
 router.get('/app/cactivate/:id', async (req, res) => {
 	await Application.mkCampaignReady(req.params.id);
@@ -111,10 +114,20 @@ router.get('/app/cactivate/:id', async (req, res) => {
 
 /**
  * Deactivate campaign creation on application
+ * URL: /admin/api/app/cdeactivate/:id
  */
 router.get('/app/cdeactivate/:id', async (req, res) => {
 	await Application.rmCampaignReady(req.params.id);
 	res.redirect('/admin/home/apps');
+});
+
+/**
+ * Delete Location Master
+ * URL: /admin/api/location/delete/:id
+ */
+router.get('/location/delete/:id', async(req, res) => {
+	await LocationMaster.deleteLocation(req.params.id);
+	res.redirect('/admin/home/locations')
 });
 
 module.exports = router;

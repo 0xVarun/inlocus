@@ -15,7 +15,7 @@
 		</div>
 		
 		<div class="card-body">
-			<form class="user" action="/admin/campaigns/create" method="post">
+			<form class="user" action="/admin/campaigns/create" method="post" enctype="multipart/form-data">
 				<div class="form-group">
                     <input type="text" class="form-control form-control-user" name="cname" placeholder="Campagin Name" required>
                 </div>
@@ -48,10 +48,9 @@
                     <div class="col-sm-6 mb-3 mb-sm-0">
                         <select class="form-control custom-select" name="location" id="location">
                             <option value="0" disabled selected>--------</option>
-                            <option value="1">Powai</option>
-                            <option value="2">Thane</option>
-                            <option value="3">Marol</option>
-                            <option value="4">Ghansoli</option>
+                            {{#each locations}}
+                            <option value="{{id}}">{{name}} - {{type}}</option>
+                            {{/each}}
                         </select>
                     </div>
                     <div class="col-sm-6">
@@ -60,10 +59,10 @@
                 </div>
                 <div class="form-group">
                     <div class="container">
-                        <input type="file" name="image" id="input-file-now" class="dropify" placeholder="Camapign Image"  data-plugin="dropify" data-default-file>
+                        <input type="file" name="image" id="input-file-now" class="dropify" placeholder="Camapign Image"  data-plugin="dropify" data-default-file accept="image/png, image/jpeg">
                     </div>
                 </div>
-                <button id="submitBtn" type="submit" class="btn btn-primary btn-user btn-block">Create</button>
+                <button id="submitBtn" disabled="true" type="submit" class="btn btn-primary btn-user btn-block">Create</button>
             </form>
 		</div>
 	</div>
@@ -72,5 +71,12 @@
 let today = moment();let nextDay = moment(today, "DD-MM-YYYY").add(1, 'days');let minsTime = today.hour() + 1;let start_date = $('#sdate').pickadate();let end_date = $('#edate').pickadate();let from_date = start_date.pickadate('picker');from_date.set('min', today._d);from_date.set('formatSubmit', 'yyyy/mm/dd');from_date.set('hiddenName', true);let to_date = end_date.pickadate('picker');to_date.set('min', false);to_date.set('formatSubmit', 'yyyy/mm/dd');to_date.set('hiddenName', true);from_date.on('set', function(event) {if(event.select) {let mdate = from_date.get('select');to_date.clear();let temp = mdate.date + 1;mdate['date'] = temp;to_date.set('min', mdate);}});$('#stime').pickatime({formatSubmit: 'HH:i',hiddenName: true,interval: 60,min: [minsTime, 0],hiddenSuffix: ':00'});$('#etime').pickatime({formatSubmit: 'HH:i',hiddenName: true,interval: 60,hiddenSuffix: ':00'});
 </script>
 <script>
-    $('.dropify').dropify();
+$('.dropify').dropify();
+$('#location').change(function() {
+    if ($('#location').val() == 0) {
+        $("#submitBtn").prop('disabled',true);
+    } else {
+        $("#submitBtn").prop('disabled',false);
+    }
+});
 </script>

@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   application.associate = function(models) {
     application.hasMany(models.user)
     application.hasMany(models.appuser)
+    application.hasMany(models.campaign)
   };
   return application;
 };

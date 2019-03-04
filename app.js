@@ -23,14 +23,14 @@ if(process.env.ENV === 'production') {
 }
 
 // set port after env variables are loaded
-const port              = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 // db connection import
-const db			= require('./db/postgres');
+const db = require('./db/postgres');
 
 
 // initialize express app
-const app 			= express();
+const app = express();
 
 // initialize logger
 // app.use(logger(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
@@ -47,7 +47,7 @@ app.set('view engine', 'handlebars');
 // initialize middleware
 // body parser
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 // cookie parser
 app.use(cookieParser());
 // sessions
@@ -56,7 +56,7 @@ app.use(session({
 	saveUninitialized: true,
 	resave: true,
   store: new MemcachedStore({
-    hosts: [process.env.MEMCACHE] 
+    host: [process.env.MEMCACHE] 
   })
   // cookie: { secure: true }
 }));
@@ -97,7 +97,7 @@ app.use('/admin', admin_routes);
 
 // server
 // db sync
-models.sequelize.sync({ force: true }).then(() => {
+models.sequelize.sync(/*{ force: true }*/).then(() => {
   app.listen(port, () => {
     console.log(`Running on port ${port}`);
   });

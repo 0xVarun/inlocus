@@ -24,7 +24,9 @@ const db = {
   wifi: sequelize.import('./wifi'),
   location: sequelize.import('./location'),
   geofence: sequelize.import('./geofence'),
-  geolocation: sequelize.import('./geolocation')
+  geolocation: sequelize.import('./geolocation'),
+  location_master: sequelize.import('./location_master'),
+  campaign: sequelize.import('./campaign')
 };
 
 
