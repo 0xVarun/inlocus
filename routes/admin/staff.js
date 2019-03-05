@@ -4,7 +4,7 @@ const User				= require('../../utils/User');
 const authMiddleware	= require('../../middleware/auth');
 
 router.get('/', authMiddleware, async (req, res) => {
-	let staffUsers = await User.getAll(req.user.appId);
+	let staffUsers = await User.getAll(req.user.applicationId);
 	res.render('admin/staffs', { title: 'New User', layout: 'home', staffusers: JSON.parse(staffUsers) });
 });
 

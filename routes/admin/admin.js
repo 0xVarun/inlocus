@@ -16,6 +16,10 @@ router.get('/', authMiddleware, (req, res) => {
 	res.render('admin/home', { title: 'Admin', layout: 'home' });
 });
 
+router.get('/analytics', authMiddleware, (req, res) => {
+	res.render('admin/comingsoon', { title: 'Admin', layout: 'home' });
+})
+
 /**
  * Create New Geo Fence
  * URL: /admin/home/geofence/create

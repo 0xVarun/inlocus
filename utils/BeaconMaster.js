@@ -1,5 +1,7 @@
 const db		= require('../db/postgres');
 const model		= require('../models');
+const Sequelize = require('sequelize');
+const Op        = Sequelize.Op;
 
 
 module.exports.addNewBeacon = (major, minor, uuid, shortlink, locationMasterId) => {
@@ -27,4 +29,25 @@ module.exports.findOneAndUpdate = (id, major, minor, uuid, shortlink, locationMa
             beacon.update({ major: major, minor: minor, uuid: uuid, shortlink: shortlink, locationMasterId: locationMasterId });
         })
         .catch( err => { throw err; });
+}
+
+module.exports.getBeaconCampaign = async (major, minor, appId) => {
+    let beacon = await model.beacon_master.findOne({ where: { major: major, minor: minor }});
+    let date = new Date()
+    // console.log(date);
+    console.log(JSON.stringify(beacon));
+    let campaign = await model.campaign.findOne({ 
+        where: { 
+            locationMasterId: beacon.locationMasterId, 
+            applicationId: appId,
+            start_timestamp: {
+                [Op.gte]: date
+            },
+            end_timestamp: {
+                [Op.lte]: date
+            } 
+        } 
+    });
+    console.log(JSON.stringify(campaign));
+    return campaign;
 }

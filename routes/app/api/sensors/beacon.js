@@ -2,6 +2,7 @@ const express 		= require('express');
 const router		= express.Router();
 const Sensor 		= require('../../../../utils/Sensor');
 const Campaign		= require('../../../../utils/Campaign');
+const BeaconMaster	= require('../../../../utils/BeaconMaster');
 const apiMiddleware = require('../../../../middleware/api').apiAuth;
 const _				= require('lodash');
 
@@ -41,7 +42,24 @@ router.put('/', apiMiddleware, async (req, res) => {
 		}
 	}
 
-	res.status(201).send({'title': "", 'body': {}})
+	let appId = res.locals.user['applicationId'];
+	let campaign = await BeaconMaster.getBeaconCampaign(payload["major"], payload["minor"], appId);
+	if(campaign) {
+		let payload = {
+			"NotificationTitle": "TITLE",
+			"NotificationType": "Image",
+			"Image_content": {
+				"ImageUrl": "http://13.127.205.229" + campaign.file,
+				"Text": campaign.content,
+				"URI": campaign.action
+			}
+		}
+		res.json(payload);
+	} else {
+		res.json({});
+	}
+
+	// res.status(201).send({'title': "", 'body': {}})
 });
 
 module.exports = router;

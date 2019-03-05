@@ -16,7 +16,7 @@ router.post('/staff', authMiddleware, async (req, res) => {
 	let email = req.body.email;
 	let password = req.body.password;
 	let password2 = req.body.password2;
-	let app = req.user.appId;
+	let app = req.user.applicationId;
 
 	if(password !== password2) {
 		req.flash('error', 'Passwords do not match');
