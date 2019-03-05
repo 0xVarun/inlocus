@@ -26,7 +26,8 @@ const db = {
   geofence: sequelize.import('./geofence'),
   geolocation: sequelize.import('./geolocation'),
   location_master: sequelize.import('./location_master'),
-  campaign: sequelize.import('./campaign')
+  campaign: sequelize.import('./campaign'),
+  beacon_master: sequelize.import('./beacon_master')
 };
 
 

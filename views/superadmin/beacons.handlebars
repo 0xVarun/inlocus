@@ -1,0 +1,50 @@
+<div class="container-fluid">
+	<h1 class="h3 mb-2 text-gray-800">Beacon Master</h1>
+	<p class="mb-4">Beacon Master list</p>
+
+	{{!-- TABLES --}}
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Beacon Master Tables</h6>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-bordered table-dark" id="dataTable" width="100%" cellspacing="0">
+					<thead>
+						<tr class="text-center">
+							<th>Sr No</th>
+							<th>Major</th>
+							<th>Minor</th>
+							<th>UUID</th>
+							<th>Shortlink</th>
+                            <th>Location</th>
+                            <th>Location Type</th>
+                            <th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each beacons}}
+							<tr class="text-center">
+								<td>{{@index}}</td>
+								<td>{{major}}</td>
+								<td>{{minor}}</td>
+                                <td>{{uuid}}</td>
+                                <td>{{shortlink}}</td>
+                                <td>{{location_master.name}}</td>
+                                <th>{{location_master.type}}</th>
+                                <th>
+                                    <a href="/admin/home/beacon/{{id}}">
+                                        <i class="fas fa-edit"></i>
+                                    </a> 
+                                    <a href="#">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </th>
+							</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

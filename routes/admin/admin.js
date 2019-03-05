@@ -4,6 +4,7 @@ const User				= require('../../utils/User');
 const Application		= require('../../utils/Application');
 const GeoFence 			= require('../../utils/GeoFence');
 const LocationMaster	= require('../../utils/LocationMaster');
+const BeaconMaster		= require('../../utils/BeaconMaster');
 const authMiddleware	= require('../../middleware/auth');
 const suMiddleware		= require('../../middleware/superadmin');
 
@@ -145,7 +146,7 @@ router.get('/location/edit/:id', suMiddleware, async(req, res) => {
 router.post('/location/edit/:id', suMiddleware, async(req, res) => {
 	await LocationMaster.findOneAndUpdate(req.params.id, req.body.name, req.body.type);
 	res.redirect('/admin/home/locations')
-})
+});
 
 /**
  * View All Location Masters
@@ -154,6 +155,63 @@ router.post('/location/edit/:id', suMiddleware, async(req, res) => {
 router.get('/locations', suMiddleware, async(req, res) => {
 	let locations = await LocationMaster.getAllLocations();
 	res.render('superadmin/locations', { title: 'Locations Master', layout: 'home', locations: locations });
+});
+
+/**
+ * Add New Beacon View
+ * URL: /admin/home/beacon
+ */
+router.get('/beacon', suMiddleware, async(req, res) => {
+	let locations = await LocationMaster.getAllLocations();
+	res.render('superadmin/addbeacon', { title: 'Beacon Master', layout: 'home', locations: locations })
+});
+
+/**
+ * Add New Beacon POST
+ * URL: /admin/home/beacon
+ */
+router.post('/beacon', suMiddleware, async(req, res) => {
+	let major = req.body.major;
+	let minor = req.body.minor;
+	let shortlink = req.body.shortlink;
+	let uuid = req.body.uuid;
+	let location = req.body.location;
+	await BeaconMaster.addNewBeacon(major, minor, uuid, shortlink, location);
+	res.redirect('/admin/home/beacon');
+});
+
+/**
+ * View All Beacons 
+ * URL: /admin/home/beacons
+ */
+router.get('/beacons', suMiddleware, async(req, res) => {
+	let beacons = await BeaconMaster.getAllBeacons();
+	res.render('superadmin/beacons', { title: 'Beacon Master', layout: 'home', beacons: beacons })
+});
+
+/**
+ * Edit Beacon
+ * URL: /admin/home/beacon/:id
+ */
+router.get('/beacon/:id', suMiddleware, async(req, res) => {
+	let beacon = await BeaconMaster.findOne(req.params.id);
+	let locations = await LocationMaster.getAllLocations();
+	res.render('superadmin/editbeacon', { title: 'Beacon Master', layout: 'home', beacon: beacon, locations: locations })
+});
+
+/**
+ * Save Edit Beacon
+ * URL: /admin/home/beacon/:id
+ */
+router.post('/beacon/:id', suMiddleware, async(req, res) => {
+	let id = req.params.id;
+	let major = req.body.major;
+	let minor = req.body.minor;
+	let shortlink = req.body.shortlink;
+	let uuid = req.body.uuid;
+	let location = req.body.location;
+	await BeaconMaster.findOneAndUpdate(id, major, minor, uuid, shortlink, location);
+	res.redirect('/admin/home/beacons');
 })
 
 module.exports = router;

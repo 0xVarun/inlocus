@@ -1,6 +1,7 @@
-const express 	= require('express');
-const router	= express.Router();
-const Sensor 	= require('../../../../utils/Sensor');
+const express 		= require('express');
+const router		= express.Router();
+const Sensor 		= require('../../../../utils/Sensor');
+const Campaign		= require('../../../../utils/Campaign');
 const apiMiddleware = require('../../../../middleware/api').apiAuth;
 const _				= require('lodash');
 

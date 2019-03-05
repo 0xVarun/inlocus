@@ -1,0 +1,48 @@
+<div class="container-fluid">
+	<h1 class="h3 mb-2 text-gray-800">Beacon</h1>
+
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Create New Beacon</h6>
+		</div>
+		
+		<div class="card-body">
+			<form class="user" action="/admin/home/beacon" method="post">
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control form-control-user" name="major" id="major" placeholder="Beacon Major">
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control form-control-user" name="minor" id="minor" placeholder="Beacon Minor">
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control form-control-user" name="shortlink" id="shortlink" placeholder="Beacon Shortlink">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="text" autocomplete="off" class="form-control form-control-user" name="uuid" placeholder="Beacon UUID">
+                    </div>	
+                    <div class="col-sm-6">
+                        <select class="form-control" name="location" id="loctype">
+                            <option value="-1">--------</option>
+                            {{#each locations}}
+                            <option value="{{id}}">{{name}} - {{type}}</option>
+                            {{/each}}
+                        </select>
+                	</div>
+                </div>
+                <button id="submitBtn" type="submit" class="btn btn-primary btn-user btn-block">Add New Beacon</button>
+            </form>
+		</div>
+	</div>
+</div>
+<script>
+$('#loctype').change(function() {
+if ($('#loctype').val() == -1) {
+    $("#submitBtn").prop('disabled',true);
+} else {
+    $("#submitBtn").prop('disabled',false);
+}
+});
+</script>
