@@ -56,7 +56,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 		}
 		res.json(payload);
 	} else {
-		res.json({});
+		res.sendStatus(304);
 	}
 
 	// res.status(201).send({'title': "", 'body': {}})

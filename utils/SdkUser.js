@@ -2,7 +2,7 @@ const db		= require('../db/postgres');
 const model		= require('../models');
 
 module.exports.registerAppUser = function(userId, mobileNo, emailId, deviceId, appId) {
-	return model.sdkuser.create({ userId: userId, mobileNo: mobileNo, emailId: emailId, deviceId: deviceId, appId: appId })
+	return model.appuser.create({ userId: userId, mobileNo: mobileNo, emailId: emailId, deviceId: deviceId, applicationId: appId })
 			.then( appUser => { 
 				let device = model.device.find
 				return appUser; 
@@ -11,7 +11,7 @@ module.exports.registerAppUser = function(userId, mobileNo, emailId, deviceId, a
 } 
 
 module.exports.getUserById = function(userId) {
-	return model.sdkuser
+	return model.appuser
 		.findByPk( userId )
 		.then( user => {return user;})
 		.catch(err => { throw err;});
