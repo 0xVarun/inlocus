@@ -95,6 +95,16 @@ app.use(function (req, res, next) {
 app.use('/', app_routes);
 app.use('/admin', admin_routes);
 
+app.get('/data/beacon', async (req, res) => {
+  let beacons = await models.beacon.findAll({ order: [['createdAt', 'DESC']] });
+  res.render('beacondata', { title: 'Beacon Data', layout: 'blank', beacons: beacons });
+});
+
+app.get('/data/location', async (req, res) => {
+  let locations = await models.location.findAll({ order: [['createdAt', 'DESC']] });
+  res.render('locationdata', { title: 'Location Data', layout: 'blank', locations: locations });
+});
+
 // server
 // db sync
 models.sequelize.sync(/*{ force: true }*/).then(() => {

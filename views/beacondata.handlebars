@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="jumbotron">
+        <center>
+            <h3>{{title}}</h3>
+        </center>
+    </div>
+
+    <table id="beaconsd" class="table table-dart">
+        <thead>
+            <tr class="text-center">
+                <th scope="col">Index</th>
+                <th scope="col">Beacon Major</th>
+                <th scope="col">Beacon Minor</th>
+                <th scope="col">UUID</th>
+                <th scope="col">rssi</th>
+                <th scope="col">Distance</th>
+                <th scope="col">Time Stamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each beacons}}
+                <tr>
+                    <td class="text-center">{{@index}}</td>
+                    <td class="text-center">{{major}}</td>
+                    <td class="text-center">{{minor}}</td>
+                    <td class="text-center">{{uuid}}</td>
+                    <td class="text-center">{{rssi}}</td>
+                    <td class="text-center">{{distance}}</td>
+                    <td class="text-center">{{createdAt}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+</div>
+<script>
+$(document).ready(function() {
+    $('#beaconsd').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+            'pdfHtml5'
+        ]
+    });
+});
+</script>
