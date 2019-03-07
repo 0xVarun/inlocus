@@ -4,6 +4,7 @@ const User				= require('../../utils/User');
 const Application		= require('../../utils/Application');
 const GeoFence 			= require('../../utils/GeoFence');
 const LocationMaster	= require('../../utils/LocationMaster');
+const Sensor			= require('../../utils/Sensor');
 const BeaconMaster		= require('../../utils/BeaconMaster');
 const authMiddleware	= require('../../middleware/auth');
 const suMiddleware		= require('../../middleware/superadmin');
@@ -12,8 +13,10 @@ const suMiddleware		= require('../../middleware/superadmin');
  * Admin Dashboard
  * URL: /admin/home
  */
-router.get('/', authMiddleware, (req, res) => {
-	res.render('admin/home', { title: 'Admin', layout: 'home' });
+router.get('/', authMiddleware, async (req, res) => {
+	let beacon = await Sensor.getLatestBeacon();
+	// console.log(JSON.stringify(beacon));
+	res.render('admin/home', { title: 'Admin', layout: 'home', beacon: beacon });
 });
 
 router.get('/analytics', authMiddleware, (req, res) => {

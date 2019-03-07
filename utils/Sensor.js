@@ -14,6 +14,12 @@ module.exports.saveBeacon = (major, minor, uuid, rssi, distance, deviceId) => {
 		.catch( err => { throw err } );
 }	
 
+module.exports.getLatestBeacon = () => {
+	return model.beacon.findAll({ limit: 1, order: [['createdAt', 'DESC']]})
+		.then(beacon => { return beacon })
+		.catch(err => { return {err} })
+}
+
 function saveWifi(macId, ssid, rssi, distance, freq, deviceId) {
 	return model.wifi.create({macid: macId, ssid: ssid, rssi: rssi, distance: distance, freq: freq, deviceId: deviceId})
 		.then( wifi => { return wifi })

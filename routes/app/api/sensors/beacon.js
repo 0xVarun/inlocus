@@ -46,11 +46,10 @@ router.put('/', apiMiddleware, async (req, res) => {
 	let campaign = await BeaconMaster.getBeaconCampaign(payload["major"], payload["minor"], appId);
 	if(campaign) {
 		let payload = {
-			"NotificationTitle": "TITLE",
-			"NotificationType": "Image",
-			"Image_content": {
-				"ImageUrl": "http://13.127.205.229" + campaign.file,
-				"Text": campaign.content,
+			"NotificationTitle": "inLocus Demo Title",
+			"NotificationType": "Text",
+			"Text_content": {
+				"Offer_Text": campaign.content,
 				"URI": campaign.action
 			}
 		}
