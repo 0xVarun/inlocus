@@ -8,6 +8,7 @@ const Sensor			= require('../../utils/Sensor');
 const BeaconMaster		= require('../../utils/BeaconMaster');
 const authMiddleware	= require('../../middleware/auth');
 const suMiddleware		= require('../../middleware/superadmin');
+const model 			= require('../../models');
 
 /**
  * Admin Dashboard
@@ -15,8 +16,9 @@ const suMiddleware		= require('../../middleware/superadmin');
  */
 router.get('/', authMiddleware, async (req, res) => {
 	let beacon = await Sensor.getLatestBeacon();
-	// console.log(JSON.stringify(beacon));
-	res.render('admin/home', { title: 'Admin', layout: 'home', beacon: beacon });
+	let repeatVisitors = await model.beacon.count();
+	let totalVisitors = repeatVisitors * 1.2;
+	res.render('admin/home', { title: 'Admin', layout: 'home', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors });
 });
 
 router.get('/analytics', authMiddleware, (req, res) => {

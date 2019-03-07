@@ -96,14 +96,20 @@ app.use('/', app_routes);
 app.use('/admin', admin_routes);
 
 app.get('/data/beacon', async (req, res) => {
-  let beacons = await models.beacon.findAll({ order: [['createdAt', 'DESC']] });
+  let beacons = await models.beacon.findAll({ include: [ { model: models.device } ],order: [['createdAt', 'DESC']] });
+  // console.log(JSON.stringify(beacons));
   res.render('beacondata', { title: 'Beacon Data', layout: 'blank', beacons: beacons });
 });
 
 app.get('/data/location', async (req, res) => {
-  let locations = await models.location.findAll({ order: [['createdAt', 'DESC']] });
+  let locations = await models.location.findAll({ include: [ { model: models.device } ],order: [['createdAt', 'DESC']] });
   res.render('locationdata', { title: 'Location Data', layout: 'blank', locations: locations });
 });
+
+app.get('/data/device', async (req, res) => {
+  let devices = await models.device.findAll();
+  res.render('devicedata', { title: 'Device Data', layout: 'blank', devices: devices });
+})
 
 // server
 // db sync

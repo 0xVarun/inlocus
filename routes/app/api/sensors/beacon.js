@@ -46,7 +46,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 	let campaign = await BeaconMaster.getBeaconCampaign(payload["major"], payload["minor"], appId);
 	if(campaign) {
 		let payload = {
-			"NotificationTitle": "inLocus Demo Title",
+			"NotificationTitle": "Paytm Karo",
 			"NotificationType": "Text",
 			"Text_content": {
 				"Offer_Text": campaign.content,

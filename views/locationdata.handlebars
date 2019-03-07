@@ -11,15 +11,17 @@
                 <th scope="col">Index</th>
                 <th scope="col">Latitude</th>
                 <th scope="col">Longitude</th>
+                <th scope="col">Device ID</th>
                 <th scope="col">Time Stamp</th>
             </tr>
         </thead>
         <tbody>
-            {{#each beacons}}
+            {{#each locations}}
                 <tr>
                     <td class="text-center">{{@index}}</td>
                     <td class="text-center">{{latitude}}</td>
                     <td class="text-center">{{longitude}}</td>
+                    <td class="text-center">{{device.deviceId}}</td>
                     <td class="text-center">{{createdAt}}</td>
                 </tr>
             {{/each}}
