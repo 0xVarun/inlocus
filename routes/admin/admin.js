@@ -23,7 +23,15 @@ router.get('/', authMiddleware, async (req, res) => {
 
 router.get('/analytics', authMiddleware, (req, res) => {
 	res.render('admin/comingsoon', { title: 'Admin', layout: 'home' });
-})
+});
+
+/**
+ * Graph Beacon
+ */
+router.get('/beacon/list', async(req, res) => {
+	let data = await Sensor.countByHour();
+	res.json(data);
+});
 
 /**
  * Create New Geo Fence

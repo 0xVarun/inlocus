@@ -1,5 +1,6 @@
 const db		= require('../db/postgres');
 const model		= require('../models');
+const sequelize = require('sequelize');
 
 
 module.exports.saveLocation = (latitude, longitude, deviceId) => {
@@ -35,3 +36,15 @@ module.exports.saveMultiWifi = (payload, deviceId) => {
 	});
 	return returnValue;
 };
+
+module.exports.countByHour = () => {
+	return model.beacon.findAll({
+		attributes: [
+			[ sequelize.fn('date_trunc', 'hour', sequelize.col('createdAt')), 'hour'],
+    		[ sequelize.fn('count', '*'), 'count']
+		],
+		group: 'hour'
+	})
+		.then( beacons => { return beacons; })
+		.catch( err => { return {err}; })
+}

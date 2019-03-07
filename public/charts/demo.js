@@ -1,3 +1,5 @@
+// import { get } from "http";
+
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
@@ -26,15 +28,28 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   }
   return s.join(dec);
 }
+$.ajax({
+  url: '/admin/home/beacon/list',
+  method: 'GET',
+  success: response => {
+    let lables_chart = [];
+    let count_chart = [] 
+    response.map(res => {
+      let m_date = new Date(res['hour']);
+      let time = m_date.getHours() + ':' + m_date.getMinutes() + ':' + m_date.getSeconds();
+      // lables_chart.push((res['hour']));
+      lables_chart.push(time);
+      count_chart.push(res['count']);
+    });
 
-// Area Chart Example
-var ctx = document.getElementById("myAreaChart");
+    var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    // labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    labels: lables_chart,
     datasets: [{
-      label: "Earnings",
+      label: "Count",
       lineTension: 0.3,
       backgroundColor: "rgba(78, 115, 223, 0.05)",
       borderColor: "rgba(78, 115, 223, 1)",
@@ -46,7 +61,8 @@ var myLineChart = new Chart(ctx, {
       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
-      data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
+      // data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
+      data: count_chart
     }],
   },
   options: {
@@ -73,14 +89,14 @@ var myLineChart = new Chart(ctx, {
         }
       }],
       yAxes: [{
-        ticks: {
-          maxTicksLimit: 5,
-          padding: 10,
-          // Include a dollar sign in the ticks
-          callback: function(value, index, values) {
-            return '$' + number_format(value);
-          }
-        },
+        // ticks: {
+        //   maxTicksLimit: 5,
+        //   padding: 10,
+        //   // Include a dollar sign in the ticks
+        //   callback: function(value, index, values) {
+        //     return '$' + number_format(value);
+        //   }
+        // },
         gridLines: {
           color: "rgb(234, 236, 244)",
           zeroLineColor: "rgb(234, 236, 244)",
@@ -110,9 +126,12 @@ var myLineChart = new Chart(ctx, {
       callbacks: {
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+          return datasetLabel + ': ' + number_format(tooltipItem.yLabel);
         }
       }
     }
   }
 });
+  }
+});
+// Area Chart Example
