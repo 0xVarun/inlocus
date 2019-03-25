@@ -42,11 +42,11 @@ router.put('/', apiMiddleware, async (req, res) => {
 		}
 	}
 
-	let appId = res.locals.user['applicationId'];
+	let appId = res.locals.user['appId'];
 	let campaign = await BeaconMaster.getBeaconCampaign(payload["major"], payload["minor"], appId);
 	if(campaign) {
 		let payload = {
-			"NotificationTitle": "Paytm Karo",
+			"NotificationTitle": campaign.name,
 			"NotificationType": "Text",
 			"Text_content": {
 				"Offer_Text": campaign.content,
