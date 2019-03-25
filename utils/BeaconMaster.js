@@ -35,20 +35,35 @@ module.exports.getBeaconCampaign = async (major, minor, appId) => {
     let campaign = undefined;
     let beacon = await model.beacon_master.findOne({ where: { major: major, minor: minor }});
     let date = new Date()
-    // try {
-    //     campaign = await model.campaign.findOne({ 
-    //         where: { 
-    //             locationMasterId: beacon.locationMasterId, 
-    //             applicationId: appId,
-    //             start_timestamp: {
-    //                 [Op.gte]: date
-    //             },
-    //             end_timestamp: {
-    //                 [Op.lte]: date
-    //             } 
-    //         } 
-    //     });
-    // } catch(err) {}
-    campaign = await model.campaign.findOne();
+    try {
+        if(appId == 1) {
+            campaign = await model.campaign.findOne({ 
+                where: { 
+                    applicationId: appId,
+                    start_timestamp: {
+                        [Op.lte]: date
+                    },
+                    end_timestamp: {
+                        [Op.gte]: date
+                    } 
+                } 
+            });
+        } else {
+            campaign = await model.campaign.findOne({ 
+                where: { 
+                    locationMasterId: beacon.locationMasterId, 
+                    applicationId: appId,
+                    start_timestamp: {
+                        [Op.lte]: date
+                    },
+                    end_timestamp: {
+                        [Op.gte]: date
+                    } 
+                } 
+            });
+        }
+        
+    } catch(err) {}
+    // campaign = await model.campaign.findOne();
     return campaign;
 }

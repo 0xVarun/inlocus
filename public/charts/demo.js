@@ -42,7 +42,7 @@ $.ajax({
       count_chart.push(res['count']);
     });
 
-    var ctx = document.getElementById("myAreaChart");
+    var ctx = document.getElementById("myAreaChart").getContext('2d');
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
