@@ -75,7 +75,7 @@ class NonInlocus(object):
 
         BEACON_BODY = {   
             "major": "12345", #36287
-            "minor": "67890", #18995
+            "minor": "678", #18995
             "rssi": 14845484,
             "uuid": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
             "distance": 3

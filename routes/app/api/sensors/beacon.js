@@ -1,10 +1,9 @@
 const express 		= require('express');
 const router		= express.Router();
 const Sensor 		= require('../../../../utils/Sensor');
-const Campaign		= require('../../../../utils/Campaign');
-const BeaconMaster	= require('../../../../utils/BeaconMaster');
 const apiMiddleware = require('../../../../middleware/api').apiAuth;
 const _				= require('lodash');
+const CampaignMgmt	= require('../../../../campaign');
 
 /**
  * url /api/sendsor/beacon
@@ -41,24 +40,12 @@ router.put('/', apiMiddleware, async (req, res) => {
 			return;
 		}
 	}
-
-	let appId = res.locals.user['appId'];
-	let campaign = await BeaconMaster.getBeaconCampaign(payload["major"], payload["minor"], appId);
-	if(campaign) {
-		let payload = {
-			"NotificationTitle": campaign.name,
-			"NotificationType": "Text",
-			"Text_content": {
-				"Offer_Text": campaign.content,
-				"URI": campaign.action
-			}
-		}
-		res.json(payload);
-	} else {
+	let campaign = await CampaignMgmt({major: payload["major"], minor: payload["minor"], appId: res.locals.user['appId'] }, 'beacon');
+	if(!campaign) {
 		res.sendStatus(304);
+	} else {
+		res.json(campaign);
 	}
-
-	// res.status(201).send({'title': "", 'body': {}})
 });
 
 module.exports = router;

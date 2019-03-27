@@ -14,11 +14,6 @@ const apiMiddleware = require('../../../middleware/api').apiAuth;
  * returns - user id in db
  */
 router.post('/register', async (req, res) => {
-	
-	if(!req.headers['authorization'] && req.headers['authorization'] !== process.env.AUTH_HEADER) {
-		res.sendStatus(403);
-		return;
-	}
 
 	if(!req.is('application/json')){
 		res.sendStatus(400);
