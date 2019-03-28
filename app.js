@@ -41,7 +41,17 @@ const app_routes	= require('./routes/app/routes.js');
 
 // initialize view engine
 app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', handlebars({ defaultLayout: 'layout' }));
+app.engine('handlebars', handlebars({ 
+  defaultLayout: 'layout',
+  helpers: {
+    inc: function(value, option) {
+      return parseInt(value) + 1;
+    },
+    hide: function(value, option) {
+      return '****' + value.substring(value.length - 4);
+    }
+  } 
+}));
 app.set('view engine', 'handlebars');
 
 // initialize middleware

@@ -33,16 +33,17 @@ $.ajax({
   method: 'GET',
   success: response => {
     let lables_chart = [];
-    let count_chart = [] 
+    let count_chart = [];
+    let date_chart = [];
     response.map(res => {
-      let m_date = new Date(res['hour']);
-      let time = m_date.getHours() + ':' + m_date.getMinutes() + ':' + m_date.getSeconds();
-      // lables_chart.push((res['hour']));
-      lables_chart.push(time);
+      let daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat'];
+      let mdate = new Date(res['date']);
+      date_chart.push(res['date']);
+      lables_chart.push(daysOfWeek[mdate.getDay()]);
       count_chart.push(res['count']);
     });
 
-    var ctx = document.getElementById("myAreaChart").getContext('2d');
+    var ctx = document.getElementById("timeline-chart").getContext('2d');
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {

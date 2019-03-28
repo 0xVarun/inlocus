@@ -15,10 +15,10 @@ module.exports.saveBeacon = (major, minor, uuid, rssi, distance, deviceId) => {
 		.catch( err => { throw err } );
 }	
 
-module.exports.getLatestBeacon = () => {
-	return model.beacon.findAll({ limit: 1, order: [['createdAt', 'DESC']]})
-		.then(beacon => { return beacon })
-		.catch(err => { return {err} })
+module.exports.getLatestBeacon = async () => {
+	let beacon = await model.beacon.find({ limit: 1, order: [['createdAt', 'DESC']]});
+	let mbeacon = await model.beacon_master.findOne({ where: { major: beacon.major, minor: beacon.minor }});
+	return mbeacon.shortlink;
 }
 
 function saveWifi(macId, ssid, rssi, distance, freq, deviceId) {
@@ -39,11 +39,16 @@ module.exports.saveMultiWifi = (payload, deviceId) => {
 
 module.exports.countByHour = () => {
 	return model.beacon.findAll({
+		// attributes: [
+		// 	[ sequelize.fn('date_trunc', 'hour', sequelize.col('createdAt')), 'hour'],
+    	// 	[ sequelize.fn('count', '*'), 'count']
+		// ],
+		// group: 'hour'
 		attributes: [
-			[ sequelize.fn('date_trunc', 'hour', sequelize.col('createdAt')), 'hour'],
-    		[ sequelize.fn('count', '*'), 'count']
+			[sequelize.literal(`DATE("createdAt")`), 'date'],
+			[sequelize.literal(`COUNT(*)`), 'count']
 		],
-		group: 'hour'
+		group: ['date'],
 	})
 		.then( beacons => { return beacons; })
 		.catch( err => { return {err}; })

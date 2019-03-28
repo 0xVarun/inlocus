@@ -17,8 +17,8 @@ const model 			= require('../../models');
 router.get('/', authMiddleware, async (req, res) => {
 	let beacon = await Sensor.getLatestBeacon();
 	let repeatVisitors = await model.beacon.count();
-	let totalVisitors = repeatVisitors * 1.2;
-	res.render('admin/home', { title: 'Admin', layout: 'home', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors });
+	let totalVisitors = parseInt(repeatVisitors * 1.2);
+	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors });
 });
 
 router.get('/analytics', authMiddleware, (req, res) => {
@@ -125,7 +125,7 @@ router.post('/app/new', suMiddleware, async (req, res) => {
  */
 router.get('/apps', suMiddleware, async (req, res) => {
 	let apps = await Application.findAll();
-	res.render('superadmin/applications', { title: 'Admin', layout: 'home', application: apps });
+	res.render('superadmin/apps', { title: 'Admin', layout: 'base', application: apps });
 });
 
 /**
