@@ -2,7 +2,7 @@
 inLocus
 Author: Varun Tewari
 */
-.border-left-success{border-left:#1cc88a 4px solid}.border-left-info{border-left:#36b9cc 4px solid}.border-left-warning{border-left:#4e73df 4px solid}.border-left-danger{border-left:#f6c23e 4px solid}.hi-100{height:100%}.text-gray-300{color:#b9bdd6!important}.pyi-2{padding-bottom:.5rem}.card-text-success{color:#1cc88a}.card-text-info{color:#36b9cc}.card-text-warning{color:#4e73df}.card-text-danger{color:#f6c23e}.card-box-text{color:#5a5c69}.cursor-pointer{cursor: pointer;}
+.border-left-success{border-left:#1cc88a 4px solid}.border-left-info{border: none;border-left:#36b9cc 4px solid}.border-left-warning{border-left:#4e73df 4px solid}.border-left-danger{border-left:#f6c23e 4px solid}.hi-100{height:100%}.text-gray-300{color:#b9bdd6!important}.pyi-2{padding-bottom:.5rem}.card-text-success{color:#1cc88a}.card-text-info{color:#36b9cc}.card-text-warning{color:#4e73df}.card-text-danger{color:#f6c23e}.card-box-text{color:#5a5c69}.cursor-pointer{cursor: pointer;}
 .margin-top {
     margin-top: 1.5rem; 
 }
@@ -11,6 +11,18 @@ Author: Varun Tewari
 }
 .lf-margin {
     margin-left: 0.8rem;
+}
+.icon-margin {
+    padding-right: 5px;
+}
+.selectize-control.multi .selectize-input [data-value] {
+    background-color: #b2e567;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+    background-image: linear-gradient(to bottom, #b8e76f, #a9e25c);
+    border-radius: 3px;
+}
+.card-header {
+    color: #077ba5;
 }
 @media only screen and (max-width: 600px) {
     .box-m{

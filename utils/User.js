@@ -24,35 +24,48 @@ module.exports.registerStaffUser = function(name, username, email, password, app
 
 module.exports.getUserByEmail = function(email, callback) {
 	model.user
-		.findOne( { where: { email: email }} )
+		.findOne( { where: { email: email }, include: [{ model: model.roles }]} )
 		.then( user => { callback(null, user); })
 		.catch(err => { callback(err, null) });
 }
 
 module.exports.getUserById = function(id, callback) {
 	model.user
-		.findByPk( id )
+		.findOne({ where: { id: id }, include: [{ model: model.roles }] })
 		.then( user => {callback(null, user);})
 		.catch(err => { callback(err, null);});
 }
 
 module.exports.findAll = function() {
 	return model.user
-		.findAll({ where: { staff: false }, include: [ { model: model.application} ] })
+		.findAll({ include: [ { model: model.application}, {model: model.roles, where: {appstaff: false}} ] })
 		.then( user => { return JSON.stringify(user); } )
 		.catch( err => { throw err; })
 }
 
 module.exports.findStaff = function() {
 	return model.user
-		.findAll({ where: { staff: true } })
+		.findAll(
+			{
+				include: [
+					{
+						model: model.application
+					}, 
+					{
+						model: model.roles,
+						attributes: ['superadmin', 'appadmin', 'appstaff', 'active'],
+                		where: { 'appstaff': true } 
+					} 
+				] 
+			}
+		)
 		.then( user => { return JSON.stringify(user); } )
 		.catch( err => { throw err; })
 }
 
 module.exports.getAll = function(applicationId) {
 	return model.user
-		.findAll({ where: { applicationId: applicationId, superadmin: false, appadmin: false } })
+		.findAll({ where: { applicationId: applicationId }, include: [{ model: model.roles, where: { appadmin: false, superadmin: false }}] })
 		.then( user => { return JSON.stringify(user); } )
 		.catch( err => { throw err; })
 }

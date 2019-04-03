@@ -49,6 +49,12 @@ app.engine('handlebars', handlebars({
     },
     hide: function(value, option) {
       return '****' + value.substring(value.length - 4);
+    },
+    select: function(value, options) { // Select helper to select the default option for each question
+      return options.fn(this).split('\n').map(function(v) {
+          var t = 'value="' + value + '"';
+          return ! RegExp(t).test(v) ? v : v.replace(t, t + ' selected="selected"');
+      }).join('\n');
     }
   } 
 }));
@@ -123,7 +129,7 @@ app.get('/data/device', async (req, res) => {
 
 // server
 // db sync
-models.sequelize.sync(/*{ force: true }*/).then(() => {
+models.sequelize.sync(/*{ force: true }*/ /*{ alter: true }*/).then(() => {
   app.listen(port, () => {
     console.log(`Running on port ${port}`);
   });

@@ -18,8 +18,8 @@ module.exports.getAllBeacons = () => {
 }
 
 module.exports.findOne = (id) => {
-    return model.beacon_master.findByPk(id)
-        .then(beacon => { return beacon; })
+    return model.beacon_master.findOne({ where: {id: id}, include:[{model:model.tags, attributes:['tag']}] })
+        .then(beacon => { return JSON.parse(JSON.stringify(beacon)); })
         .catch(err => { throw err; });
 }
 

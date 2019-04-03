@@ -4,11 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     username: DataTypes.STRING,
     email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    active: DataTypes.BOOLEAN,
-    superadmin: DataTypes.BOOLEAN,
-    appadmin: DataTypes.BOOLEAN,
-    staff: DataTypes.BOOLEAN
+    password: DataTypes.STRING
   }, {});
   user.associate = function(models) {
     // associations can be defined here
@@ -19,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       targetKey: 'id'
     });
-    user.hasMany(models.geolocation)
+    user.hasMany(models.geolocation);
+    user.hasOne(models.roles);
   };
   return user;
 };

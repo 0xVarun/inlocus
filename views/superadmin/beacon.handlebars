@@ -1,0 +1,119 @@
+<div class="container-fluid">
+    <div class="row margin-top">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header">
+                
+                    <div class="float-left"><a href="/admin/home/beacons">Beacon</a> <b>{{beacon.shortlink}}</b></div>
+                    <div class="float-right"><a href="/admin/home/beacon" data-toggle="tooltip" data-placement="left" title="Add New Beacon"><i class="fas fa-plus fa-lg"></i></a></div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="beaconMajor" class="form-control" value="{{beacon.major}}">
+                                    <label for="beaconMajor">Beacon Major</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="beaconMinor" class="form-control" value="{{beacon.minor}}">
+                                    <label for="beaconMinor">Beacon Minor</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="beaconUUID" class="form-control" value="{{beacon.uuid}}">
+                                    <label for="beaconUUID">Beacon UUID</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="beaconStatus">Beacon Status</label>
+                                <select name="status" id="beaconStatus" class="browser-default custom-select">
+                                    <option value="public" {{#if beacon.public}}selected{{else}}{{/if}}>Public</option>
+                                    <option value="private" {{#if beacon.public}}{{else}}selected{{/if}}>Private</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="beaconShortlink" class="form-control" value="{{beacon.shortlink}}">
+                                    <label for="beaconShortlink">Shortlink</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{!-- <div class="md-form"> --}}
+                                    <label for="beaconLocation">Locations</label>
+                                    <select name="" id="beaconLocation" class="browser-default custom-select">
+                                        {{#select beacon.locationMasterId }}
+                                        {{#each locations}}
+                                            <option value="{{id}}">{{name}} - {{type}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                {{!-- </div> --}}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="preTags">Tags</label>
+                                <input type="text" data-data='{{tags}}' name="pretags" id="preTags">
+                            </div>
+                            <div class="col">
+                                <label for="cTags">Custom Tags</label>
+                                <input type="text" data-data='{{tags}}' name="ctags" id="cTags">
+                            </div>
+                        </div>
+                        <button class="btn btn-info my-4 btn-block float-md-right" type="submit">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">Beacon Info</div>
+                <div class="card-body container">
+                    <b>Major</b>: {{beacon.major}} <br>
+                    <b>Minor</b>: {{beacon.minor}} <br>
+                    {{!-- <b>UUID</b>: {{beacon.uuid}} <br> --}}
+                    <b>Shortlink</b>: {{beacon.shortlink}} <br>
+                    <b>Locations</b>: {{beaconlocation_master.name}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$('#preTags').selectize({
+    plugins:['drag_drop'],
+    delimiter: ',',
+    persist: false,
+    create: function(input) {
+        return {
+            value: input,
+            text: input
+        }
+    },
+    onDelete:function(value){
+        return '';
+    }
+});
+$('#cTags').selectize({
+    plugins:['drag_drop'],
+    delimiter: ',',
+    persist: false,
+    create: function(input) {
+        return {
+            value: input,
+            text: input
+        }
+    },
+    onDelete:function(value){
+        return '';
+    }
+})[0].selectize.addItem("WORKING", true);
+</script>

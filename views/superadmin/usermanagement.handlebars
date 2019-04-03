@@ -1,0 +1,95 @@
+<div class="container-fluid">
+    <div class="row margin-top">
+        <div class="col-md-9">
+            <div class="card shadow">
+                <div class="card-header">Admin Users</div>
+                <div class="card-body">
+                    <table id="users" class="table table-striped table-bordered table-sm bs-select" >
+                        <thead>
+                            <tr>
+                                <th class="th-sm text-center">Sr No</th>
+                                <th class="th-sm text-center">Name</th>
+                                <th class="th-sm text-center">Email</th>
+                                <th class="th-sm text-center">Application</th>
+                                <th class="th-sm text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each adminuser}}
+                            <tr>
+                                <td class="text-center">{{inc @index}}</td>
+                                <td class="text-center">{{name}}</td>
+                                <td class="text-center">{{email}}</td>
+                                <td class="text-center">{{application.name}}</td>
+                                <td class="text-center">
+                                  <a class="icon-margin" href="#"><i class="fas fa-edit"></i></a>
+                                  <a class="icon-margin" href="#"><i class="fas fa-trash-alt"></i></a>
+                                  <a class="icon-margin" href="#"><i class="fas fa-envelope"></i></a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">Admin User Action</div>
+            </div>
+        </div>
+    </div>
+
+  <div class="row margin-top">
+    <div class="col-md-9">
+      <div class="card shadow">
+        <div class="card-header">Staff Users</div>
+        <div class="card-body">
+          <table id="susers" class="table table-striped table-bordered table-sm bs-select">
+            <thead>
+              <tr>
+                  <th class="th-sm text-center">Sr No</th>
+                  <th class="th-sm text-center">Name</th>
+                  <th class="th-sm text-center">Email</th>
+                  <th class="th-sm text-center">Application</th>
+                  <th class="th-sm text-center">Action</th>
+              </tr>
+          </thead>
+          <tbody>
+              {{#each staff}}
+              <tr>
+                  <td class="text-center">{{inc @index}}</td>
+                  <td class="text-center">{{name}}</td>
+                  <td class="text-center">{{email}}</td>
+                  <td class="text-center">{{application.name}}</td>
+                  <td class="text-center">
+                    <a class="icon-margin" href="#"><i class="fas fa-edit"></i></a>
+                    <a class="icon-margin" href="#"><i class="fas fa-trash-alt"></i></a>
+                    <a class="icon-margin" href="#"><i class="fas fa-envelope"></i></a>
+                  </td>
+              </tr>
+              {{/each}}
+          </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-xs-12 col-sm-12">
+      <div class="card shadow">
+        <div class="card-header">User Action</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+$(document).ready(function() {
+    $('#users').DataTable();
+     $('#susers').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+    $('.dataTables_filter input').addClass('form-control');
+    $('.dataTables_filter input').addClass('form-control-sm');
+    $('.paginate_button').addClass('page-item');
+    $('.paginate_button').addClass('active');
+});
+</script>
