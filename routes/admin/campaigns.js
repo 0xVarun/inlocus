@@ -12,12 +12,18 @@ const uuid				= require('uuid/v4');
 
 router.get('/new', authMiddleware, async (req, res) => {
 	let locations = await LocationMaster.getAllLocations();
-	res.render('admin/campaign', { title: 'New Campaign', layout: 'home', locations: locations });
+	console.log(JSON.parse(JSON.stringify(locations)));
+	let d = [];
+	locations.map(loc => {
+		d.push({ "value": loc.id, "text": loc.name + '(' + loc.type + ')' });
+	});
+	res.render('admin/campaign', { title: 'New Campaign', layout: 'base', locations: JSON.stringify(d) });
 });
 
 router.get('/', authMiddleware, async(req, res) => {
 	let campaigns = await Campaign.findAllCampaigns(req.user.applicationId);
-	res.render('admin/campaigns', { title: 'Campaigns', layout: 'home', campaigns: campaigns });
+	console.log(JSON.parse(JSON.stringify(campaigns)));
+	res.render('admin/campaigns', { title: 'Campaigns', layout: 'base', campaigns: campaigns });
 })
 
 router.post('/create', authMiddleware, async (req, res) => {
@@ -64,6 +70,13 @@ router.post('/create', authMiddleware, async (req, res) => {
 		res.redirect('/admin/campaigns/new');
 	});
 
-})
+});
+
+router.get('/edit/:id', authMiddleware, async (req, res) => {
+	let camp = await require('../../models').campaign.findOne(req.param.id);
+	res.render('admin/editcampaign', { title: 'Edit Campaigns', layout: 'base', campaign: camp });
+});
+
+// router.post('/edit/:id')
 
 module.exports = router;

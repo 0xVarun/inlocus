@@ -29,7 +29,8 @@ const db = {
   location_master: sequelize.import('./location_master'),
   campaign: sequelize.import('./campaign'),
   beacon_master: sequelize.import('./beacon_master'),
-  tags: sequelize.import('./tags.js')
+  tags: sequelize.import('./beacontags.js'),
+  ltags: sequelize.import('./locationtags.js')
 };
 
 

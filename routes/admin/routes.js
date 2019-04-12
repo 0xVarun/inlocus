@@ -8,6 +8,9 @@ const campaigns	= require('./campaigns');
 const helpers	= require('./helpers');
 const user		= require('./user');
 const staff		= require('./staff');
+const appAdmin  = require('./app');
+const appBeacon  = require('./beacon');
+const content  = require('./content');
 
 router.use('/login', login);
 router.use('/register', register);
@@ -16,6 +19,9 @@ router.use('/api', helpers)
 router.use('/campaigns', campaigns);
 router.use('/user', user);
 router.use('/staff', staff);
+router.use('/app', appAdmin)
+router.use('/beacon', appBeacon)
+router.use('/content', content)
 router.use('/', (req, res) => { res.redirect('/admin/login'); })
 
 module.exports = router;

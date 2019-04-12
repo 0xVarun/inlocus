@@ -3,8 +3,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header">
-                
-                    <div class="float-left"><a href="/admin/home/beacons">Beacon</a> <b>{{beacon.shortlink}}</b></div>
+                    <div class="float-left"><a href="/admin/home/beacons"><i class="fas fa-chevron-left"></i></a> Beacon <b>{{beacon.shortlink}}</b></div>
                     <div class="float-right"><a href="/admin/home/beacon" data-toggle="tooltip" data-placement="left" title="Add New Beacon"><i class="fas fa-plus fa-lg"></i></a></div>
                 </div>
                 <div class="card-body">
@@ -81,7 +80,8 @@
                     <b>Minor</b>: {{beacon.minor}} <br>
                     {{!-- <b>UUID</b>: {{beacon.uuid}} <br> --}}
                     <b>Shortlink</b>: {{beacon.shortlink}} <br>
-                    <b>Locations</b>: {{beaconlocation_master.name}}
+                    <b>Locations</b>: {{beacon.location_master.name}} <br>
+                    <b>User</b>: {{beacon.user.email}}
                 </div>
             </div>
         </div>

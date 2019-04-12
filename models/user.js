@@ -8,15 +8,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   user.associate = function(models) {
     // associations can be defined here
-    user.belongsTo(models.application, {
-      foreignKey: {
-        name: 'applicationId',
-        allowNull: false
-      },
-      targetKey: 'id'
-    });
     user.hasMany(models.geolocation);
     user.hasOne(models.roles);
+    user.hasMany(models.beacon_master);
   };
   return user;
 };

@@ -1,12 +1,12 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const tags = sequelize.define('tags', {
+  const tags = sequelize.define('location_tags', {
     tag: DataTypes.STRING
   }, {});
   tags.associate = function(models) {
-    tags.belongsTo(models.beacon_master, {
+    tags.belongsTo(models.location_master, {
         foreignKey: {
-            name: 'beaconMasterId',
+            name: 'locationMasterId',
             allowNull: false
       },
       targetKey: 'id'

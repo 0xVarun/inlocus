@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <div class="row margin-top">
+        <div class="col-md-8 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <div class="float-left"><a href="/admin/content"><i class="fas fa-chevron-left"></i></a> Contents</div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-row align-bottom">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="content_name" id="content_name" class="form-control" required>
+                                    <label for="content_name">Content Name <small>*</small></label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <input type="file" name="content" class="dropify" data-max-file-size="1M" accept="image/*" required/>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-light-blue">Create Content</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    Campaign Creation Help
+                </div>
+                <div class="card-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$('.dropify').dropify({
+    messages: {
+        'default': 'Drag and drop a file here or click',
+        'replace': 'Drag and drop or click to replace',
+        'remove':  'Remove',
+        'error':   'Ooops, something wrong happended.'
+    }
+})
+</script>

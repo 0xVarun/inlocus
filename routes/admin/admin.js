@@ -149,18 +149,22 @@ router.post('/location', suMiddleware, async(req, res) => {
 
 /**
  * Edit Location Master
- * URL: /admin/home/location/edit/:id
+ * URL: /admin/home/location/:id
  */
-router.get('/location/edit/:id', suMiddleware, async(req, res) => {
+router.get('/location/:id', suMiddleware, async(req, res) => {
 	let location = await LocationMaster.findOne(req.params.id);
-	res.render('superadmin/locationedit', { title: 'Locations Master', layout: 'home', location: location });	
+	// let tags = location.tags;
+	// let mTags = [];
+	// tags.map(tag => {mTags.push({ 'value': tag.tag, 'text': tag.tag });});
+	
+	res.render('superadmin/locationedit', { title: 'Locations Master', layout: 'base', location: location });	
 });
 
 /**
  * Edit Location Master POST
- * URL: /admin/home/location/edit/:id
+ * URL: /admin/home/location/:id
  */
-router.post('/location/edit/:id', suMiddleware, async(req, res) => {
+router.post('/location/:id', suMiddleware, async(req, res) => {
 	await LocationMaster.findOneAndUpdate(req.params.id, req.body.name, req.body.type);
 	res.redirect('/admin/home/locations')
 });
@@ -216,12 +220,9 @@ router.get('/beacons', suMiddleware, async(req, res) => {
  */
 router.get('/beacon/:id', suMiddleware, async(req, res) => {
 	let beacon = await BeaconMaster.findOne(req.params.id);
-	let tags = beacon.tags;
-	let mTags = [];
-	tags.map(tag => {
-		mTags.push({ 'value': tag.tag, 'text': tag.tag });});
 	let locations = await LocationMaster.getAllLocations();
-	res.render('superadmin/beacon', { title: 'Beacon Master', layout: 'base',tags: JSON.stringify(mTags), beacon: beacon, locations: locations })
+	console.log(JSON.parse(JSON.stringify(beacon)));
+	res.render('superadmin/beacon', { title: 'Beacon Master', layout: 'base', beacon: beacon, locations: locations })
 });
 
 /**

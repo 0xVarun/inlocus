@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
     end_timestamp: DataTypes.DATE,
     content: DataTypes.STRING,
     action: DataTypes.STRING,
-    file: DataTypes.STRING
   }, {});
   campaign.associate = function(models) {
     campaign.belongsTo(models.application, {

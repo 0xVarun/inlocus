@@ -19,7 +19,7 @@ module.exports.deleteLocation = (id) => {
 }
 
 module.exports.findOne = (id) => {
-    return model.location_master.findByPk(id)
+    return model.location_master.findOne({ where: { id: id }, include: [{model: model.ltags}]})
         .then(loc => { return loc })
         .catch(err => { throw err });
 }

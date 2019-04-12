@@ -2,30 +2,4 @@
 inLocus
 Author: Varun Tewari
 */
-.border-left-success{border-left:#1cc88a 4px solid}.border-left-info{border: none;border-left:#36b9cc 4px solid}.border-left-warning{border-left:#4e73df 4px solid}.border-left-danger{border-left:#f6c23e 4px solid}.hi-100{height:100%}.text-gray-300{color:#b9bdd6!important}.pyi-2{padding-bottom:.5rem}.card-text-success{color:#1cc88a}.card-text-info{color:#36b9cc}.card-text-warning{color:#4e73df}.card-text-danger{color:#f6c23e}.card-box-text{color:#5a5c69}.cursor-pointer{cursor: pointer;}
-.margin-top {
-    margin-top: 1.5rem; 
-}
-.max-height {
-    height: 100%;
-}
-.lf-margin {
-    margin-left: 0.8rem;
-}
-.icon-margin {
-    padding-right: 5px;
-}
-.selectize-control.multi .selectize-input [data-value] {
-    background-color: #b2e567;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
-    background-image: linear-gradient(to bottom, #b8e76f, #a9e25c);
-    border-radius: 3px;
-}
-.card-header {
-    color: #077ba5;
-}
-@media only screen and (max-width: 600px) {
-    .box-m{
-        margin-bottom: 1em;
-    }
-  }
+.card[class*="border"]{border: none;}.border-left-success{border-left:#1cc88a 4px solid}.border-left-info{border: none;border-left:#36b9cc 4px solid}.border-left-warning{border-left:#4e73df 4px solid}.border-left-danger{border-left:#f6c23e 4px solid}.hi-100{height:100%}.text-gray-300{color:#b9bdd6!important}.pyi-2{padding-bottom:.5rem}.card-text-success{color:#1cc88a}.card-text-info{color:#36b9cc}.card-text-warning{color:#4e73df}.card-text-danger{color:#f6c23e}.card-box-text{color:#5a5c69}.cursor-pointer{cursor: pointer;}.margin-top{margin-top: 1.5rem;}.max-height{height: 100%;}.lf-margin{margin-left: 0.8rem;}.icon-margin{padding-right: 5px;}.selectize-control.multi .selectize-input [data-value]{background-color: #b2e567;text-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);background-image: linear-gradient(to bottom, #b8e76f, #a9e25c);border-radius: 3px;}.card-header{color: #077ba5;}@media only screen and (max-width: 600px) {.box-m{margin-bottom: 1em;}}#snackbar{visibility:hidden;min-width:250px;margin-left:-125px;background-color:#333;color:#fff;text-align:center;border-radius:2px;padding:16px;position:fixed;z-index:1;left:50%;bottom:30px}#snackbar.show{visibility:visible;-webkit-animation:fadein .5s,fadeout .5s 2.5s;animation:fadein .5s,fadeout .5s 2.5s}@-webkit-keyframes fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}@keyframes fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}@-webkit-keyframes fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}@keyframes fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}small{color: rgb(255, 0, 0)}

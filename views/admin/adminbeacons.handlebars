@@ -1,0 +1,56 @@
+<div class="container-fluid">
+    <div class="row margin-top">
+        <div class="col-md-9">
+            <div class="card shadow">
+                <div class="card-header">
+                    <div class="float-left"><b>Beacons</b></div>
+                    <div class="float-right"><a href="/admin/beacon/create"><i class="fas fa-plus fa-lg"></i></a></div>
+                </div>
+                <div class="card-body">
+                    <table id="beacons" class="table table-striped table-bordered table-sm bs-select">
+                        <thead>
+                            <th class="th-sm text-center">Sr No</th>
+                            <th class="th-sm text-center">Short Link</th>
+                            <th class="th-sm text-center">Major</th>
+                            <th class="th-sm text-center">Minor</th>
+                            <th class="th-sm text-center">Location</th>
+                            <th class="th-sm text-center">Location Type</th>
+                            <th class="th-sm text-center">Action</th>
+                        </thead>
+                        <tbody>
+                            {{#each beacons}}
+                            <tr>
+                                <td class="text-center">{{inc @index}}</td>
+                                <td class="text-center">{{shortlink}}</td>
+                                <td class="text-center">{{major}}</td>
+                                <td class="text-center">{{minor}}</td>
+                                <td class="text-center">{{location_master.name}}</td>
+                                <td class="text-center">{{location_master.type}}</td>
+                                <td class="text-center">
+                                    <a href="/admin/home/beacon/{{id}}" class="icon-margin"><i class="fas fa-edit" style="color: #3949ab;"></i></a>
+                                    <a href="#" class="icon-margin"><i class="fas fa-trash-alt" style="color: #b71c1c;"></i></a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow">
+                <div class="card-header">Beacon Action</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function() {
+    $('#beacons').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+    $('.dataTables_filter input').addClass('form-control');
+    $('.dataTables_filter input').addClass('form-control-sm');
+    $('.paginate_button').addClass('page-item');
+    $('.paginate_button').addClass('active');
+});
+</script>

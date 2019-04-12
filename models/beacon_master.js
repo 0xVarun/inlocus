@@ -26,6 +26,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       targetKey: 'id'
     });
+    beacon_master.belongsTo(models.user, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      },
+      targetKey: 'id'
+    });
     beacon_master.hasMany(models.tags);
   };
   return beacon_master;

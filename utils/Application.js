@@ -13,6 +13,18 @@ module.exports.findAll = function() {
 		.catch(err => { throw err; });
 }
 
+module.exports.findAllUserApps = (id) => {
+	return model.application.findAll({ where: { 'userId': id } })
+		.then(apps => { return apps; })
+		.catch(err => { throw err; });
+}
+
+module.exports.findOneApp = (userId, id) => {
+	return model.application.findOne({ where: { 'userId': userId, 'id': id} })
+		.then(app => { return app; })
+		.catch(err => { throw err; });
+}
+
 module.exports.activateApp = async function(id) {
 	return model.application
 		.update({ active: true }, { where: { id: id }, returning: true, plain: true });

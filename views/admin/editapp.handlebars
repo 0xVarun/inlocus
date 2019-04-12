@@ -1,0 +1,81 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 col-xs-12 box-m mb-4">
+            <div class="card shadow margin-top">
+                <div class="card-header">
+                	<div class="float-left"><a href="/admin/app"><i class="fas fa-chevron-left"></i></a> Create Applications </div>
+                	<div class="float-right">
+                		{{#if application.approved}}
+                		<b style="color: #388e3c;">Approved</b>
+                		{{else}}
+                		<b style="color: #d32f2f;">Pending Approval</b>
+                		{{/if}}
+                	</div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="applicationName" class="form-control" disabled="true" value="{{application.name}}">
+                                    <label for="applicationName">Application Name </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="appUrl" class="form-control" disabled="true" value="{{application.url}}">
+                                    <label for="appUrl">Application URL </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="apiKey" class="form-control" value="{{application.API_KEY}}" readonly="true">
+                                    <label for="apiKey">API Key </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="apiSecret" class="form-control" value="{{application.API_SECRET}}" readonly="true">
+                                    <label for="apiSecret">API Secret </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="category" class="form-control" value="{{application.category}}" disabled="true">
+                                    <label for="category">Application Category </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="beaconStatus">Production Status </label>
+                                {{#if application.production}}
+                                <select name="status" id="beaconStatus" class="browser-default custom-select">
+                                    <option value="development">Development</option>
+                                    <option value="production" selected="true">Production</option>
+                                </select>
+                                {{else}}
+                                <select name="status" id="beaconStatus" class="browser-default custom-select">
+                                    <option value="development" selected="true">Development</option>
+                                    <option value="production">Production</option>
+                                </select>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <button class="btn btn-info my-4 btn-block float-md-right" type="submit">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <div class="card shadow margin-top">
+                <div class="card-header">Applications</div>
+                <div class="card-body text-center">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

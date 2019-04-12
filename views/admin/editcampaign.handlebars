@@ -3,20 +3,26 @@
         <div class="col-md-8 col-xs-12 col-sm-12">
             <div class="card shadow">
                 <div class="card-header">
-                    <div class="float-left"><a href="/admin/campaigns"><i class="fas fa-chevron-left"></i></a> Campaigns</div>
+                    <div class="float-left">
+                        <a href="/admin/campaigns"><i class="fas fa-chevron-left"></i> <b>Campaign</b></a>
+                        {{campaign.name}}
+                    </div>
+                    <div class="float-right">
+                        <a href="/admin/campaigns/new"><i class="fas fa-plus"></i></a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <form>
                         <div class="form-row">
                             <div class="col">
                                 <div class="md-form">
-                                    <input type="text" name="campaign_name" id="campaign_name" class="form-control">
+                                    <input type="text" name="campaign_name" id="campaign_name" class="form-control" value="{{campaign.name}}">
                                     <label for="campaign_name">Campaign Name <small>*</small></label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="md-form">
-                                    <input type="text" name="campaign_title" id="campaign_title" class="form-control">
+                                    <input type="text" name="campaign_title" id="campaign_title" class="form-control" value="{{campaign.title}}">
                                     <label for="campaign_title">Campaign Title <small>*</small></label>
                                 </div>
                             </div>
@@ -24,13 +30,13 @@
                         <div class="form-row">
                             <div class="col">
                                 <div class="md-form">
-                                    <input type="text" class="form-control" name="start_time" id="start_time">
+                                    <input type="text" class="form-control" name="start_time" id="start_time" value="{{campaign.start_timestamp}}">
                                     <label for="start_time">Start Time <small>*</small></label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="md-form">
-                                    <input type="text" name="end_time" id="end_time" class="form-control">
+                                    <input type="text" name="end_time" id="end_time" class="form-control" value="{{campaign.end_timestamp}}">
                                     <label for="end_time">End Time <small>*</small></label>
                                 </div>
                             </div>
@@ -38,7 +44,7 @@
                         <div class="form-row">
                             <div class="col">
                                 <div class="md-form">
-                                    <textarea class="md-textarea form-control" name="campaign_text" id="campaign_text" rows="5"></textarea>
+                                    <textarea class="md-textarea form-control" name="campaign_text" id="campaign_text" rows="5">{{campaign.content}}</textarea>
                                     <label for="campaign_text">Campaign Text <small>*</small></label>
                                 </div>
                             </div>
@@ -54,14 +60,14 @@
                                 <input type="text" data-data="{{locations}}" name="location" id="locations">
                             </div>
                             <div class="col">
-                                <label for="preTags">Tags</label>
                                 <input type="text" name="pretags" id="preTags">
+                                <label for="preTags">Tags</label>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col">
                                 <div class="md-form">
-                                    <input type="text" name="action" id="action" class="form-control">
+                                    <input type="text" name="action" id="action" class="form-control" value="{{c.action}}">
                                     <label for="action">Action <small>*</small></label>
                                 </div>
                             </div>
@@ -74,9 +80,7 @@
         <div class="col-md-4 col-xs-12 col-sm-12">
             <div class="card shadow">
                 <div class="card-header">
-                    Campaign Creation Help
-                </div>
-                <div class="card-body">
+                    Campaign Edit Action
                 </div>
             </div>
         </div>
