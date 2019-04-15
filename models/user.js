@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   user.associate = function(models) {
     // associations can be defined here
     user.hasMany(models.geolocation);
+    user.hasMany(models.application);
     user.hasOne(models.roles);
     user.hasMany(models.beacon_master);
   };

@@ -11,8 +11,10 @@ const suMiddleware		= require('../../middleware/superadmin');
 const model 			= require('../../models');
 
 /**
- * Admin Dashboard
- * URL: /admin/home
+ * @url: /admin/home
+ * @member: GET
+ * @template: views/admin/home
+ * @desc: Admin Dashboard
  */
 router.get('/', authMiddleware, async (req, res) => {
 	let beacon = await Sensor.getLatestBeacon();
@@ -21,6 +23,15 @@ router.get('/', authMiddleware, async (req, res) => {
 	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors });
 });
 
+
+/**
+ * @url: /admin/analytics
+ * @method: GET
+ * @template: views/admin/comingsoon
+ * @desc: App wise based analytics
+ * 
+ * @TODO: Implementation
+ */
 router.get('/analytics', authMiddleware, (req, res) => {
 	res.render('admin/comingsoon', { title: 'Admin', layout: 'home' });
 });
@@ -34,16 +45,19 @@ router.get('/beacon/list', async(req, res) => {
 });
 
 /**
- * Create New Geo Fence
- * URL: /admin/home/geofence/create
+ * @url: /admin/home/geofence/create
+ * @method: GET
+ * @template: views/admin/fence
+ * @desc: Create new Geofences
  */
 router.get('/geofence/create', authMiddleware, (req, res) => {
 	res.render('admin/fence', { title: 'New Fence', layout: 'home' })
 });
 
 /**
- * Save Geo Fence Name POST
- * URL: /admin/home/geofence/create
+ * @url: /admin/home/geofence/create
+ * @method: POST
+ * @desc: Post method to save geofence name
  */
 router.post('/geofence/create', authMiddleware, async (req, res) => {
 	let name = req.body.fence;
@@ -75,9 +89,14 @@ router.post('/geofence', authMiddleware, (req, res) => {
 	res.sendStatus(201);
 });
 
+
 /**
- * View All Admin and SuperAdmin Users
- * URL: /admin/home/users
+ * @url: /admin/home/users
+ * @method: GET
+ * @template: views/superadmin/usermanagement
+ * @desc: Manage SuperUsers, Admin Users and Staff Users
+ * 
+ * @TODO: Add editing user roles and disabling login 
  */
 router.get('/users', suMiddleware, async (req, res) => {
 	let Users = await User.findAll();
@@ -85,14 +104,6 @@ router.get('/users', suMiddleware, async (req, res) => {
 	res.render('superadmin/usermanagement', { title: 'Admin', layout: 'base', adminuser: JSON.parse(Users), staff: JSON.parse(staffUsers) });
 });
 
-/**
- * View All Staff Users
- * URL: /admin/home/staffs
- */
-router.get('/staffs', suMiddleware, async (req, res) => {
-	let staffUsers = await User.findStaff();
-	res.render('superadmin/staffs',  { title: 'Admin', layout: 'home', staffusers: JSON.parse(staffUsers) });
-})
 
 /**
  * Create New App View
@@ -206,17 +217,23 @@ router.post('/beacon', suMiddleware, async(req, res) => {
 });
 
 /**
- * View All Beacons 
- * URL: /admin/home/beacons
+ * @url: /admin/home/beacons
+ * @method: GET
+ * @template: views/superadmin/managebeacon 
+ * @desc: View all beacons in a datatable
  */
 router.get('/beacons', suMiddleware, async(req, res) => {
 	let beacons = await BeaconMaster.getAllBeacons();
 	res.render('superadmin/managebeacon', { title: 'Beacon Master', layout: 'base', beacons: beacons })
 });
 
+
 /**
- * Edit Beacon
- * URL: /admin/home/beacon/:id
+ * @url: /admin/home/beacon/:id
+ * @method: GET
+ * @template: views/superadmin/beacon
+ * @desc: Edit beacon
+ * 
  */
 router.get('/beacon/:id', suMiddleware, async(req, res) => {
 	let beacon = await BeaconMaster.findOne(req.params.id);
@@ -225,9 +242,12 @@ router.get('/beacon/:id', suMiddleware, async(req, res) => {
 	res.render('superadmin/beacon', { title: 'Beacon Master', layout: 'base', beacon: beacon, locations: locations })
 });
 
+
 /**
- * Save Edit Beacon
- * URL: /admin/home/beacon/:id
+ * @url: /admin/home/beacon/:id
+ * @method: POST
+ * @desc: Save beacon edits
+ * 
  */
 router.post('/beacon/:id', suMiddleware, async(req, res) => {
 	let id = req.params.id;

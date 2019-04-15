@@ -20,7 +20,12 @@
                                 <td class="text-center">{{inc @index}}</td>
                                 <td class="text-center">{{name}}</td>
                                 <td class="text-center">{{email}}</td>
-                                <td class="text-center">{{application.name}}</td>
+                                <td class="text-center">
+                                  {{application.name}}
+                                  {{#each applications}}
+                                    <input type="hidden" name="application{{@index}}" value="{{name}}">
+                                  {{/each}}
+                                </td>
                                 <td class="text-center">
                                   <a class="icon-margin" href="#"><i class="fas fa-edit"></i></a>
                                   <a class="icon-margin" href="#"><i class="fas fa-trash-alt"></i></a>
@@ -61,7 +66,12 @@
                   <td class="text-center">{{inc @index}}</td>
                   <td class="text-center">{{name}}</td>
                   <td class="text-center">{{email}}</td>
-                  <td class="text-center">{{application.name}}</td>
+                  <td class="text-center">
+                    {{application.name}}
+                    {{#each applications}}
+                      <input type="hidden" name="application{{@index}}" value="{{name}}">
+                    {{/each}}
+                  </td>
                   <td class="text-center">
                     <a class="icon-margin" href="#"><i class="fas fa-edit"></i></a>
                     <a class="icon-margin" href="#"><i class="fas fa-trash-alt"></i></a>
