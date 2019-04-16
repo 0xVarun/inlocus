@@ -45,52 +45,6 @@ router.get('/beacon/list', async(req, res) => {
 });
 
 /**
- * @url: /admin/home/geofence/create
- * @method: GET
- * @template: views/admin/fence
- * @desc: Create new Geofences
- */
-router.get('/geofence/create', authMiddleware, (req, res) => {
-	res.render('admin/fence', { title: 'New Fence', layout: 'home' })
-});
-
-/**
- * @url: /admin/home/geofence/create
- * @method: POST
- * @desc: Post method to save geofence name
- */
-router.post('/geofence/create', authMiddleware, async (req, res) => {
-	let name = req.body.fence;
-	let user = req.user.id;
-	let mGeofence = await GeoFence.create(name, user);
-	console.log(mGeofence);
-	if(!mGeofence.id) {
-		res.redirect('/admin/home/geofence/create');
-		return;
-	}
-	res.redirect(`/admin/home/fence/maps?id=${mGeofence.id}`)
-});
-
-/**
- * Renders Maps
- * URL: /admin/home/fence/maps
- */
-router.get('/fence/maps', authMiddleware, (req, res) => {
-	res.render('admin/geofence', { title: 'Geo Fence', layout: 'geofence' });
-});
-
-/**
- * Save All GeoFence POST
- * URL: /admin/home/geofence
- */
-router.post('/geofence', authMiddleware, (req, res) => {
-	let payload = req.body;
-	console.log(payload);
-	res.sendStatus(201);
-});
-
-
-/**
  * @url: /admin/home/users
  * @method: GET
  * @template: views/superadmin/usermanagement
@@ -186,7 +140,6 @@ router.post('/location/:id', suMiddleware, async(req, res) => {
  */
 router.get('/locations', suMiddleware, async(req, res) => {
 	let locations = await LocationMaster.getAllLocations();
-	console.log(locations);
 	res.render('superadmin/managelocation', { title: 'Locations Master', layout: 'base', locations: locations });
 });
 
@@ -212,7 +165,7 @@ router.post('/beacon', suMiddleware, async(req, res) => {
 	let ctags = req.body.ctags
 	let pretags = req.body.pretags
 	// await BeaconMaster.addNewBeacon(major, minor, uuid, shortlink, location);
-	console.log({major,minor,shortlink,uuid,location,ctags,pretags});
+	// console.log({major,minor,shortlink,uuid,location,ctags,pretags});
 	res.redirect('/admin/home/beacon');
 });
 
@@ -238,7 +191,6 @@ router.get('/beacons', suMiddleware, async(req, res) => {
 router.get('/beacon/:id', suMiddleware, async(req, res) => {
 	let beacon = await BeaconMaster.findOne(req.params.id);
 	let locations = await LocationMaster.getAllLocations();
-	console.log(JSON.parse(JSON.stringify(beacon)));
 	res.render('superadmin/beacon', { title: 'Beacon Master', layout: 'base', beacon: beacon, locations: locations })
 });
 
