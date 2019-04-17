@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   location_master.associate = function(models) {
     location_master.hasMany(models.campaign);
     location_master.hasMany(models.beacon_master);
-    location_master.hasMany(models.ltags);
+    location_master.hasMany(models.tags);
   };
   return location_master;
 };
