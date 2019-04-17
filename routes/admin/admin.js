@@ -1,11 +1,6 @@
 const express 			= require('express');
 const router			= express.Router();
-const User				= require('../../utils/User');
-const Application		= require('../../utils/Application');
-const GeoFence 			= require('../../utils/GeoFence');
-const LocationMaster	= require('../../utils/LocationMaster');
-const Sensor			= require('../../utils/Sensor');
-const BeaconMaster		= require('../../utils/BeaconMaster');
+const utils				= require('../../utils');
 const authMiddleware	= require('../../middleware/auth');
 const suMiddleware		= require('../../middleware/superadmin');
 const model 			= require('../../models');
@@ -17,7 +12,7 @@ const model 			= require('../../models');
  * @desc: Admin Dashboard
  */
 router.get('/', authMiddleware, async (req, res) => {
-	let beacon = await Sensor.getLatestBeacon();
+	let beacon = await utils.Sensor.getLatestBeacon();
 	let repeatVisitors = await model.beacon.count();
 	let totalVisitors = parseInt(repeatVisitors * 1.2);
 	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors });
@@ -40,7 +35,7 @@ router.get('/analytics', authMiddleware, (req, res) => {
  * Graph Beacon
  */
 router.get('/beacon/list', async(req, res) => {
-	let data = await Sensor.countByHour();
+	let data = await utils.Sensor.countByHour();
 	res.json(data);
 });
 
@@ -53,8 +48,8 @@ router.get('/beacon/list', async(req, res) => {
  * @TODO: Add editing user roles and disabling login 
  */
 router.get('/users', suMiddleware, async (req, res) => {
-	let Users = await User.findAll();
-	let staffUsers = await User.findStaff();
+	let Users = await utils.User.findAll();
+	let staffUsers = await utils.User.findStaff();
 	res.render('superadmin/usermanagement', { title: 'Admin', layout: 'base', adminuser: JSON.parse(Users), staff: JSON.parse(staffUsers) });
 });
 
@@ -76,7 +71,7 @@ router.post('/app/new', suMiddleware, async (req, res) => {
 	let api_key = req.body.api_key;
 	let api_secret = req.body.api_secret;
 	try {
-		let app = await Application.registerApplication(name, api_key, api_secret);
+		let app = await utils.Application.registerApplication(name, api_key, api_secret);
 	} catch (err) {
 		res.redirect('/admin/home/app/new');
 		return;
@@ -89,7 +84,7 @@ router.post('/app/new', suMiddleware, async (req, res) => {
  * URL: /admin/home/apps
  */
 router.get('/apps', suMiddleware, async (req, res) => {
-	let apps = await Application.findAll();
+	let apps = await utils.Application.findAll();
 	res.render('superadmin/apps', { title: 'Admin', layout: 'base', application: apps });
 });
 
@@ -108,7 +103,7 @@ router.get('/location', suMiddleware, (req, res) => {
 router.post('/location', suMiddleware, async(req, res) => {
 	let locationName = req.body.locationname;
 	let type = req.body.type;
-	await LocationMaster.createLocations(locationName, type);
+	await utils.LocationMaster.createLocations(locationName, type);
 	res.redirect('/admin/home/location');
 });
 
@@ -117,7 +112,7 @@ router.post('/location', suMiddleware, async(req, res) => {
  * URL: /admin/home/location/:id
  */
 router.get('/location/:id', suMiddleware, async(req, res) => {
-	let location = await LocationMaster.findOne(req.params.id);
+	let location = await utils.LocationMaster.findOne(req.params.id);
 	// let tags = location.tags;
 	// let mTags = [];
 	// tags.map(tag => {mTags.push({ 'value': tag.tag, 'text': tag.tag });});
@@ -130,7 +125,7 @@ router.get('/location/:id', suMiddleware, async(req, res) => {
  * URL: /admin/home/location/:id
  */
 router.post('/location/:id', suMiddleware, async(req, res) => {
-	await LocationMaster.findOneAndUpdate(req.params.id, req.body.name, req.body.type);
+	await utils.LocationMaster.findOneAndUpdate(req.params.id, req.body.name, req.body.type);
 	res.redirect('/admin/home/locations')
 });
 
@@ -139,7 +134,7 @@ router.post('/location/:id', suMiddleware, async(req, res) => {
  * URL: /admin/home/locations
  */
 router.get('/locations', suMiddleware, async(req, res) => {
-	let locations = await LocationMaster.getAllLocations();
+	let locations = await utils.LocationMaster.getAllLocations();
 	res.render('superadmin/managelocation', { title: 'Locations Master', layout: 'base', locations: locations });
 });
 
@@ -148,7 +143,7 @@ router.get('/locations', suMiddleware, async(req, res) => {
  * URL: /admin/home/beacon
  */
 router.get('/beacon', suMiddleware, async(req, res) => {
-	let locations = await LocationMaster.getAllLocations();
+	let locations = await utils.LocationMaster.getAllLocations();
 	res.render('superadmin/newbeacon', { title: 'Beacon Master', layout: 'base', locations: locations })
 });
 
@@ -176,7 +171,7 @@ router.post('/beacon', suMiddleware, async(req, res) => {
  * @desc: View all beacons in a datatable
  */
 router.get('/beacons', suMiddleware, async(req, res) => {
-	let beacons = await BeaconMaster.getAllBeacons();
+	let beacons = await utils.BeaconMaster.getAllBeacons();
 	res.render('superadmin/managebeacon', { title: 'Beacon Master', layout: 'base', beacons: beacons })
 });
 
@@ -189,8 +184,8 @@ router.get('/beacons', suMiddleware, async(req, res) => {
  * 
  */
 router.get('/beacon/:id', suMiddleware, async(req, res) => {
-	let beacon = await BeaconMaster.findOne(req.params.id);
-	let locations = await LocationMaster.getAllLocations();
+	let beacon = await utils.BeaconMaster.findOne(req.params.id);
+	let locations = await utils.LocationMaster.getAllLocations();
 	res.render('superadmin/beacon', { title: 'Beacon Master', layout: 'base', beacon: beacon, locations: locations })
 });
 
@@ -208,7 +203,7 @@ router.post('/beacon/:id', suMiddleware, async(req, res) => {
 	let shortlink = req.body.shortlink;
 	let uuid = req.body.uuid;
 	let location = req.body.location;
-	await BeaconMaster.findOneAndUpdate(id, major, minor, uuid, shortlink, location);
+	await utils.BeaconMaster.findOneAndUpdate(id, major, minor, uuid, shortlink, location);
 	res.redirect('/admin/home/beacons');
 })
 
