@@ -9,7 +9,8 @@ const utilExports = {
     LocationMaster: require('./LocationMaster'),
     SdkUser: require('./SdkUser'),
     Sensor: require('./Sensor'),
-    User: require('./User')
+    User: require('./User'),
+    Tag: require('./Tags'),
 }
 
 module.exports = utilExports;
