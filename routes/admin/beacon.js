@@ -1,14 +1,7 @@
 const express 			= require('express');
 const router			= express.Router();
-const User				= require('../../utils/User');
-const Application		= require('../../utils/Application');
-const GeoFence 			= require('../../utils/GeoFence');
-const LocationMaster	= require('../../utils/LocationMaster');
-const Sensor			= require('../../utils/Sensor');
-const BeaconMaster		= require('../../utils/BeaconMaster');
 const authMiddleware	= require('../../middleware/auth');
-const suMiddleware		= require('../../middleware/superadmin');
-const model 			= require('../../models');
+const utils 			= require('../../utils');
 
 
 /**
@@ -29,7 +22,8 @@ router.get('/', authMiddleware, async (req, res) => {
  * @desc: Add new Beacon
  */
 router.get('/create', authMiddleware, async (req, res) => {
-	res.render('admin/adminbeacon', { title: 'Admin', layout: 'base'});
+	let locations = await utils.LocationMaster.getAllLocations()
+	res.render('admin/adminbeacon', { title: 'Admin', layout: 'base', locations: locations});
 });
 
 
@@ -40,8 +34,28 @@ router.get('/create', authMiddleware, async (req, res) => {
  * 
  * @TODO: adding beacon to beacon master or create new table
  */
-router.post('/create', authMiddleware, async(req, res) => {
+router.post('/create', authMiddleware, async (req, res) => {
+	/**
+	 * { 
+	 * 		major,
+	 * 		minor,
+	 * 		uuid,
+	 * 		ctags,
+	 * 		shortlink,
+	 * 		location 
+	 * }
+	 */
+	let major = req.body.major;
+	let minor = req.body.minor;
+	let uuid = req.body.uuid;
+	let ctags = req.body.ctags;
+	let shortlink = req.body.shortlink;
+	let location = req.body.location;
 
+	let beacon = await utils.BeaconMaster.addNewBeacon(major, minor, uuid, shortlink, location);
+	await utils.Tag.createBeaconTag(ctags, beacon.id, req.user.id);
+
+	res.redirect('/admin/beacon/create');
 })
 
 module.exports = router;
