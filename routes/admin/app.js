@@ -1,5 +1,6 @@
 const express 			= require('express');
 const router			= express.Router();
+const utils			 	= require('../../utils');
 const User				= require('../../utils/User');
 const Application		= require('../../utils/Application');
 const GeoFence 			= require('../../utils/GeoFence');
@@ -46,7 +47,15 @@ router.get('/create', authMiddleware, async (req, res) => {
  * 
  */
 router.post('/create', authMiddleware, async (req, res) => {
-	console.log(req.body);
+	let applicationName = req.body.applicationName
+	let applicationUrl = req.body.applicationUrl
+	let applicationKey = req.body.applicationKey
+	let applicationSecret = req.body.applicationSecret
+	let applcationCategory = req.body.applcationCategory
+	let applicationStatus = req.body.applicationStatus == 1 ? true : false;
+
+	await utils.Application.registerApplication(applicationName, applicationUrl, applicationKey, applicationSecret, false, applcationCategory, applicationStatus, req.user.id);
+	
 	res.redirect('/admin/app');
 });
 
