@@ -16,7 +16,7 @@ def login():
         'x-app-api-key': 'KHK9J4K-AGQ4BY7-K94B4G8-WQTFWGJ'
     }
 
-    login = requests.post('http://13.127.205.229/api/user/login', headers=LOGIN_HEADERS, data=json.dumps(LOGIN_BODY))
+    login = requests.post('http://localhost:3000/api/user/login', headers=LOGIN_HEADERS, data=json.dumps(LOGIN_BODY))
     
     if login.status_code != 200:
         print('Login Failed')
@@ -42,7 +42,7 @@ def beacon():
         "distance": 3
     }
     
-    beacon = requests.put('http://13.127.205.229/api/sensor/beacon', headers=SENSOR_HEADERS, data=json.dumps(BEACON_BODY))
+    beacon = requests.put('http://localhost:3000/api/sensor/beacon', headers=SENSOR_HEADERS, data=json.dumps(BEACON_BODY))
     print(beacon.text)
 
 if __name__ == '__main__':

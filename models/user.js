@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     user.hasOne(models.roles);
     user.hasMany(models.beacon_master);
     user.hasMany(models.tags);
+    user.hasMany(models.location_master);
   };
   return user;
 };

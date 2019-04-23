@@ -11,18 +11,28 @@ const path 				= require('path');
 const uuid				= require('uuid/v4');
 
 router.get('/new', authMiddleware, async (req, res) => {
-	let locations = await LocationMaster.getAllLocations();
-	console.log(JSON.parse(JSON.stringify(locations)));
+	let locations = await LocationMaster.getAllSuperadminLocations();
+	let d = [];
+	locations.map(loc => {
+		// d.push({ "value": loc.id, "text": loc.name + '(' + loc.type + ')' });
+		d.push(loc.name);
+	});
+	console.log(JSON.stringify(d));
+	res.render('admin/campaign', { title: 'New Campaign', layout: 'base', locations: d.join(',') });
+});
+
+router.get('/locations', authMiddleware, async(req, res) => {
+	let locations = await LocationMaster.getAllSuperadminLocations();
 	let d = [];
 	locations.map(loc => {
 		d.push({ "value": loc.id, "text": loc.name + '(' + loc.type + ')' });
+		// d.push(loc.name);
 	});
-	res.render('admin/campaign', { title: 'New Campaign', layout: 'base', locations: JSON.stringify(d) });
-});
+	res.json(d);
+})
 
 router.get('/', authMiddleware, async(req, res) => {
 	let campaigns = await Campaign.findAllCampaigns(req.user.applicationId);
-	console.log(JSON.parse(JSON.stringify(campaigns)));
 	res.render('admin/campaigns', { title: 'Campaigns', layout: 'base', campaigns: campaigns });
 })
 

@@ -1,10 +1,15 @@
 const db		= require('../db/postgres');
 const model		= require('../models');
 
-module.exports.registerApplication = function(name, api_key, api_secret) {
-	model.application.create({name: name, API_KEY: api_key, API_SECRET: api_secret,active: false,cactive: false})
+module.exports.registerApplication = (name, url, key, secret, approved, category, production, userid) => {
+	model.application.create({ name: name, url: url, API_KEY: key, API_SECRET: secret, approved: approved, category: category, production: production, userId: userid })
 		.then(app => { return app; })
 		.catch(err => { throw err; });
+}
+
+module.exports.update = (production, userId, appId) => {
+	return model.application
+		.update({ production: production }, { where: { id: appId, userId: userId }, returning: true, plain: true})
 }
 
 module.exports.findAll = function() {

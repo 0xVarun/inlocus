@@ -1,15 +1,7 @@
 const express 			= require('express');
 const router			= express.Router();
 const utils			 	= require('../../utils');
-const User				= require('../../utils/User');
-const Application		= require('../../utils/Application');
-const GeoFence 			= require('../../utils/GeoFence');
-const LocationMaster	= require('../../utils/LocationMaster');
-const Sensor			= require('../../utils/Sensor');
-const BeaconMaster		= require('../../utils/BeaconMaster');
 const authMiddleware	= require('../../middleware/auth');
-const suMiddleware		= require('../../middleware/superadmin');
-const model 			= require('../../models');
 const apiKey            = require('uuid-apikey');
 
 
@@ -22,7 +14,7 @@ const apiKey            = require('uuid-apikey');
  * @TODO: Display all apps created by all admins of the app
  */
 router.get('/', authMiddleware, async (req, res) => {
-    let userApps = await Application.findAllUserApps(req.user.id);
+    let userApps = await utils.Application.findAllUserApps(req.user.id);
 	res.render('admin/adminapps', { title: 'Admin', layout: 'base', application: userApps });    
 });
 
@@ -52,7 +44,7 @@ router.post('/create', authMiddleware, async (req, res) => {
 	let applicationKey = req.body.applicationKey
 	let applicationSecret = req.body.applicationSecret
 	let applcationCategory = req.body.applcationCategory
-	let applicationStatus = req.body.applicationStatus == 1 ? true : false;
+	let applicationStatus = req.body.applicationStatus == 'production' ? true : false;
 
 	await utils.Application.registerApplication(applicationName, applicationUrl, applicationKey, applicationSecret, false, applcationCategory, applicationStatus, req.user.id);
 	
@@ -70,7 +62,7 @@ router.post('/create', authMiddleware, async (req, res) => {
  * 
  */
 router.get('/:id', authMiddleware, async (req, res) => {
-	let app = await Application.findOneApp(req.user.id, req.params.id);
+	let app = await utils.Application.findOneApp(req.user.id, req.params.id);
 	res.render('admin/editapp', { title: 'Admin', layout: 'base', application: app });
 });
 
@@ -85,7 +77,11 @@ router.get('/:id', authMiddleware, async (req, res) => {
  * 		or vice versa
  */
 router.post('/:id', authMiddleware, async (req, res) => {
-
+	let applicationStatus = req.body.applicationStatus == 'production' ? true : false;
+	await utils.Application.update(applicationStatus, req.user.id, req.params.id);
+	// let appApproved = req.body.applicationApprove == '0' ? true : false;
+	// console.log(appApproved);
+	res.redirect(`/admin/app/${req.params.id}`);
 });
 
 module.exports = router;

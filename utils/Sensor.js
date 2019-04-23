@@ -17,6 +17,9 @@ module.exports.saveBeacon = (major, minor, uuid, rssi, distance, deviceId) => {
 
 module.exports.getLatestBeacon = async () => {
 	let beacon = await model.beacon.findAll({ limit: 1, order: [['createdAt', 'DESC']]});
+	if(beacon.length === 0) {
+		return '';
+	}
 	let mbeacon = await model.beacon_master.findOne({ where: { major: beacon[0].major, minor: beacon[0].minor }});
 	return mbeacon.shortlink;
 }

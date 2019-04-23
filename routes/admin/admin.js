@@ -79,9 +79,12 @@ router.post('/app/new', suMiddleware, async (req, res) => {
 	res.redirect('/admin/home/apps');
 });
 
+
 /**
- * List All Apps
- * URL: /admin/home/apps
+ * @url: /admin/home/apps
+ * @method: GET
+ * @template: views/superadmin/apps.handlebars
+ * @desc: List View of all Applications
  */
 router.get('/apps', suMiddleware, async (req, res) => {
 	let apps = await utils.Application.findAll();
@@ -134,7 +137,7 @@ router.post('/location/:id', suMiddleware, async(req, res) => {
  * URL: /admin/home/locations
  */
 router.get('/locations', suMiddleware, async(req, res) => {
-	let locations = await utils.LocationMaster.getAllLocations();
+	let locations = await utils.LocationMaster.getAllSuperadminLocations();
 	res.render('superadmin/managelocation', { title: 'Locations Master', layout: 'base', locations: locations });
 });
 
@@ -181,12 +184,15 @@ router.get('/beacons', suMiddleware, async(req, res) => {
  * @method: GET
  * @template: views/superadmin/beacon
  * @desc: Edit beacon
- * 
  */
 router.get('/beacon/:id', suMiddleware, async(req, res) => {
 	let beacon = await utils.BeaconMaster.findOne(req.params.id);
-	let locations = await utils.LocationMaster.getAllLocations();
-	res.render('superadmin/beacon', { title: 'Beacon Master', layout: 'base', beacon: beacon, locations: locations })
+	let locations = await utils.LocationMaster.getAllSuperadminLocations();
+	let tags = [];
+	beacon.tags.map(tag => {
+		tags.push(tag.tag);
+	})
+	res.render('superadmin/beacon', { title: 'Beacon Master', layout: 'base', beacon: beacon, locations: locations, tag: tags.join(',') })
 });
 
 

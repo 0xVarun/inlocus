@@ -4,8 +4,8 @@ const Sequelize = require('sequelize');
 const Op        = Sequelize.Op;
 
 
-module.exports.addNewBeacon = (major, minor, uuid, shortlink, locationMasterId) => {
-    return model.beacon_master.create({ major: major, minor: minor, uuid: uuid, shortlink: shortlink, locationMasterId: locationMasterId })
+module.exports.addNewBeacon = (major, minor, uuid, shortlink, locationMasterId, public, userId) => {
+    return model.beacon_master.create({ major: major, minor: minor, uuid: uuid, shortlink: shortlink, locationMasterId: locationMasterId, public: public, userId: userId })
         .then(beacon => { return beacon; })
         .catch(err => { throw err; });
 }
@@ -18,7 +18,7 @@ module.exports.getAllBeacons = () => {
 }
 
 module.exports.findOne = (id) => {
-    return model.beacon_master.findOne({ where: {id: id}, include:[{model:model.location_master},{model:model.user, attributes: ['email']}] })
+    return model.beacon_master.findOne({ where: {id: id}, include:[{model:model.location_master},{model:model.user, attributes: ['email']}, {model: model.tags}] })
         .then(beacon => { return JSON.parse(JSON.stringify(beacon)); })
         .catch(err => { throw err; });
 }

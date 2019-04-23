@@ -46,12 +46,7 @@
                         <div class="form-row">
                             <div class="col">
 								<label for="campaignLocation">Location <small>*</small></label>
-								{{!-- <select name="campaign_location" class="custom-select" id="campaignLocation" multiple>
-                                    {{#each locations}}
-									<option value="{{id}}">{{name}} ({{type}})</option>
-                                    {{/each}}
-								</select> --}}
-                                <input type="text" data-data="{{locations}}" name="location" id="locations">
+                                <input type="text" name="location" id="locations">
                             </div>
                             <div class="col">
                                 <label for="preTags">Tags</label>
@@ -89,6 +84,43 @@ $('#start_time').bootstrapMaterialDatePicker({ weekStart : 0, minDate: new Date(
     $('#end_time').bootstrapMaterialDatePicker('setMinDate', date);
     $('#end_time').bootstrapMaterialDatePicker('setFormat', 'YYYY-MM-DD HH:mm');
 }); 
-$('#preTags').selectize({plugins:['drag_drop'],delimiter: ',',persist: false,create: function(input) {return {value: input,text: input}},onDelete:function(value){return '';}});
-$('#locations').selectize({plugins:['drag_drop'],delimiter: ',',persist: false,create: function(input) {return {value: input,text: input}},onDelete:function(value){return '';}});
+$('#preTags').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    persist: false,
+    create: function(input) {
+        console.log(input);
+        return {value: input,text: input}
+    },
+    onDelete:function(value){
+        return '';
+    },
+    load: function(query, callback) {
+        console.log('called');
+    }
+});
+$('#locations').selectize({
+    plugins:['drag_drop'],
+    delimiter: ',',
+    preload: true,
+    persist: false,
+    maxItems: 5,
+    onDelete:function(value){
+        return '';
+    },
+    load: function(query, callback) {
+        let add = this.addOption;
+        //if(!query.length) return callback();
+        $.ajax({
+            url: '/admin/campaigns/locations',
+            method: 'GET',
+            success: function(data) {
+                /*data.map(d => {
+                    add(d);
+                })*/
+                callback(data);
+            }
+        })
+    }
+});
 </script>

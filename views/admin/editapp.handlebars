@@ -13,7 +13,7 @@
                 	</div>
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form method="POST" action="/admin/app/{{application.id}}">
                         <div class="form-row">
                             <div class="col">
                                 <div class="md-form">
@@ -52,17 +52,33 @@
                             <div class="col">
                                 <label for="beaconStatus">Production Status </label>
                                 {{#if application.production}}
-                                <select name="status" id="beaconStatus" class="browser-default custom-select">
+                                <select name="applicationStatus" id="beaconStatus" class="browser-default custom-select">
                                     <option value="development">Development</option>
                                     <option value="production" selected="true">Production</option>
                                 </select>
                                 {{else}}
-                                <select name="status" id="beaconStatus" class="browser-default custom-select">
+                                <select name="applicationStatus" id="beaconStatus" class="browser-default custom-select">
                                     <option value="development" selected="true">Development</option>
                                     <option value="production">Production</option>
                                 </select>
                                 {{/if}}
                             </div>
+                            {{#if user.role.superadmin}}
+                            <div class="col">
+                                <label for="appApproved">Approve</label>
+                                {{#if application.approved}}
+                                <select name="applicationApprove" id="appApprove" class="browser-default custom-select">
+                                    <option value="0" selected="true">Approve</option>
+                                    <option value="1">Disable</option>
+                                </select>
+                                {{else}}
+                                <select name="applicationApprove" id="appApprove" class="browser-default custom-select">
+                                    <option value="0">Approve</option>
+                                    <option value="1" selected="true">Disable</option>
+                                </select>
+                                {{/if}}
+                            </div>
+                            {{/if}}
                         </div>
                         <button class="btn btn-info my-4 btn-block float-md-right" type="submit">Update</button>
                     </form>

@@ -22,7 +22,7 @@ router.get('/', authMiddleware, async (req, res) => {
  * @desc: Add new Beacon
  */
 router.get('/create', authMiddleware, async (req, res) => {
-	let locations = await utils.LocationMaster.getAllLocations()
+	let locations = await utils.LocationMaster.getAllLocations(req.user.id);
 	res.render('admin/adminbeacon', { title: 'Admin', layout: 'base', locations: locations});
 });
 
@@ -35,24 +35,13 @@ router.get('/create', authMiddleware, async (req, res) => {
  * @TODO: adding beacon to beacon master or create new table
  */
 router.post('/create', authMiddleware, async (req, res) => {
-	/**
-	 * { 
-	 * 		major,
-	 * 		minor,
-	 * 		uuid,
-	 * 		ctags,
-	 * 		shortlink,
-	 * 		location 
-	 * }
-	 */
 	let major = req.body.major;
 	let minor = req.body.minor;
 	let uuid = req.body.uuid;
 	let ctags = req.body.ctags;
 	let shortlink = req.body.shortlink;
 	let location = req.body.location;
-
-	let beacon = await utils.BeaconMaster.addNewBeacon(major, minor, uuid, shortlink, location);
+	let beacon = await utils.BeaconMaster.addNewBeacon(major, minor, uuid, shortlink, location, false, req.user.id);
 	await utils.Tag.createBeaconTag(ctags, beacon.id, req.user.id);
 
 	res.redirect('/admin/beacon/create');

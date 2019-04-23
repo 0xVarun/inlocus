@@ -22,28 +22,20 @@ module.exports = {
       }], {});
     */
     return queryInterface.bulkInsert('users', [{
+      id: 1,
       name: "Admin",
       username: "admin",
       email: "admin@beaconstalk.com",
       password: hashed_password,
-      active: true,
-      superadmin: true,
-      appadmin: false,
-      staff: false,
-      applicationId: 1,
       createdAt: new Date(),
       updatedAt: new Date()
     },
     {
+      id: 2,
       name: "BMS Admin",
       username: "bms",
       email: "admin@bookmyshow.com",
       password: hashed_password,
-      active: true,
-      superadmin: true,
-      appadmin: false,
-      staff: false,
-      applicationId: 3,
       createdAt: new Date(),
       updatedAt: new Date()
     }], {});
