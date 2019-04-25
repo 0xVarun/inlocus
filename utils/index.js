@@ -11,6 +11,7 @@ const utilExports = {
     Sensor: require('./Sensor'),
     User: require('./User'),
     Tag: require('./Tags'),
+    Content: require('./Content'),
 }
 
 module.exports = utilExports;
