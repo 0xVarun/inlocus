@@ -1,4 +1,7 @@
 <div class="container-fluid">
+    {{#if error_msg}}
+    <div class="alert alert-danger">{{error_msg}}</div>
+    {{/if}}
     <div class="row margin-top">
         <div class="col-md-8 col-xs-12 col-sm-12">
             <div class="card shadow">
@@ -6,7 +9,7 @@
                     <div class="float-left"><a href="/admin/campaigns"><i class="fas fa-chevron-left"></i></a> Campaigns</div>
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form action="/admin/campaigns/create" method="POST">
                         <div class="form-row">
                             <div class="col">
                                 <div class="md-form">
@@ -17,7 +20,7 @@
                             <div class="col">
                                 <div class="md-form">
                                     <input type="text" name="campaign_title" id="campaign_title" class="form-control">
-                                    <label for="campaign_title">Campaign Title <small>*</small></label>
+                                    <label for="campaign_title">Notification Title <small>*</small></label>
                                 </div>
                             </div>
                         </div>
@@ -25,21 +28,21 @@
                             <div class="col">
                                 <div class="md-form">
                                     <input type="text" class="form-control" name="start_time" id="start_time">
-                                    <label for="start_time">Start Time <small>*</small></label>
+                                    <label for="start_time">Start Date <small>*</small></label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="md-form">
                                     <input type="text" name="end_time" id="end_time" class="form-control">
-                                    <label for="end_time">End Time <small>*</small></label>
+                                    <label for="end_time">End Date <small>*</small></label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col">
                                 <div class="md-form">
-                                    <textarea class="md-textarea form-control" name="campaign_text" id="campaign_text" rows="5"></textarea>
-                                    <label for="campaign_text">Campaign Text <small>*</small></label>
+                                    <textarea class="md-textarea form-control" name="campaign_text" id="campaign_text" rows="5" maxlength="140"></textarea>
+                                    <label for="campaign_text">Notification Body <small>*</small></label>
                                 </div>
                             </div>
                         </div>
@@ -49,8 +52,8 @@
                                 <input type="text" name="location" id="locations">
                             </div>
                             <div class="col">
-                                <label for="preTags">Tags</label>
-                                <input type="text" name="pretags" id="preTags">
+                                <label for="tags">Tags</label>
+                                <input type="text" name="tags" id="tags">
                             </div>
                         </div>
                         <div class="form-row">
@@ -59,6 +62,20 @@
                                     <input type="text" name="action" id="action" class="form-control">
                                     <label for="action">Action <small>*</small></label>
                                 </div>
+                            </div>
+                            <div class="col">
+                                <label for="applications">App <small>*</small></label>
+                                <input type="text" name="applications" id="applications" required="true">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="campaign_type">Campaign Type <small>*</small></label>
+                                <input type="text" name="campaign_type" id="campaign_type">
+                            </div>
+                            <div class="col">
+                                <label for="contents">Content</label>
+                                <input type="text" name="content" id="contents" required="true">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-light-blue">Create Campaign</button>
@@ -79,28 +96,54 @@
 </div>
 <script>
 //$('#start_time').bootstrapMaterialDatePicker({ weekStart : 0, minDate: new Date(), format : 'YYYY-MM-DD HH:mm' });
-$('#end_time').bootstrapMaterialDatePicker({ format: 'YYYY-MM-DD HH:mm'});
-$('#start_time').bootstrapMaterialDatePicker({ weekStart : 0, minDate: new Date(), format : 'YYYY-MM-DD HH:mm' }).on('change', function(e, date){
+$('#end_time').bootstrapMaterialDatePicker({ format: 'YYYY-MM-DD', time: false});
+$('#start_time').bootstrapMaterialDatePicker({ weekStart : 0, minDate: new Date(), format : 'YYYY-MM-DD', time: false }).on('change', function(e, date){
     $('#end_time').bootstrapMaterialDatePicker('setMinDate', date);
-    $('#end_time').bootstrapMaterialDatePicker('setFormat', 'YYYY-MM-DD HH:mm');
+    $('#end_time').bootstrapMaterialDatePicker('setFormat', 'YYYY-MM-DD');
 }); 
-$('#preTags').selectize({
+$('#tags').selectize({
     plugins:['remove_button'],
     delimiter: ',',
     persist: false,
     create: function(input) {
-        console.log(input);
         return {value: input,text: input}
     },
     onDelete:function(value){
         return '';
+    }
+});
+$('#campaign_type').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    persist: false,
+    maxItems: 1,
+    options: [ {value: "TEXT", text: "TEXT"}, {value: "IMAGE", text: "IMAGE"} ],
+    onDelete:function(value){
+        return '';
+    }
+});
+$('#contents').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    preload: true,
+    persist: false,
+    maxItems: 1,
+    onDelete:function(value){
+        return '';
     },
     load: function(query, callback) {
-        console.log('called');
+        let add = this.addOption;
+        $.ajax({
+            url: '/admin/campaigns/contents',
+            method: 'GET',
+            success: function(data) {
+                callback(data);
+            }
+        })
     }
 });
 $('#locations').selectize({
-    plugins:['drag_drop'],
+    plugins:['remove_button'],
     delimiter: ',',
     preload: true,
     persist: false,
@@ -110,14 +153,30 @@ $('#locations').selectize({
     },
     load: function(query, callback) {
         let add = this.addOption;
-        //if(!query.length) return callback();
         $.ajax({
             url: '/admin/campaigns/locations',
             method: 'GET',
             success: function(data) {
-                /*data.map(d => {
-                    add(d);
-                })*/
+                callback(data);
+            }
+        })
+    }
+});
+$('#applications').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    preload: true,
+    persist: false,
+    maxItems: 1,
+    onDelete:function(value){
+        return '';
+    },
+    load: function(query, callback) {
+        let add = this.addOption;
+        $.ajax({
+            url: '/admin/campaigns/apps',
+            method: 'GET',
+            success: function(data) {
                 callback(data);
             }
         })
