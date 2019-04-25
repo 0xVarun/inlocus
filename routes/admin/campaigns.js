@@ -1,8 +1,6 @@
 const express 			= require('express');
 const router			= express.Router();
-const User				= require('../../utils/User');
-const Campaign			= require('../../utils/Campaign');
-const LocationMaster	= require('../../utils/LocationMaster');
+const utils				= require('../../utils');
 const authMiddleware	= require('../../middleware/auth');
 const appMiddleware		= require('../../middleware/active_application');
 const formidable		= require('formidable');
@@ -10,83 +8,112 @@ const move 				= require('mv');
 const path 				= require('path');
 const uuid				= require('uuid/v4');
 
-router.get('/new', authMiddleware, async (req, res) => {
-	let locations = await LocationMaster.getAllSuperadminLocations();
-	let d = [];
-	locations.map(loc => {
-		// d.push({ "value": loc.id, "text": loc.name + '(' + loc.type + ')' });
-		d.push(loc.name);
-	});
-	console.log(JSON.stringify(d));
-	res.render('admin/campaign', { title: 'New Campaign', layout: 'base', locations: d.join(',') });
+
+/**
+ * @url: /admin/campaigns/create
+ * @method: GET
+ * @template: views/admin/campaign.handlebars
+ * @desc: Create a New Campaign
+ * 
+ * @todo: Content Creation
+ */
+router.get('/create', authMiddleware, (req, res) => {
+	res.render('admin/campaign', { title: 'New Campaign', layout: 'base' });
 });
 
+
+/**
+ * @url: /admin/campaigns/create
+ * @method: POST
+ * @desc: Create campaign entry in database
+ */
+router.post('/create', authMiddleware, (req, res) => {
+	let campaignName = req.body.campaign_name;
+	let campaignTitle = req.body.campaign_title;
+	let startTime = new Date(req.body.start_time);
+	let endTime = new Date(req.body.end_time + " 23:59:59");
+	let campaignText = req.body.campaign_text;
+	let location = req.body.location;
+	let tags = req.body.pretags;
+	let action = req.body.action;
+	let application = req.body.applications;
+	let type = req.body.campaign_type;
+	let content = req.body.content;
+
+	if(type === 'IMAGE') {
+
+	}
+
+	res.redirect('/admin/campaigns/create');
+});
+
+
+/**
+ * @url: /admin/campaigns/locations
+ * @method: GET
+ * @returns: JSON array of Locations
+ * @desc: Used by new campaigns to provide list of locations
+ * 
+ * @todo: Send all superuser created locations and admin only created locations
+ */
 router.get('/locations', authMiddleware, async(req, res) => {
-	let locations = await LocationMaster.getAllSuperadminLocations();
+	let locations = await utils.LocationMaster.getAllSuperadminLocations();
 	let d = [];
-	locations.map(loc => {
-		d.push({ "value": loc.id, "text": loc.name + '(' + loc.type + ')' });
-		// d.push(loc.name);
-	});
+	locations.map(loc => {d.push({ "value": loc.id, "text": loc.name + '(' + loc.type + ')' });});
 	res.json(d);
-})
-
-router.get('/', authMiddleware, async(req, res) => {
-	let campaigns = await Campaign.findAllCampaigns(req.user.applicationId);
-	res.render('admin/campaigns', { title: 'Campaigns', layout: 'base', campaigns: campaigns });
-})
-
-router.post('/create', authMiddleware, async (req, res) => {
-	let form = new formidable.IncomingForm();
-	form.parse(req, async (err, fields, files) => {
-		let campaign_name = fields['cname'];
-		let start_date = fields['startdate'];
-		let end_date = fields['enddate'];
-		let start_time = fields['starttime'] + ':00';
-		let end_time = fields['endtime'] + ':00';
-		let content = fields['content'];
-		let location = fields['location'];
-		let actionUri = fields['actionUri'] || '';
-
-		let start_timestamp = new Date(`${start_date} ${start_time}`);
-		let end_timestamp = new Date(`${end_date} ${end_time}`);
-		/**
-		 * File Handling Begin
-		 */
-		let upload_dir = path.join(process.cwd(), 'public', 'uploads');
-		let temp_file = files['image']['path'];
-		let file_ext = files['image']['type'].split('/')[1];
-		let file_name = uuid();
-		let file = path.join(upload_dir, file_name + '.' + file_ext);
-		move(temp_file, file, { mkdirp: false }, err => {});
-		/**
-		 * File Handling End
-		 */
-
-		let static_path = '/uploads/' + file_name + '.' + file_ext;
-
-		let payload = {
-			name: campaign_name,
-			start_timestamp: start_timestamp,
-			end_timestamp: end_timestamp,
-			content: content,
-			action: actionUri,
-			locationMasterId: location,
-			applicationId: req.user.applicationId,
-			file: static_path
-		}
-
-		await Campaign.createCampaign(payload);
-		res.redirect('/admin/campaigns/new');
-	});
-
 });
 
+
+/**
+ * @url: /admin/campaigns/contents
+ * @method: GET
+ * @returns: JSON array of user created contents
+ * @desc: Attach Content to Campagin
+ */
+router.get('/contents', authMiddleware, async(req, res) => {
+	let contents = await utils.Content.findAll(req.user.id);
+	let jcontent = [];
+	contents.map(content => {jcontent.push({"value": content.id, "text": content.name})});
+	res.json(jcontent);
+})
+
+
+/**
+ * @url: /admin/campaigns/apps
+ * @method: GET
+ * @returns: JSON array of approved apps
+ * @desc: Used by new campaigns creation to specify app for campaign
+ */
+router.get('/apps', authMiddleware, async(req, res) => {
+	let apps = await utils.Application.findAllUserApprovedApps(req.user.id);
+	let japps = [];
+	apps.map(app => { japps.push({ "value": app.id, "text": app.name }); })
+	res.json(japps);
+});
+
+
+/**
+ * @url: /admin/campaigns/edit/:id
+ * @method: GET
+ * @template: views/admin/editcampaign.handlebars
+ */
 router.get('/edit/:id', authMiddleware, async (req, res) => {
 	let camp = await require('../../models').campaign.findOne(req.param.id);
 	res.render('admin/editcampaign', { title: 'Edit Campaigns', layout: 'base', campaign: camp });
 });
 
-// router.post('/edit/:id')
+
+/**
+ * @url: /admin/campaigns
+ * @method: GET
+ * @template: views/admin/campaigns.handlebars
+ * @desc: List all campaigns created by Users
+ * 
+ * @todo: add render template
+ */
+router.get('/', authMiddleware, async(req, res) => {
+	let campaigns = await utils.Campaign.findAllCampaigns(req.user.applicationId);
+	res.render('admin/campaigns', { title: 'Campaigns', layout: 'base', campaigns: campaigns });
+});
 
 module.exports = router;
