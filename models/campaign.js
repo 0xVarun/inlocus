@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
     start_timestamp: DataTypes.DATE,
     end_timestamp: DataTypes.DATE,
     body: DataTypes.STRING,
-    content: DataTypes.STRING,
     action: DataTypes.STRING,
     type: DataTypes.STRING
   }, {});
@@ -18,6 +17,21 @@ module.exports = (sequelize, DataTypes) => {
       },
       targetKey: 'id'
     });
+    campaign.belongsTo(models.user, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      },
+      targetKey: 'id'
+    });
+    campaign.belongsTo(models.content, {
+      foreignKey: {
+        name: 'contentId',
+        allowNull: true
+      },
+      targetKey: 'id'
+    });
+    campaign.hasMany(models.CampaignLocation);
   };
   return campaign;
 };

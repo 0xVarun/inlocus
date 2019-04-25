@@ -27,7 +27,7 @@ router.get('/create', authMiddleware, (req, res) => {
  * @method: POST
  * @desc: Create campaign entry in database
  */
-router.post('/create', authMiddleware, (req, res) => {
+router.post('/create', authMiddleware, async (req, res) => {
 	let campaignName = req.body.campaign_name;
 	let campaignTitle = req.body.campaign_title;
 	let startTime = new Date(req.body.start_time);
@@ -39,9 +39,19 @@ router.post('/create', authMiddleware, (req, res) => {
 	let application = req.body.applications;
 	let type = req.body.campaign_type;
 	let content = req.body.content;
+	let locations = location.split(',');
+
+	console.log({campaignName, campaignText, startTime, endTime, campaignText, locations, action, application, type, content});
 
 	if(type === 'IMAGE') {
-
+		console.log('IMAGE');
+		let campaign = await utils.Campaign.createImageCampaign(campaignName, campaignTitle, startTime, endTime, campaignText, action, content, application, locations, req.user.id);
+	} else if(type === 'TEXT') {
+		console.log('TEXT');
+		let campaign = await utils.Campaign.createTextCampaign(campaignName, campaignTitle, startTime, endTime, campaignText, action, application, locations, req.user.id);
+	} else {
+		req.flash('error_msg', 'Invalid Campagin Type. Needs to be Image or Text');
+		res.redirect('/admin/campaigns/create');
 	}
 
 	res.redirect('/admin/campaigns/create');
@@ -98,8 +108,9 @@ router.get('/apps', authMiddleware, async(req, res) => {
  * @template: views/admin/editcampaign.handlebars
  */
 router.get('/edit/:id', authMiddleware, async (req, res) => {
-	let camp = await require('../../models').campaign.findOne(req.param.id);
-	res.render('admin/editcampaign', { title: 'Edit Campaigns', layout: 'base', campaign: camp });
+	let campaign = await utils.Campaign.findOneCampaign(req.params.id);
+	campaign = JSON.parse(JSON.stringify(campaign));
+	res.render('admin/editcampaign', { title: 'Edit Campaigns', layout: 'base', campaign: campaign });
 });
 
 
@@ -112,7 +123,7 @@ router.get('/edit/:id', authMiddleware, async (req, res) => {
  * @todo: add render template
  */
 router.get('/', authMiddleware, async(req, res) => {
-	let campaigns = await utils.Campaign.findAllCampaigns(req.user.applicationId);
+	let campaigns = await utils.Campaign.findAllCampaigns(req.user.id);
 	res.render('admin/campaigns', { title: 'Campaigns', layout: 'base', campaigns: campaigns });
 });
 
