@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-10 col-xs-12 box-m mb-4">
+        <div class="col-md-8 col-xs-12 box-m mb-4">
             <div class="card shadow margin-top">
                 <div class="card-header">
                     <div class="float-left">Manage Content</div>
@@ -12,53 +12,24 @@
                             <tr class="text-center">
                                 <th scope="col">Sr No</th>
                                 <th scope="col">Name</th>
-                                {{!-- <th scope="col">API KEY</th>
-                                <th scope="col">API SECRET</th> --}}
-                                <th scope="col">App Link</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Production</th>
-                                <th scope="col">Approved</th>
+                                <th scope="col">Content Link</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each application}}
+                            {{#each contents}}
                                 <tr class="text-center">
                                     <td>{{ inc @index}}</td>
                                     <td>{{name}}</td>
-                                    {{!-- <td data-toggle="tooltip" data-placement="bottom" title="{{API_KEY}}">{{API_KEY}}</td>
-                                    <td data-toggle="tooltip" data-placement="bottom" title="{{API_SECRET}}">{{API_SECRET}}</td> --}}
-                                    <td><a style="color: #007bff;" href="{{url}}">App Url</a></td>
-                                    <td>{{category}}</td>
-                                    <td>
-                                        {{#if production}}
-                                        <i style="color: #388E3C" class="fas fa-circle"></i>
-                                        {{else}}
-                                        <i style="color: #d32f2f" class="fas fa-circle"></i>
-                                        {{/if}}
-                                    </td>
-                                    <td>
-                                        {{#if approved}}
-                                        <i style="color: #388E3C" class="fas fa-circle"></i>
-                                        {{else}}
-                                        <i style="color: #d32f2f" class="fas fa-circle"></i>
-                                        {{/if}}
-                                    </td>
+                                    <td><a style="color: #007bff;" href="{{url}}">Content Url</a></td>
                                     <td>
                                         {{!-- EDIT --}}
-                                        <a style="margin-right: 5px;" href="/admin/app/{{id}}"><i style="color: #077ba5;" class="fas fa-eye"></i></a>
+                                        <a style="margin-right: 5px;" href="/admin/content/{{id}}"><i style="color: #077ba5;" class="fas fa-eye"></i></a>
                                         {{!-- END EDIT --}}
                                         {{!-- DELETE --}}
                                         <a style="margin-right: 5px;" href="#"><i style="color: #d32f2f;" class="fas fa-trash-alt"></i></a>
                                         {{!-- END DELETE --}}
                                     </td>
-                                    {{!-- <td><a href="#"><i class="fas fa-edit"></i></a></td>
-                                    {{#if cactive}}
-                                    <td><a href="/admin/api/app/cdeactivate/{{id}}"><i class="fas fa-bell-slash"></i></a></td>
-                                    {{else}}
-                                    <td><a href="/admin/api/app/cactivate/{{id}}"><i class="fas fa-bell"></i></a></td>
-                                    {{/if}}
-                                    <td><a href="#"><i class="fas fa-trash-alt"></i></a></td> --}}
                                 </tr>
                             {{/each}}
                         </tbody>
@@ -66,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-2 col-sm-12 col-xs-12">
+        <div class="col-md-4 col-sm-12 col-xs-12">
             <div class="card shadow margin-top">
                 <div class="card-header">Help</div>
                 <div class="card-body text-center">

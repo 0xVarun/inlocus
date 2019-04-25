@@ -6,7 +6,13 @@ module.exports = (sequelize, DataTypes) => {
     url: DataTypes.STRING
   }, {});
   content.associate = function(models) {
-    content.hasMany(models.campaign);
+    content.belongsTo(models.user, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      },
+      targetKey: 'id'
+    });
   };
   return content;
 };
