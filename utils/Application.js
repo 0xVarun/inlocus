@@ -24,6 +24,12 @@ module.exports.findAllUserApps = (id) => {
 		.catch(err => { throw err; });
 }
 
+module.exports.findAllUserApprovedApps = (id) => {
+	return model.application.findAll({ where: { 'userId': id } })
+		.then(apps => { return apps; })
+		.catch(err => { throw err; });
+}
+
 module.exports.findOneApp = (userId, id) => {
 	return model.application.findOne({ where: { 'userId': userId, 'id': id} })
 		.then(app => { return app; })
