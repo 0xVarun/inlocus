@@ -22,6 +22,9 @@ if(process.env.ENV === 'production') {
 	env.config({ path: path.join(__dirname, 'environments/docker.env') });
 }
 
+// set upload dir path
+process.env.NODE_UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
+
 // set port after env variables are loaded
 const port = process.env.PORT || 3000;
 
