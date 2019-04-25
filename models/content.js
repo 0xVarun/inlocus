@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       targetKey: 'id'
     });
+    content.hasMany(models.campaign);
   };
   return content;
 };
