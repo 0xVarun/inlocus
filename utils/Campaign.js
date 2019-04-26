@@ -1,5 +1,6 @@
-const db		= require('../db/postgres');
-const model		= require('../models');
+const db		    = require('../db/postgres');
+const model		    = require('../models');
+const CampaignMgnt  = require('../campaign/cache');
 
 module.exports.createImageCampaign = async (name, title, start, end, body, action, content, app, locations, userId) => {
     let campaign = undefined;
@@ -9,6 +10,7 @@ module.exports.createImageCampaign = async (name, title, start, end, body, actio
         locations.map(async location => {
             await model.CampaignLocation.create({campaignId: id, locationMasterId: location});
         });
+        CampaignMgnt.addToCache(id);
         return campaign;
     } catch(err) {
         return err;
@@ -21,9 +23,9 @@ module.exports.createTextCampaign = async (name, title, start, end, body, action
         campaign = await model.campaign.create({ name:name, title: title, start_timestamp: start, end_timestamp: end, body: body, action: action, contentId: null, applicationId: app, type: 'TEXT', userId: userId  });
         let id = campaign.id;
         locations.map(async location => {
-            console.log(`map ${location}`);
             await model.CampaignLocation.create({campaignId: id, locationMasterId: location});
         });
+        CampaignMgnt.addToCache(id);
         return campaign;
     } catch(err) {
         return err;
