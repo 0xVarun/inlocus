@@ -11,7 +11,6 @@ const flash 		        = require('connect-flash');
 const passport		      = require('passport');
 const LocalStrategy	    = require('passport-local').Strategy;
 const logger            = require('morgan');
-const Redis             = require('ioredis');
 const models            = require('./models');
 
 // process environment initialize
@@ -32,7 +31,6 @@ const port = process.env.PORT || 3000;
 // db connection import
 const db = require('./db/postgres');
 
-global.redis = new Redis();
 
 // initialize express app
 const app = express();
