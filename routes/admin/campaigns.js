@@ -3,11 +3,6 @@ const router			= express.Router();
 const utils				= require('../../utils');
 const authMiddleware	= require('../../middleware/auth');
 const appMiddleware		= require('../../middleware/active_application');
-const formidable		= require('formidable');
-const move 				= require('mv');
-const path 				= require('path');
-const uuid				= require('uuid/v4');
-
 
 /**
  * @url: /admin/campaigns/create
@@ -40,8 +35,6 @@ router.post('/create', authMiddleware, async (req, res) => {
 	let type = req.body.campaign_type;
 	let content = req.body.content;
 	let locations = location.split(',');
-
-	console.log({campaignName, campaignText, startTime, endTime, campaignText, locations, action, application, type, content});
 
 	if(type === 'IMAGE') {
 		console.log('IMAGE');
