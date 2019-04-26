@@ -25,7 +25,7 @@
                                 <td class="text-center">{{start_timestamp}}</td>
                                 <td class="text-center">{{end_timestamp}}</td>
                                 {{#if contentId}}
-								<td class="text-center"><a href="{{content.url}}">Image</a></td>
+								<td class="text-center"><a href="{{content.url}}" data-lightbox="{{content.name}}" data-title="{{content.name}}">View</a></td>
 								{{else}}
                                 <td class="text-center">No Content</td>
                                 {{/if}}
