@@ -1,49 +1,54 @@
-import sys
-import json
 import requests
+import json
 
+HOST = 'http://localhost:3000{}'
+
+def device_register():
+    url = '/api/device/register'
+    body = { 'IMEI': 'DUMMY_IMEI', 'GAID': 'DUMMY_GAID', 'deviceId': 'DUMMY_DEVICE_ID' }
+    header = { 'Content-Type': 'application/json' }
+    dev_reg = requests.post(HOST.format(url), data=json.dumps(body), headers=header)
+
+    print(dev_reg.status_code)
+
+    return dev_reg.text
+    # {"id":2,"deviceId":"DUMMY_DEVICE_ID"}
+
+def user_register():
+    url = '/api/user/register'
+    body = { 'userId': 'DUMMY_USER_ID', 'mobileNo': 'DUMMY_NUMBER', 'emailId': 'DUMMY_EMAIL', 'deviceId': '2' }
+    header = { 'Content-Type': 'application/json', 'x-app-api-key': 'AXFXD9S-EJCMQ2C-GNYNRSA-MVXTQH2' }
+    usr_reg = requests.post(HOST.format(url), data=json.dumps(body), headers=header)
+
+    print(usr_reg.status_code)
+    print(usr_reg.text)
+
+    # {"appUserId":1}
 
 def login():
-    DEVICE_ID = 'defn24ijqeif2f'
-    USER_ID = 1
+    url = '/api/user/login'
+    body = { 'userId': 1, 'deviceId': 'DUMMY_DEVICE_ID' }
+    header = { 'Content-Type': 'application/json', 'x-app-api-key': 'AXFXD9S-EJCMQ2C-GNYNRSA-MVXTQH2' }
+    login_req = requests.post(HOST.format(url), headers=header, data=json.dumps(body))
 
-    LOGIN_BODY = {
-        "userId": USER_ID,
-        "deviceId": DEVICE_ID
-    }
-    LOGIN_HEADERS = {
-        'Content-Type': 'application/json',
-        'x-app-api-key': 'KHK9J4K-AGQ4BY7-K94B4G8-WQTFWGJ'
-    }
+    print(login_req.status_code)
+    print(login_req.text)     
 
-    login = requests.post('http://localhost:3000/api/user/login', headers=LOGIN_HEADERS, data=json.dumps(LOGIN_BODY))
-    
-    if login.status_code != 200:
-        print('Login Failed')
-        sys.exit(1)
-
-    token_payload = json.loads(login.text)
-    return token_payload['token']
+    # {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcklkIjoiRFVNTVlfVVNFUl9JRCIsIm1vYmlsZU5vIjoiRFVNTVlfTlVNQkVSIiwiZGV2aWNlSWQiOjIsImFwcElkIjoxLCJlbWFpbElkIjoiRFVNTVlfRU1BSUwiLCJpYXQiOjE1NTYyNjMxODMsImV4cCI6MTU4Nzc5OTE4M30.-9ABOXxpXomxaB-PDzT4tZqll1TCtX3XRIWRRKN6hlk"}
 
 def beacon():
+    url = '/api/sensor/beacon'
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcklkIjoiRFVNTVlfVVNFUl9JRCIsIm1vYmlsZU5vIjoiRFVNTVlfTlVNQkVSIiwiZGV2aWNlSWQiOjIsImFwcElkIjoxLCJlbWFpbElkIjoiRFVNTVlfRU1BSUwiLCJpYXQiOjE1NTYyNjMxODMsImV4cCI6MTU4Nzc5OTE4M30.-9ABOXxpXomxaB-PDzT4tZqll1TCtX3XRIWRRKN6hlk'
+    headers = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
+    body = { 'major': '9481', 'minor': '1587', 'uuid': 'snjsndjsndjnajsndjnasdj', 'rssi': -1542975, 'distance': 5 }
+    bea = requests.put(HOST.format(url), headers=headers, data=json.dumps(body))
     
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcklkIjoiVEVTVCIsIm1vYmlsZU5vIjoiODg3OTM0OTUyMSIsImRldmljZUlkIjoxLCJhcHBJZCI6MSwiZW1haWxJZCI6InZ0ZXdhcmkyNkBnbWFpbC5jb20iLCJpYXQiOjE1NTMyMzU4MzAsImV4cCI6MTU4NDc3MTgzMH0.n_WVKw1Iq3eUSfhjvBUjz7tMPii3XkF_juVEDa_FBmg' #token_payload['token']
+    print(bea.status_code)
+    print(bea.text)
     
-    SENSOR_HEADERS = {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer {}'.format(token)
-    }
-
-    BEACON_BODY = {   
-        "major": "36287", #36287
-        "minor": "18995", #18995
-        "rssi": 14845484,
-        "uuid": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
-        "distance": 3
-    }
-    
-    beacon = requests.put('http://localhost:3000/api/sensor/beacon', headers=SENSOR_HEADERS, data=json.dumps(BEACON_BODY))
-    print(beacon.text)
 
 if __name__ == '__main__':
+    # data = device_register()
+    # user_register()
+    # login()
     beacon()

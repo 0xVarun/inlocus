@@ -5,7 +5,23 @@
 
 const model  = require('./models');
 
-model.user
-		.findAll({ include: [ { model: model.application}, {model: model.roles, where: {appstaff: false}} ] })
-		.then( user => { return JSON.stringify(user); } )
-		.catch( err => { throw err; })
+model.campaign.findAll({
+	include:[
+		{
+			model:model.content
+		},
+		{
+			model: model.application
+		}, 
+		{
+			model: model.CampaignLocation,
+			include: {
+				model: model.location_master,
+			}
+		}
+	] 
+})
+	.then(c => { 
+		let x = JSON.parse(JSON.stringify(c));
+		console.log(JSON.stringify(x)) 
+	});
