@@ -17,6 +17,12 @@ module.exports.getAllBeacons = () => {
         .catch(err => { throw err; });
 }
 
+module.exports.getAllUserBeacons = (userId) => {
+    return model.beacon_master.findAll({ where: { userId: userId }, include: [{model: model.location_master}] })
+        .then(beacons => { return beacons; })
+        .catch(err => { throw err; });
+}
+
 module.exports.findOne = (id) => {
     return model.beacon_master.findOne({ where: {id: id}, include:[{model:model.location_master},{model:model.user, attributes: ['email']}, {model: model.tags}] })
         .then(beacon => { return JSON.parse(JSON.stringify(beacon)); })

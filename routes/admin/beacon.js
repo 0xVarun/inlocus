@@ -11,7 +11,8 @@ const utils 			= require('../../utils');
  * @desc: View all beacons added by the admin user
  */
 router.get('/', authMiddleware, async (req, res) => {
-	res.render('admin/adminbeacons', { title: 'Admin', layout: 'base'});
+	let beacons = await utils.BeaconMaster.getAllUserBeacons(req.user.id);
+	res.render('admin/adminbeacons', { title: 'Admin', layout: 'base', beacons: beacons});
 });
 
 
