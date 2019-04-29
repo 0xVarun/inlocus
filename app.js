@@ -26,6 +26,9 @@ if(process.env.ENV === 'production') {
 // set upload dir path
 process.env.NODE_UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
 
+// set timezone
+process.env.TZ = 'asia/kolkata'
+
 // set port after env variables are loaded
 const port = process.env.PORT || 3000;
 
