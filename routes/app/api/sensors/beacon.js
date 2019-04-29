@@ -1,12 +1,12 @@
 const express 		= require('express');
 const router		= express.Router();
-const Sensor 		= require('../../../../utils/Sensor');
+const utils 		= require('../../../../utils');
 const apiMiddleware = require('../../../../middleware/api').apiAuth;
 const _				= require('lodash');
-const CampaignMgmt	= require('../../../../campaign');
+const CampaignMgmt	= require('../../../../campaign/cache');
 
 /**
- * url /api/sendsor/beacon
+ * url /api/sensor/beacon
  * method PUT
  * header authorization: Bearer <TOKEN>
  * body uuid, major, minor, rssi, distance
@@ -31,7 +31,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 		let beacon = undefined;
 		let location = undefined;
 		try {
-			beacon = await Sensor.saveBeacon(payload["major"], payload["minor"], payload["uuid"], payload["rssi"], payload["distance"], deviceId);
+			beacon = await utils.Sensor.saveBeacon(payload["major"], payload["minor"], payload["uuid"], payload["rssi"], payload["distance"], deviceId);
 		} catch (err) {
 			let er = err.name;
 			er = er.replace(/Sequelize/gi, '');
@@ -40,11 +40,21 @@ router.put('/', apiMiddleware, async (req, res) => {
 			return;
 		}
 	}
-	let campaign = await CampaignMgmt({major: payload["major"], minor: payload["minor"], appId: res.locals.user['appId'] }, 'beacon');
-	if(!campaign) {
-		res.sendStatus(304);
+	
+	let id = await utils.Campaign.getOneBeaconCampaign(res.locals.user['appId'], payload['major'], payload['minor'])
+	let campaign = await CampaignMgmt.getCampaign(id, deviceId);
+	if(campaign) {
+		let notif_payload = {
+			"NotificationTitle": campaign.title,
+            "NotificationType": campaign.type,
+            "Text_content": {
+                "Offer_Text": campaign.body,
+                "URI": campaign.action
+            }
+		}
+		res.json(notif_payload);
 	} else {
-		res.json(campaign);
+		res.sendStatus(204);
 	}
 });
 

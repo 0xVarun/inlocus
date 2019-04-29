@@ -44,3 +44,12 @@ module.exports.findOneCampaign = (id) => {
         .then(campaign => { return campaign; })
         .catch(err => { throw err; });
 }
+
+module.exports.getOneBeaconCampaign = async (appId, major, minor) => {
+    let beacon = await model.beacon_master.findOne({ where: { major: major, minor: minor } });
+    let campaign = await model.campaign.findOne({ where: {applicationId: appId }, include:[{
+        model: model.CampaignLocation,
+        include: {model: model.location_master, where: { id: beacon.locationMasterId }}
+    }] })
+    return campaign.id;
+}
