@@ -12,6 +12,7 @@ const passport		      = require('passport');
 const LocalStrategy	    = require('passport-local').Strategy;
 const logger            = require('morgan');
 const models            = require('./models');
+const Cache             = require('./campaign/cache').addToCache;
 
 // process environment initialize
 if(process.env.ENV === 'production') {
@@ -130,10 +131,21 @@ app.get('/data/device', async (req, res) => {
   res.render('devicedata', { title: 'Device Data', layout: 'blank', devices: devices });
 })
 
+function cacheAll() {
+  models.campaign.findAll({ attributes: ['id'] })
+  .then(campaigns => {
+    campaigns.map(campaign => {
+      Cache(campaign.id);
+    })
+  })
+  .catch(err => { console.log(err) }); 
+}
+
 // server
 // db sync
 models.sequelize.sync(/*{ force: true }*/ /*{ alter: true }*/).then(() => {
   app.listen(port, () => {
     console.log(`Running on port ${port}`);
+    cacheAll();
   });
 });
