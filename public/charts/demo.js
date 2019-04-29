@@ -41,6 +41,10 @@ $.ajax({
       date_chart.push(res['date']);
       lables_chart.push(daysOfWeek[mdate.getDay()]);
       count_chart.push(res['count']);
+
+      date_chart.reverse()
+      lables_chart.reverse()
+      count_chart.reverse()
     });
 
     var ctx = document.getElementById("timeline-chart").getContext('2d');
