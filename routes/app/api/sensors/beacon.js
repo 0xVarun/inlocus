@@ -6,10 +6,15 @@ const _				= require('lodash');
 const CampaignMgmt	= require('../../../../campaign/cache');
 
 /**
- * url /api/sensor/beacon
- * method PUT
- * header authorization: Bearer <TOKEN>
- * body uuid, major, minor, rssi, distance
+ * @url: /api/sensor/beacon
+ * @method: PUT
+ * @header: authorization: Bearer <TOKEN>
+ * @body: { uuid, major, minor, rssi, distance } 
+ * @desc: Takes beacon information from device and sends
+ * 	campaign to the device if available 
+ * 
+ * @todo: Create notification payload based on campaign
+ * 	type
  */ 
 router.put('/', apiMiddleware, async (req, res) => {
 
