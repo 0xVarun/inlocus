@@ -14,7 +14,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       targetKey: 'id'
     });
-
+    geofence.belongsTo(models.location_master, {
+      foreignKey: {
+        name: 'locationMasterId',
+        allowNull: false
+      },
+      targetKey: 'id'
+    });
     geofence.hasMany(models.geolocation)
   };
   return geofence;
