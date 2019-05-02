@@ -117,3 +117,36 @@ Notification
 	- CampaignId
 	- AppId
 	- DeviceId
+
+
+[{
+	"id": 1,
+	"name": "inLocus",
+	"url": "https://inlocus.in",
+	"API_KEY": "AXFXD9S-EJCMQ2C-GNYNRSA-MVXTQH2",
+	"API_SECRET": "575fd6a7-7499-4b89-857d-5c65a6fbabc4",
+	"approved": true,
+	"category": "Utilities",
+	"production": true,
+	"createdAt": "2019-04-23T06:06:17.738Z",
+	"updatedAt": "2019-04-24T06:50:15.634Z",
+	"userId": 1,
+	"appusers": [{
+		"id": 1,
+		"userId": "DUMMY_USER_ID",
+		"mobileNo": "DUMMY_NUMBER",
+		"emailId": "DUMMY_EMAIL",
+		"createdAt": "2019-04-26T07:16:24.651Z",
+		"updatedAt": "2019-04-26T07:16:24.651Z",
+		"applicationId": 1,
+		"deviceId": 2,
+		"device": {
+			"id": 2,
+			"IMEI": "DUMMY_IMEI",
+			"GAID": "DUMMY_GAID",
+			"deviceId": "DUMMY_DEVICE_ID",
+			"createdAt": "2019-04-26T06:58:01.571Z",
+			"updatedAt": "2019-04-26T06:58:01.571Z"
+		}
+	}]
+}]

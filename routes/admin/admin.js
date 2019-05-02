@@ -15,9 +15,14 @@ router.get('/', authMiddleware, async (req, res) => {
 	let beacon = await utils.Sensor.getLatestBeacon();
 	let repeatVisitors = await model.beacon.count();
 	let totalVisitors = parseInt(repeatVisitors * 1.2);
-	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors });
+	let apps = await utils.SdkUser.getUsers(req.user.id);
+	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors, apps: apps });
 });
 
+
+router.get('/profile/:id', authMiddleware, async (req, res) => {
+	res.render('admin/userprofile', { title: 'Admin', layout: 'base' });
+});
 
 /**
  * @url: /admin/analytics

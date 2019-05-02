@@ -84,12 +84,28 @@
     </div>
 
     <div class="row margin-top">
-        <div class="col-md-5 col-sm-12 col-xs-12">
+        <div class="col-md-7 col-sm-12 col-xs-12">
             <div class="card shadow">
-                <div class="card-header">Users By Location</div>
+                <div class="card-header">User</div>
                 <div class="card-body">
-                    <h3>Coming Soon...</h3>
-                    <img src="/images/powai.png" alt="placeholder" class="img-fluid">
+                    <table id="locations" class="table table-striped table-bordered table-sm bs-select">
+                        <thead>
+                            <th class="th-sm text-center">Sr No</th>
+                            <th class="th-sm text-center">DeviceId</th>
+                            <th class="th-sm text-center">App</th>
+                        </thead>
+                        <tbody>
+                            {{#each apps}}
+                            {{#each appusers}}
+                            <tr>
+								<td class="text-center">{{inc @index}}</td>
+								<td class="text-center"><a href="/admin/home/profile/{{deviceId}}">{{device.deviceId}}</a></td>
+                                <td class="text-center">{{../name}}</td>
+                            </tr>
+                            {{/each}}
+                            {{/each}}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -97,3 +113,13 @@
 </div>
 <script src="/charts/demo.js"></script>
 <script src="/charts/timeline.js"></script>
+<script>
+$(document).ready(function() {
+    $('#locations').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+    $('.dataTables_filter input').addClass('form-control');
+    $('.dataTables_filter input').addClass('form-control-sm');
+    $('.paginate_button').addClass('page-item');
+    $('.paginate_button').addClass('active');
+});
+</script>

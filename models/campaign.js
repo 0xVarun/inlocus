@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     end_timestamp: DataTypes.DATE,
     body: DataTypes.STRING,
     action: DataTypes.STRING,
+    filters: DataTypes.STRING,
     type: DataTypes.STRING
   }, {});
   campaign.associate = function(models) {

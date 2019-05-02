@@ -68,6 +68,6 @@ if __name__ == '__main__':
     # data = device_register()
     # user_register()
     # login()
-    # beacon()
-    location()
+    beacon()
+    # location()
     # notify()

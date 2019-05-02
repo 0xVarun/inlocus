@@ -18,10 +18,10 @@ async function getUsableLocations(userId) {
     return f.filter(distinct);
 }
 
-module.exports.createImageCampaign = async (name, title, start, end, body, action, content, app, locations, userId) => {
+module.exports.createImageCampaign = async (name, title, start, end, body, action, content, app, locations, userId, filters) => {
     let campaign = undefined;
     try {
-        campaign = await model.campaign.create({ name:name, title: title, start_timestamp: start, end_timestamp: end, body: body, action: action, contentId: content, applicationId: app, type: 'IMAGE', userId: userId  });
+        campaign = await model.campaign.create({ name:name, title: title, start_timestamp: start, end_timestamp: end, body: body, action: action, contentId: content, applicationId: app, type: 'IMAGE', userId: userId, filter: filters  });
         let id = campaign.id;
         locations.map(async location => {
             await model.CampaignLocation.create({campaignId: id, locationMasterId: location});
@@ -33,10 +33,10 @@ module.exports.createImageCampaign = async (name, title, start, end, body, actio
     }
 }
 
-module.exports.createTextCampaign = async (name, title, start, end, body, action, app, locations, userId) => {
+module.exports.createTextCampaign = async (name, title, start, end, body, action, app, locations, userId, filters) => {
     let campaign = undefined;
     try {
-        campaign = await model.campaign.create({ name:name, title: title, start_timestamp: start, end_timestamp: end, body: body, action: action, contentId: null, applicationId: app, type: 'TEXT', userId: userId  });
+        campaign = await model.campaign.create({ name:name, title: title, start_timestamp: start, end_timestamp: end, body: body, action: action, contentId: null, applicationId: app, type: 'TEXT', userId: userId, filter: filters });
         let id = campaign.id;
         locations.map(async location => {
             await model.CampaignLocation.create({campaignId: id, locationMasterId: location});
@@ -67,7 +67,11 @@ module.exports.getOneBeaconCampaign = async (appId, major, minor) => {
         model: model.CampaignLocation,
         include: {model: model.location_master, where: { id: beacon.locationMasterId }}
     }] })
-    return campaign.id;
+    if(campaign) {
+        return campaign.id;
+    } else {
+        return null;
+    }
 }
 
 // TODO Link geofences with Location Master
@@ -85,5 +89,5 @@ module.exports.getOneLocationCampaign = async (appId, lat, lng) => {
 }
 
 module.exports.getOneWifiCampaign = async (appId, deviceId, wifis) => {
-    
+
 } 

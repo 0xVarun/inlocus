@@ -8,13 +8,10 @@ router.get('/:id', apiMiddleware, async (req, res) => {
     let appId   = res.locals.user['appId'];
     let campaignId = req.params.id;
     
-    console.log({deviceId, appId, campaignId});
+    await utils.Notify.clicked("CLICKED", deviceId, appId, campaignId);
 
     res.sendStatus(200);
 });
 
-router.get('/', async (req, res) => {
-    res.sendStatus(400);
-})
 
 module.exports = router;

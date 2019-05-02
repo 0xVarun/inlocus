@@ -34,14 +34,15 @@ router.post('/create', authMiddleware, async (req, res) => {
 	let application = req.body.applications;
 	let type = req.body.campaign_type;
 	let content = req.body.content;
+	let filters = req.body.filters;
 	let locations = location.split(',');
 
 	if(type === 'IMAGE') {
 		console.log('IMAGE');
-		let campaign = await utils.Campaign.createImageCampaign(campaignName, campaignTitle, startTime, endTime, campaignText, action, content, application, locations, req.user.id);
+		let campaign = await utils.Campaign.createImageCampaign(campaignName, campaignTitle, startTime, endTime, campaignText, action, content, application, locations, req.user.id, filters);
 	} else if(type === 'TEXT') {
 		console.log('TEXT');
-		let campaign = await utils.Campaign.createTextCampaign(campaignName, campaignTitle, startTime, endTime, campaignText, action, application, locations, req.user.id);
+		let campaign = await utils.Campaign.createTextCampaign(campaignName, campaignTitle, startTime, endTime, campaignText, action, application, locations, req.user.id, filters);
 	} else {
 		req.flash('error_msg', 'Invalid Campagin Type. Needs to be Image or Text');
 		res.redirect('/admin/campaigns/create');
