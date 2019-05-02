@@ -42,9 +42,9 @@ module.exports.saveMultiWifi = (payload, deviceId) => {
 };
 
 module.exports.countByHour = () => {
-	return model.beacon.findAll({
+	return model.location.findAll({
 		// attributes: [
-		// 	[ sequelize.fn('date_trunc', 'hour', sequelize.col('createdAt')), 'hour'],
+		// 	[ sequelize.fn('date_trunc', '	', sequelize.col('createdAt')), 'hour'],
     	// 	[ sequelize.fn('count', '*'), 'count']
 		// ],
 		// group: 'hour'

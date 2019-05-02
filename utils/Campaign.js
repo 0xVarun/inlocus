@@ -21,7 +21,7 @@ async function getUsableLocations(userId) {
 module.exports.createImageCampaign = async (name, title, start, end, body, action, content, app, locations, userId, filters) => {
     let campaign = undefined;
     try {
-        campaign = await model.campaign.create({ name:name, title: title, start_timestamp: start, end_timestamp: end, body: body, action: action, contentId: content, applicationId: app, type: 'IMAGE', userId: userId, filter: filters  });
+        campaign = await model.campaign.create({ name:name, title: title, start_timestamp: start, end_timestamp: end, body: body, action: action, contentId: content, applicationId: app, type: 'IMAGE', userId: userId, filters: filters  });
         let id = campaign.id;
         locations.map(async location => {
             await model.CampaignLocation.create({campaignId: id, locationMasterId: location});
@@ -36,7 +36,7 @@ module.exports.createImageCampaign = async (name, title, start, end, body, actio
 module.exports.createTextCampaign = async (name, title, start, end, body, action, app, locations, userId, filters) => {
     let campaign = undefined;
     try {
-        campaign = await model.campaign.create({ name:name, title: title, start_timestamp: start, end_timestamp: end, body: body, action: action, contentId: null, applicationId: app, type: 'TEXT', userId: userId, filter: filters });
+        campaign = await model.campaign.create({ name:name, title: title, start_timestamp: start, end_timestamp: end, body: body, action: action, contentId: null, applicationId: app, type: 'TEXT', userId: userId, filters: filters });
         let id = campaign.id;
         locations.map(async location => {
             await model.CampaignLocation.create({campaignId: id, locationMasterId: location});
