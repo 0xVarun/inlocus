@@ -1,6 +1,9 @@
 const db		= require('../db/postgres');
 const model		= require('../models');
 
+const distinct = (v, i, s) => {
+    return s.indexOf(v) === i;
+}
 
 module.exports.createLocations = (name, type, latitude, longitude, userId) => {
     return model.location_master.create({name: name, type: type, latitude: latitude, longitude: longitude, userId: userId})
@@ -18,6 +21,17 @@ module.exports.getAllSuperadminLocations = () => {
     return model.location_master.findAll({include:[{model: model.user, include: [{model: model.roles}]}]})
         .then(location => { return location; })
         .catch(err => { throw err; });
+}
+
+module.exports.getUsableLocations = async userId => {
+    let f = [];
+    let suLocations = await model.location_master.findAll({include:[{model: model.user,attributes: [],include: {model: model.roles, attributes: [], where: {superadmin: true }}}]});
+    let locations = await model.location_master.findAll({where: { userId: userId }});
+    suLocations = JSON.parse(JSON.stringify(suLocations));
+    suLocations.map(s => { f.push(s) });
+    locations = JSON.parse(JSON.stringify(locations));
+    locations.map(s => { f.push(s) });
+    return f.filter(distinct);
 }
 
 module.exports.deleteLocation = (id) => {

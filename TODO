@@ -109,3 +109,11 @@ NUmber of active app users
 		}
 	}]
 }
+
+
+Notification
+	- Sent
+	- Clicked
+	- CampaignId
+	- AppId
+	- DeviceId

@@ -38,6 +38,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="location">Location <small>*</small></label>
+                                <select name="location" id="location" class="browser-default custom-select">
+                                    <option selected="true" disabled="true">---Select---</option>
+                                    {{#each locations}}
+                                    <option value="{{id}}">{{name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
                         <button type="submit" id="submitBtn" class="btn btn-success btn-user" disabled="true">Create</button>
                     </form>
                 </div>

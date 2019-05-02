@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       targetKey: 'id'
     });
     campaign.hasMany(models.CampaignLocation);
+    campaign.hasMany(models.notify);
   };
   return campaign;
 };

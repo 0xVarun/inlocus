@@ -1,15 +1,21 @@
 const express 		= require('express');
 const router		= express.Router();
-const Sensor 		= require('../../../../utils/Sensor');
+const utils 		= require('../../../../utils');
 const apiMiddleware = require('../../../../middleware/api').apiAuth;
 const _				= require('lodash');
+const Cache			= require('../../../../campaign/cache').getCampaign;
 
 /**
- * url /api/sensor/location
- * method PUT
- * header authorization: Bearer <TOKEN>
- * body latitude, longitude
- */ 
+ * @url: /api/sensor/location
+ * @method: PUT
+ * @header: authorization: Bearer <TOKEN>
+ * @body: { latitude, longitude } 
+ * @desc: Takes location information from device and sends
+ * 	campaign to the device if available 
+ * 
+ * @todo: Create notification payload based on campaign
+ * 	type
+ */
 router.put('/', apiMiddleware, async (req, res) => {
 
 	if(!req.is('application/json')){
@@ -29,7 +35,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 	} else {
 		let location = undefined;
 		try {
-			location = await Sensor.saveLocation(payload["latitude"], payload["longitude"], deviceId);
+			location = await utils.Sensor.saveLocation(payload["latitude"], payload["longitude"], deviceId);
 		} catch(err) {
 			let er = err.name;
 			er = er.replace(/Sequelize/gi, '');
@@ -39,7 +45,28 @@ router.put('/', apiMiddleware, async (req, res) => {
 		}
 	}
 
-	res.status(201).send({'title': "", 'body': {}});
+	let id = await utils.Campaign.getOneLocationCampaign(res.locals.user['appId'], payload['latitude'], payload['longitude']);
+
+	if(id) {
+		let campaign = await Cache(id, deviceId);
+		if(campaign) {
+			let notif_payload = {
+				"CampaignId": campaign.id,
+				"NotificationTitle": campaign.title,
+				"NotificationType": campaign.type,
+				"Text_content": {
+					"Offer_Text": campaign.body,
+					"URI": campaign.action
+				}
+			}
+			res.json(notif_payload);
+		} else {
+			res.sendStatus(204)
+		}
+	} else {
+		res.sendStatus(204);
+	}
+	
 });
 
 module.exports = router;

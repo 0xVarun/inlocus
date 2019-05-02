@@ -46,9 +46,28 @@ def beacon():
     print(bea.status_code)
     print(bea.text)
     
+def location():
+    url = '/api/sensor/location'
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcklkIjoiRFVNTVlfVVNFUl9JRCIsIm1vYmlsZU5vIjoiRFVNTVlfTlVNQkVSIiwiZGV2aWNlSWQiOjIsImFwcElkIjoxLCJlbWFpbElkIjoiRFVNTVlfRU1BSUwiLCJpYXQiOjE1NTYyNjMxODMsImV4cCI6MTU4Nzc5OTE4M30.-9ABOXxpXomxaB-PDzT4tZqll1TCtX3XRIWRRKN6hlk'
+    headers = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
+    body = { 'latitude': '19.119178953763367', 'longitude': '72.9128210792652' }
+    bea = requests.put(HOST.format(url), headers=headers, data=json.dumps(body))
+    
+    print(bea.status_code)
+    print(bea.text)
+
+def notify():
+    url = '/api/notify/7'
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcklkIjoiRFVNTVlfVVNFUl9JRCIsIm1vYmlsZU5vIjoiRFVNTVlfTlVNQkVSIiwiZGV2aWNlSWQiOjIsImFwcElkIjoxLCJlbWFpbElkIjoiRFVNTVlfRU1BSUwiLCJpYXQiOjE1NTYyNjMxODMsImV4cCI6MTU4Nzc5OTE4M30.-9ABOXxpXomxaB-PDzT4tZqll1TCtX3XRIWRRKN6hlk'
+    headers = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
+    bea = requests.get(HOST.format(url), headers=headers)
+    
+    print(bea.status_code)
 
 if __name__ == '__main__':
     # data = device_register()
     # user_register()
     # login()
-    beacon()
+    # beacon()
+    location()
+    # notify()

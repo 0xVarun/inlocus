@@ -8,8 +8,8 @@ const model		= require('../models');
  * @param      {Integer}  user    User id
  * @return     {geofence}  Newly created Geo Fence
  */
-module.exports.create = function(name, user, lat, lng, rad) {
-	return model.geofence.create({ name: name, userId: user, latitude: lat, longitude: lng, radius: rad })
+module.exports.create = function(name, user, lat, lng, rad, location) {
+	return model.geofence.create({ name: name, userId: user, latitude: lat, longitude: lng, radius: rad, locationMasterId: location })
 		.then( fence => { return fence })
 		.catch( err => { throw err; })
 };
@@ -50,7 +50,7 @@ module.exports.findOneAndUpdate = (id, payload) => {
 	// 	.catch(err => { throw err; });
 	model.geofence.findByPk(id)
         .then( geofence => {
-            geofence.update({ latitude: payload.lat, longitude: payload.lng, radius: payload.rad, name: payload.name });
+            geofence.update({ latitude: payload.lat, longitude: payload.lng, radius: payload.rad, name: payload.name, locationMasterId: payload.location });
         })
         .catch( err => { throw err; });
 }

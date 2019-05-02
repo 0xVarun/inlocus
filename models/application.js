@@ -17,8 +17,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       targetKey: 'id'
     });
-    application.hasMany(models.appuser)
-    application.hasMany(models.campaign)
+    application.hasMany(models.appuser);
+    application.hasMany(models.campaign);
+    application.hasMany(models.notify);
   };
   return application;
 };

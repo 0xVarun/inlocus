@@ -1,6 +1,6 @@
 const express 			= require('express');
 const router			= express.Router();
-const GeoFence 			= require('../../utils/GeoFence');
+const utils 			= require('../../utils');
 const authMiddleware	= require('../../middleware/auth');
 const suMiddleware		= require('../../middleware/superadmin');
 
@@ -12,7 +12,7 @@ const suMiddleware		= require('../../middleware/superadmin');
  * @desc: View all Geofences
  */
 router.get('/', authMiddleware, async (req, res) => {
-    let fences = await GeoFence.findAllFences(req.user.id);
+    let fences = await utils.GeoFence.findAllFences(req.user.id);
     res.render('admin/managegeofence', { title: 'Admin', layout: 'base', fences: fences});
 });
 
@@ -24,7 +24,8 @@ router.get('/', authMiddleware, async (req, res) => {
  * @desc: Create New Geofences
  */
 router.get('/create', authMiddleware, async (req, res) => {
-    res.render('admin/geofence', { title: 'Admin', layout: 'base'});
+    let locations = await utils.LocationMaster.getUsableLocations(req.user.id);
+    res.render('admin/geofence', { title: 'Admin', layout: 'base', locations: locations});
 });
 
 
@@ -38,8 +39,9 @@ router.post('/create', authMiddleware, async (req, res) => {
     let lat  = req.body.latitude;
     let lng  = req.body.longitude;
     let rad  = req.body.radius;
+    let location = req.body.location;
 
-    await GeoFence.create(name, req.user.id, lat, lng, rad);
+    await utils.GeoFence.create(name, req.user.id, lat, lng, rad, location);
 
     res.redirect('/admin/geofence/create');
 });
@@ -52,8 +54,9 @@ router.post('/create', authMiddleware, async (req, res) => {
  * @desc: View and Edit already created GeoFence
  */
 router.get('/:id', authMiddleware, async (req, res) => {
-    let fence = await GeoFence.findOneFence(req.params.id);
-    res.render('admin/editgeofence', { title: 'Admin', layout: 'base', fence: fence});
+    let fence = await utils.GeoFence.findOneFence(req.params.id);
+    let locations = await utils.LocationMaster.getUsableLocations(req.user.id);
+    res.render('admin/editgeofence', { title: 'Admin', layout: 'base', fence: fence, locations: locations});
 });
 
 
@@ -67,10 +70,11 @@ router.post('/:id', authMiddleware, async (req, res) => {
         lat: req.body.latitude,
         lng: req.body.longitude,
         name: req.body.fence_name,
-        rad: req.body.radius
+        rad: req.body.radius,
+        location: req.body.location
     };
 
-    await GeoFence.findOneAndUpdate(req.params.id, payload);
+    await utils.GeoFence.findOneAndUpdate(req.params.id, payload);
 
     res.redirect(`/admin/geofence/${req.params.id}`);
 
