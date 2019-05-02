@@ -21,7 +21,8 @@ module.exports.getLatestBeacon = async () => {
 		return '';
 	}
 	let mbeacon = await model.beacon_master.findOne({ where: { major: beacon[0].major, minor: beacon[0].minor }});
-	return mbeacon.shortlink;
+	if(mbeacon) {return mbeacon.shortlink}
+	else { return '' };
 }
 
 function saveWifi(macId, ssid, rssi, distance, freq, deviceId) {

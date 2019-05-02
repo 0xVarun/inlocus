@@ -33,8 +33,8 @@ router.post('/create', authMiddleware, async (req, res) => {
 	let action = req.body.action;
 	let application = req.body.applications;
 	let type = req.body.campaign_type;
-	let content = req.body.content;
-	let filters = req.body.filters;
+	let content = req.body.content || null;
+	let filters = req.body.filters || '';
 	let locations = location.split(',');
 
 	if(type === 'IMAGE') {
@@ -112,9 +112,7 @@ router.get('/edit/:id', authMiddleware, async (req, res) => {
  * @url: /admin/campaigns
  * @method: GET
  * @template: views/admin/campaigns.handlebars
- * @desc: List all campaigns created by Users
- * 
- * @todo: add render template
+ * @desc: List all campaigns created by Users 
  */
 router.get('/', authMiddleware, async(req, res) => {
 	let campaigns = await utils.Campaign.findAllCampaigns(req.user.id);

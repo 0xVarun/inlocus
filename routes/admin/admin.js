@@ -20,10 +20,6 @@ router.get('/', authMiddleware, async (req, res) => {
 });
 
 
-router.get('/profile/:id', authMiddleware, async (req, res) => {
-	res.render('admin/userprofile', { title: 'Admin', layout: 'base' });
-});
-
 /**
  * @url: /admin/analytics
  * @method: GET
@@ -217,5 +213,26 @@ router.post('/beacon/:id', suMiddleware, async(req, res) => {
 	await utils.BeaconMaster.findOneAndUpdate(id, major, minor, uuid, shortlink, location);
 	res.redirect('/admin/home/beacons');
 })
+
+router.get('/profile/:id', authMiddleware, async (req, res) => {
+	let locations = await model.location.findAll({ where: { deviceId: req.params.id } });
+	let deviceId = await model.device.findOne({where: {id: req.params.id}});
+	let countClicked = await model.notify.count({ where: { status: 'CLICKED'} });
+	let countSent = await model.notify.count({ where: { status: 'SENT'} });
+	let notif = await model.notify.findOne({where:{status: 'SENT'}, order: [['createdAt', 'DESC']] });
+	let lastNotif = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);
+
+	let notifc = await model.notify.findOne({where:{status: 'SENT'}, order: [['createdAt', 'DESC']] });
+	let lastNotifc = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);
+	console.log(lastNotif);  
+	res.render('admin/userprofile', { title: 'Admin', layout: 'base', location: locations, tid: req.params.id, device:deviceId, countClicked: countClicked, countSent: countSent, lastNotif: lastNotif, lastNotifc:lastNotifc });
+});
+
+router.get('/profile/:id/:long', authMiddleware, async (req, res) => {
+	let data = await model.location.find({where: {id: req.params.long, deviceId: req.params.id}});
+	let deviceId = await model.device.findOne({where: {id: req.params.id}})
+	res.render('admin/viewonmap', { title: 'Admin', layout: 'base', data: data, deviceId: deviceId });
+});
+
 
 module.exports = router;
