@@ -29,7 +29,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   return s.join(dec);
 }
 $.ajax({
-  url: '/admin/home/beacon/list',
+  url: '/admin/home/graph',
   method: 'GET',
   success: response => {
     let lables_chart = [];

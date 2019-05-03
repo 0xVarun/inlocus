@@ -26,7 +26,7 @@ async function getCampaign(id, deviceId) {
     let isAllowed = await checkIfId(deviceId);
     if(isAllowed) {
         let payload = await cache.get(id.toString());
-        redis.set(deviceId, 1, 'ex', 900);
+        redis.set(deviceId, 1, 'ex', 300);
         return payload;
     } else {
         return null;

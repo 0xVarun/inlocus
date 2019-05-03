@@ -1,8 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const notification = sequelize.define('notification', {
-    clicked: DataTypes.BOOLEAN,
-    sent: DataTypes.BOOLEAN
+    status: DataTypes.STRING,
+    type: DataTypes.STRING
   }, {});
   notification.associate = function(models) {
     notification.belongsTo(models.device, {

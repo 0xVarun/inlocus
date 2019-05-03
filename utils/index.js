@@ -12,6 +12,7 @@ const utilExports = {
     User: require('./User'),
     Tag: require('./Tags'),
     Content: require('./Content'),
+    Notify: require('./Notify'),
 }
 
 module.exports = utilExports;

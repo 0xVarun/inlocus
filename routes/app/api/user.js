@@ -27,7 +27,7 @@ router.post('/register', async (req, res) => {
 	try {
 		application_id = await Application.getAppId(api_key);
 	} catch(err) {
-		res.sendStatus(500);
+		res.status(400).send({message: 'invalid api key'})
 		return;
 	}
 

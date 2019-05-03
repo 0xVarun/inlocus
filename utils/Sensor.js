@@ -21,7 +21,8 @@ module.exports.getLatestBeacon = async () => {
 		return '';
 	}
 	let mbeacon = await model.beacon_master.findOne({ where: { major: beacon[0].major, minor: beacon[0].minor }});
-	return mbeacon.shortlink;
+	if(mbeacon) {return mbeacon.shortlink}
+	else { return '' };
 }
 
 function saveWifi(macId, ssid, rssi, distance, freq, deviceId) {
@@ -41,9 +42,9 @@ module.exports.saveMultiWifi = (payload, deviceId) => {
 };
 
 module.exports.countByHour = () => {
-	return model.beacon.findAll({
+	return model.location.findAll({
 		// attributes: [
-		// 	[ sequelize.fn('date_trunc', 'hour', sequelize.col('createdAt')), 'hour'],
+		// 	[ sequelize.fn('date_trunc', '	', sequelize.col('createdAt')), 'hour'],
     	// 	[ sequelize.fn('count', '*'), 'count']
 		// ],
 		// group: 'hour'
@@ -55,4 +56,31 @@ module.exports.countByHour = () => {
 	})
 		.then( beacons => { return beacons; })
 		.catch( err => { return {err}; })
+}
+
+module.exports.getDeviceCount = async () => {
+	let android = 0;
+	let iPhone = 0;
+
+	let d = await model.device.findAll({ attributes:['GAID'] });
+	d.map(x => {
+
+		let type = x['GAID'].split(',')[1].trim().split(' ')[0];
+
+		if(type === 'Android') {
+			android++;
+		} else if( type === 'iPhone') {
+			iPhone++;
+		}
+	});
+	return { android, iPhone };
+}
+
+
+module.exports.getLatestLocation = async () => {
+	let beacon = await model.location.findAll({ limit: 1, order: [['createdAt', 'DESC']]});
+	if(beacon.length === 0) {
+		return '';
+	}
+	return `${beacon[0].latitude}, ${beacon[0].longitude}` 
 }

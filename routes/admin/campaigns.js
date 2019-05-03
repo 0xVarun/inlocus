@@ -33,15 +33,16 @@ router.post('/create', authMiddleware, async (req, res) => {
 	let action = req.body.action;
 	let application = req.body.applications;
 	let type = req.body.campaign_type;
-	let content = req.body.content;
+	let content = req.body.content || null;
+	let filters = req.body.filters || '';
 	let locations = location.split(',');
 
 	if(type === 'IMAGE') {
 		console.log('IMAGE');
-		let campaign = await utils.Campaign.createImageCampaign(campaignName, campaignTitle, startTime, endTime, campaignText, action, content, application, locations, req.user.id);
+		let campaign = await utils.Campaign.createImageCampaign(campaignName, campaignTitle, startTime, endTime, campaignText, action, content, application, locations, req.user.id, filters);
 	} else if(type === 'TEXT') {
 		console.log('TEXT');
-		let campaign = await utils.Campaign.createTextCampaign(campaignName, campaignTitle, startTime, endTime, campaignText, action, application, locations, req.user.id);
+		let campaign = await utils.Campaign.createTextCampaign(campaignName, campaignTitle, startTime, endTime, campaignText, action, application, locations, req.user.id, filters);
 	} else {
 		req.flash('error_msg', 'Invalid Campagin Type. Needs to be Image or Text');
 		res.redirect('/admin/campaigns/create');
@@ -103,6 +104,7 @@ router.get('/apps', authMiddleware, async(req, res) => {
 router.get('/edit/:id', authMiddleware, async (req, res) => {
 	let campaign = await utils.Campaign.findOneCampaign(req.params.id);
 	campaign = JSON.parse(JSON.stringify(campaign));
+	console.log(campaign);
 	res.render('admin/editcampaign', { title: 'Edit Campaigns', layout: 'base', campaign: campaign });
 });
 
@@ -111,9 +113,7 @@ router.get('/edit/:id', authMiddleware, async (req, res) => {
  * @url: /admin/campaigns
  * @method: GET
  * @template: views/admin/campaigns.handlebars
- * @desc: List all campaigns created by Users
- * 
- * @todo: add render template
+ * @desc: List all campaigns created by Users 
  */
 router.get('/', authMiddleware, async(req, res) => {
 	let campaigns = await utils.Campaign.findAllCampaigns(req.user.id);

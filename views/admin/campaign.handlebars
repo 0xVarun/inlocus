@@ -55,6 +55,10 @@
                                 <label for="tags">Tags</label>
                                 <input type="text" name="tags" id="tags">
                             </div>
+                            <div class="col">
+                                <label for="filters">Filters</label>
+                                <input type="text" name="filters" id="filters">
+                            </div>
                         </div>
                         <div class="form-row">
                             <div class="col">
@@ -108,6 +112,15 @@ $('#tags').selectize({
     create: function(input) {
         return {value: input,text: input}
     },
+    onDelete:function(value){
+        return '';
+    }
+});
+$('#filters').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    persist: false,
+    options: [ {value: "In Bag", text: "In Bag"}, {value: "In Hand", text: "In Hand"}, {value: "Walking", text: "Walking"} ],
     onDelete:function(value){
         return '';
     }

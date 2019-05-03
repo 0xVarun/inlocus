@@ -47,7 +47,13 @@ router.put('/', apiMiddleware, async (req, res) => {
 	}
 	
 	let id = await utils.Campaign.getOneBeaconCampaign(res.locals.user['appId'], payload['major'], payload['minor'])
-	let campaign = await CampaignMgmt.getCampaign(id, deviceId);
+	
+	let campaign =  undefined;
+	
+	// if(id) {
+	// 	campaign = await CampaignMgmt.getCampaign(id, deviceId);
+	// }
+	
 	if(campaign) {
 		let notif_payload = {
 			"NotificationTitle": campaign.title,

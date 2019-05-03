@@ -58,14 +58,14 @@ module.exports.rmCampaignReady = function(id) {
 
 module.exports.isActive = function(key, secret) {
 	return model.application
-		.find({ where: { API_KEY: key, API_SECRET: secret } })
+		.findOne({ where: { API_KEY: key, API_SECRET: secret } })
 		.then( app => { if( app.approved ) return true; else return false })
 		.catch(err => { return err });
 }
 
 module.exports.getAppId = function(key) {
 	return model.application
-		.find({ where: { API_KEY: key }})
+		.findOne({ where: { API_KEY: key }})
 		.then( app => { return app.id })
 		.catch(err => { throw err; });
 }

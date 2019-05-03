@@ -12,7 +12,7 @@ const passport		      = require('passport');
 const LocalStrategy	    = require('passport-local').Strategy;
 const logger            = require('morgan');
 const models            = require('./models');
-const Cache             = require('./campaign/cache').addToCache;
+const cacheAll          = require('./cache');
 
 // process environment initialize
 if(process.env.ENV === 'production') {
@@ -62,6 +62,12 @@ app.engine('handlebars', handlebars({
           var t = 'value="' + value + '"';
           return ! RegExp(t).test(v) ? v : v.replace(t, t + ' selected="selected"');
       }).join('\n');
+    },
+    split: function(value, options) {
+      return value.split(',')[1].trim();
+    },
+    locale: function(value, options) {
+      return value.toLocaleString('en-US', { timeZone: 'asia/kolkata' });
     }
   } 
 }));
@@ -134,15 +140,7 @@ app.get('/data/device', async (req, res) => {
   res.render('devicedata', { title: 'Device Data', layout: 'blank', devices: devices });
 })
 
-function cacheAll() {
-  models.campaign.findAll({ attributes: ['id'] })
-  .then(campaigns => {
-    campaigns.map(campaign => {
-      Cache(campaign.id);
-    })
-  })
-  .catch(err => { console.log(err) }); 
-}
+
 
 // server
 // db sync
