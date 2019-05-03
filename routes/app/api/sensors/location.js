@@ -61,7 +61,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 				}
 			}
 			res.json(notif_payload);
-			await utils.Notify.sent("SENT", deviceId, res.locals.user['appId'], campaign.id);
+			await utils.Notify.sent("SENT", deviceId, res.locals.user['appId'], campaign.id, "LOCATION");
 		} else {
 			res.sendStatus(204)
 		}

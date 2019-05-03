@@ -5,23 +5,25 @@
 
 const model  = require('./models');
 
-model.campaign.findAll({
-	include:[
-		{
-			model:model.content
-		},
-		{
-			model: model.application
-		}, 
-		{
-			model: model.CampaignLocation,
-			include: {
-				model: model.location_master,
-			}
+
+async function t(){
+
+	let android = 0;
+	let ios = 0;
+
+	let d = await model.device.findAll({ attributes:['GAID'] });
+	d.map(x => {
+
+		let type = x['GAID'].split(',')[1].trim().split(' ')[0];
+
+		if(type === 'Android') {
+			android++;
+		} else if( type === 'iPhone') {
+			ios++;
 		}
-	] 
-})
-	.then(c => { 
-		let x = JSON.parse(JSON.stringify(c));
-		console.log(JSON.stringify(x)) 
 	});
+
+	console.log(JSON.parse(`{"android": ${android}, "iphone": ${ios}}`));
+}
+
+t();

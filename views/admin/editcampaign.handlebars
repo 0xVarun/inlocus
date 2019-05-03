@@ -52,11 +52,15 @@
                         <div class="form-row">
                             <div class="col">
 								<label for="campaignLocation">Location <small>*</small></label>
-                                <input type="text" name="location" id="locations" readonly="true">
+                                <input type="text" name="location" id="locations" readonly="true" >
                             </div>
                             <div class="col">
                                 <label for="tags">Tags</label>
                                 <input type="text" name="tags" id="tags" readonly="true">
+                            </div>
+                            <div class="col">
+                                <label for="filters">Filters</label>
+                                <input type="text" name="filters" id="filters" value="{{campaign.filters}}">
                             </div>
                         </div>
                         <div class="form-row">
@@ -107,6 +111,15 @@ $('#tags').selectize({
     create: function(input) {
         return {value: input,text: input}
     },
+    onDelete:function(value){
+        return '';
+    }
+});
+$('#filters').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    persist: false,
+    options: [ {value: "In Bag", text: "In Bag"}, {value: "In Hand", text: "In Hand"}, {value: "Walking", text: "Walking"} ],
     onDelete:function(value){
         return '';
     }

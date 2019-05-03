@@ -12,8 +12,8 @@ const model 			= require('../../models');
  * @desc: Admin Dashboard
  */
 router.get('/', authMiddleware, async (req, res) => {
-	let beacon = await utils.Sensor.getLatestBeacon();
-	let repeatVisitors = await model.beacon.count();
+	let beacon = await utils.Sensor.getLatestLocation();
+	let repeatVisitors = await model.location.count();
 	let totalVisitors = parseInt(repeatVisitors * 1.2);
 	let apps = await utils.SdkUser.getUsers(req.user.id);
 	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors, apps: apps });
@@ -40,6 +40,12 @@ router.get('/analytics', authMiddleware, (req, res) => {
  */
 router.get('/graph', async(req, res) => {
 	let data = await utils.Sensor.countByHour();
+	res.json(data);
+});
+
+
+router.get('/pie', async(req, res) => {
+	let data = await utils.Sensor.getDeviceCount();
 	res.json(data);
 });
 
@@ -190,15 +196,13 @@ router.post('/beacon/:id', suMiddleware, async(req, res) => {
  */
 router.get('/profile/:id', authMiddleware, async (req, res) => {
 	let locations = await model.location.findAll({ where: { deviceId: req.params.id } });
-	let deviceId = await model.device.findOne({where: {id: req.params.id}});
+	let deviceId = await model.device.findOne({where: {id: req.params.id}, include:[{model:model.appuser, include: {model:model.application}}]});
 	let countClicked = await model.notify.count({ where: { status: 'CLICKED'} });
 	let countSent = await model.notify.count({ where: { status: 'SENT'} });
 	let notif = await model.notify.findOne({where:{status: 'SENT'}, order: [['createdAt', 'DESC']] });
 	let lastNotif = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);
-
 	let notifc = await model.notify.findOne({where:{status: 'SENT'}, order: [['createdAt', 'DESC']] });
 	let lastNotifc = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);
-	console.log(lastNotif);  
 	res.render('admin/userprofile', { title: 'Admin', layout: 'base', location: locations, tid: req.params.id, device:deviceId, countClicked: countClicked, countSent: countSent, lastNotif: lastNotif, lastNotifc:lastNotifc });
 });
 
