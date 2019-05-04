@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <title>inLocus</title>
+    <style>.card{border: none}</style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.5/css/mdb.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- Chartjs Deps -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script>$(function (){$('[data-toggle="tooltip"]').tooltip()})</script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <!-- SELECTIZE DEPS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.min.css">
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <!-- Moment JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+
+    <!-- Date Time Pickers -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bootstrap-material-datetimepicker.css">
+    <script src="/js/bootstrap-material-datetimepicker.js"></script>
+
+    <!-- File Uploader -->
+    <link rel="stylesheet" href="/css/dropify.min.css">
+    <script src="/js/dropify.min.js"></script>
+
+    <!-- Lightbox -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.0/css/lightbox.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.0/js/lightbox.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/admin/home"><i class="fas fa-home"></i> Home</a>
+                </li>
+                {{#if user.role.superadmin}}
+                <li class="nav-item dropdown lf-margin">
+                    <a class="nav-link dropdown-toggle" id="actions" href="#" data-toggle="dropdown" aria-expanded="false">Superuser</a>
+                    <div class="dropdown-menu" aria-labelledby="actions">
+                        <div class="dropdown-header">Super Admin</div>
+                        <a href="/admin/home/apps" class="dropdown-item cursor-pointer">Manage Apps</a>
+                        <a href="/admin/home/users" class="dropdown-item cursor-pointer">Manager Users</a>
+                        <a href="/admin/home/locations" class="dropdown-item cursor-pointer">Manage Location</a>
+                        <a href="/admin/home/beacons" class="dropdown-item cursor-pointer">Manage Beacons</a>
+                        <a href="#" class="dropdown-item cursor-pointer">Manage WiFi AP</a>
+                        <a href="#" class="dropdown-item cursor-pointer">Manage Advertisers</a>
+                    </div>
+                </li>
+                {{/if}}
+                {{#if user.role.appadmin}}
+                <li class="nav-item dropdown lf-margin">
+                    <a href="#" class="nav-link dropdown-toggle" id="appadmin" data-toggle="dropdown" aria-expanded="false">Admin</a>
+                    <div class="dropdown-menu" aria-labelledby="appadmin">
+                        <div class="dropdown-header">App Admin</div>
+                        <a href="" class="dropdown-item cursor-pointer">Manage Users</a>
+                        <a href="/admin/app" class="dropdown-item cursor-pointer">Manage Apps</a>
+                        <a href="/admin/beacon" class="dropdown-item cursor-pointer">Manage Beacons</a>
+                        <a href="/admin/location" class="dropdown-item cursor-pointer">Manage Locations</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown lf-margin">
+                    <a href="#" class="nav-link dropdown-toggle" id="campaigns" data-toggle="dropdown" aria-expanded="false">Campaigns</a>
+                    <div class="dropdown-menu" aria-labelledby="campaigns">
+                        <div class="dropdown-header">Campaign Management</div>
+                        <a href="/admin/campaigns" class="dropdown-item cursor-pointer">Manage Campaigns</a>
+                        <hr>
+                        <div class="dropdown-header">Content Management</div>
+                        <a href="/admin/content" class="dropdown-item cursor-pointer">Manage Contents</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown lf-margin">
+                    <a href="#" class="nav-link dropdown-toggle" id="geofence" data-toggle="dropdown" aria-expanded="false">Geofences</a>
+                    <div class="dropdown-menu" aria-labelledby="geofence">
+                        <div class="dropdown-header">Geofence Management</div>
+                        <a href="/admin/geofence/create" class="dropdown-item cursor-pointer">New Fence</a>
+                        <a href="/admin/geofence" class="dropdown-item cursor-pointer">View all Fences</a>
+                    </div>
+                </li>
+                {{/if}}
+                {{#if user.role.appstaff}}
+                {{/if}}
+                {{#if user.role.advertiser}}
+                {{/if}}
+            </ul>
+        </div>
+        <div class="mx-auto order-0">
+            <a class="navbar-brand mx-auto" href="/admin/home"><i style="color: #4e73df;" class="fas fa-map-marker-alt"></i> inLocus</a>
+        </div>
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item" style="margin-right: 1.5em;">
+                    <a class="nav-link" href="/docs"><i class="fas fa-book"></i> Docs</a>
+                </li>
+                <li class="nav-item" style="margin-right: 1.5em;">
+                    <a href="#" class="nav-link"><i class="fas fa-headset"></i> Support</a>
+                </li>
+                <li class="nav-item dropdown" style="margin-right: 1.5em;">
+                    <a class="nav-link dropdown-toggle text-success" id="userAction" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-user"></i> {{user.name}}</a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userAction">
+                        <a class="dropdown-item" href="#"><i style="color: #4b70dd;" class="fas fa-users"></i> Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/admin/login/logout"><i style="color: #4b70dd;" class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="snackbar">{{success_msg}}</div>
+    <div class="container-fluid" style="margin-top: 3em;">
+        {{{body}}}
+    </div>
+    <hr>
+    <footer class="footer mt-auto py-3">
+        <div class="container">
+            <span class="text-muted">&copy; inLocus</span>
+        </div>
+    </footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.6/js/mdb.min.js"></script>
+<script src="/js/socket-notification.js"></script>
+</body>
+</html>

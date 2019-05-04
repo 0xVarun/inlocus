@@ -12,6 +12,7 @@ const passport		      = require('passport');
 const LocalStrategy	    = require('passport-local').Strategy;
 const logger            = require('morgan');
 const models            = require('./models');
+const cacheAll          = require('./cache');
 
 // process environment initialize
 if(process.env.ENV === 'production') {
@@ -21,6 +22,12 @@ if(process.env.ENV === 'production') {
 } else if(process.env.ENV === 'docker') {
 	env.config({ path: path.join(__dirname, 'environments/docker.env') });
 }
+
+// set upload dir path
+process.env.NODE_UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
+
+// set timezone
+process.env.TZ = 'asia/kolkata'
 
 // set port after env variables are loaded
 const port = process.env.PORT || 3000;
@@ -41,7 +48,29 @@ const app_routes	= require('./routes/app/routes.js');
 
 // initialize view engine
 app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', handlebars({ defaultLayout: 'layout' }));
+app.engine('handlebars', handlebars({ 
+  defaultLayout: 'layout',
+  helpers: {
+    inc: function(value, option) {
+      return parseInt(value) + 1;
+    },
+    hide: function(value, option) {
+      return '****' + value.substring(value.length - 4);
+    },
+    select: function(value, options) { // Select helper to select the default option for each question
+      return options.fn(this).split('\n').map(function(v) {
+          var t = 'value="' + value + '"';
+          return ! RegExp(t).test(v) ? v : v.replace(t, t + ' selected="selected"');
+      }).join('\n');
+    },
+    split: function(value, options) {
+      return value.split(',')[1].trim();
+    },
+    locale: function(value, options) {
+      return value.toLocaleString('en-US', { timeZone: 'asia/kolkata' });
+    }
+  } 
+}));
 app.set('view engine', 'handlebars');
 
 // initialize middleware
@@ -111,10 +140,13 @@ app.get('/data/device', async (req, res) => {
   res.render('devicedata', { title: 'Device Data', layout: 'blank', devices: devices });
 })
 
+
+
 // server
 // db sync
-models.sequelize.sync(/*{ force: true }*/).then(() => {
+models.sequelize.sync(/*{ force: true }*/ /*{ alter: true }*/).then(() => {
   app.listen(port, () => {
     console.log(`Running on port ${port}`);
+    cacheAll();
   });
 });

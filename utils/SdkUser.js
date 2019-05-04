@@ -20,3 +20,15 @@ module.exports.getUserById = function(userId) {
 module.exports.updateAppUser = function(appUser){
 
 }
+
+module.exports.getUsers = async (userId) => {
+	let apps = await model.application.findAll({ 
+		where: { 
+			userId: userId 
+		}, 
+		include: [
+			{model:model.appuser, include: {model: model.device}},
+		]
+	});
+	return apps;
+}

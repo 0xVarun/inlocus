@@ -1,15 +1,38 @@
 const db		= require('../db/postgres');
 const model		= require('../models');
 
-module.exports.registerApplication = function(name, api_key, api_secret) {
-	model.application.create({name: name, API_KEY: api_key, API_SECRET: api_secret,active: false,cactive: false})
+module.exports.registerApplication = (name, url, key, secret, approved, category, production, userid) => {
+	model.application.create({ name: name, url: url, API_KEY: key, API_SECRET: secret, approved: approved, category: category, production: production, userId: userid })
 		.then(app => { return app; })
 		.catch(err => { throw err; });
+}
+
+module.exports.update = (production, userId, appId) => {
+	return model.application
+		.update({ production: production }, { where: { id: appId, userId: userId }, returning: true, plain: true})
 }
 
 module.exports.findAll = function() {
 	return model.application.findAll()
 		.then(apps => { return apps; })
+		.catch(err => { throw err; });
+}
+
+module.exports.findAllUserApps = (id) => {
+	return model.application.findAll({ where: { 'userId': id } })
+		.then(apps => { return apps; })
+		.catch(err => { throw err; });
+}
+
+module.exports.findAllUserApprovedApps = (id) => {
+	return model.application.findAll({ where: { 'userId': id } })
+		.then(apps => { return apps; })
+		.catch(err => { throw err; });
+}
+
+module.exports.findOneApp = (userId, id) => {
+	return model.application.findOne({ where: { 'userId': userId, 'id': id} })
+		.then(app => { return app; })
 		.catch(err => { throw err; });
 }
 
@@ -35,14 +58,14 @@ module.exports.rmCampaignReady = function(id) {
 
 module.exports.isActive = function(key, secret) {
 	return model.application
-		.find({ where: { API_KEY: key, API_SECRET: secret } })
-		.then( app => { if( app.active ) return true; else return false })
+		.findOne({ where: { API_KEY: key, API_SECRET: secret } })
+		.then( app => { if( app.approved ) return true; else return false })
 		.catch(err => { return err });
 }
 
 module.exports.getAppId = function(key) {
 	return model.application
-		.find({ where: { API_KEY: key }})
+		.findOne({ where: { API_KEY: key }})
 		.then( app => { return app.id })
 		.catch(err => { throw err; });
 }

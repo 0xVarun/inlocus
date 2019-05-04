@@ -18,6 +18,7 @@ if (config.use_env_variable) {
 const db = {
   application: sequelize.import('./application'),
   user: sequelize.import('./user'),
+  roles: sequelize.import('./roles'),
   device: sequelize.import('./device'),
   appuser: sequelize.import('./appuser'),
   beacon: sequelize.import('./beacon'),
@@ -25,9 +26,13 @@ const db = {
   location: sequelize.import('./location'),
   geofence: sequelize.import('./geofence'),
   geolocation: sequelize.import('./geolocation'),
+  notify: sequelize.import('./notification'),
   location_master: sequelize.import('./location_master'),
   campaign: sequelize.import('./campaign'),
-  beacon_master: sequelize.import('./beacon_master')
+  beacon_master: sequelize.import('./beacon_master'),
+  tags: sequelize.import('./tags'),
+  content: sequelize.import('./content'),
+  CampaignLocation: sequelize.import('./campaign_location'),
 };
 
 

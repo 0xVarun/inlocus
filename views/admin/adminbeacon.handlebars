@@ -1,0 +1,69 @@
+<div class="container-fluid">
+    <div class="row margin-top">
+        <div class="col-md-8 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">New Beacon</div>
+                <div class="card-body">
+                    <form accept="/admin/home/beacon" method="POST">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="beaconMajor" name="major" class="form-control">
+                                    <label for="beaconMajor">Beacon Major</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="beaconMinor" name="minor" class="form-control">
+                                    <label for="beaconMinor">Beacon Minor</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="beaconUUID" name="uuid" class="form-control">
+                                    <label for="beaconUUID">Beacon UUID</label>
+                                </div>
+                            </div>
+                           <div class="col">
+                                <label for="cTags">Custom Tags</label>
+                                <input type="text" name="ctags" id="cTags">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="beaconShortlink" name="shortlink" class="form-control">
+                                    <label for="beaconShortlink">Shortlink</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{!-- <div class="md-form"> --}}
+                                    <label for="beaconLocation">Locations</label>
+                                    <select name="location" id="beaconLocation" class="browser-default custom-select">
+                                        {{#each locations}}
+                                            <option value="{{id}}">{{name}} - {{type}}</option>
+                                        {{/each}}
+                                    </select>
+                                {{!-- </div> --}}
+                            </div>
+                        </div>
+                        <button class="btn btn-info my-4 btn-block float-md-right" type="submit">Create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">New Beacon</div>
+                <div class="card-body text-center">
+                    <center><i style="color: #dad612" class="fas fa-exclamation-triangle fa-3x"></i></center>
+                    <br>
+                    <p>Please remember to fill all<br> fields before submitting</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>$('#cTags').selectize({plugins:['drag_drop'],delimiter: ',',persist: false,create: function(input){return {value: input,text: input}},onDelete:function(value){return '';}});</script>

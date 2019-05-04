@@ -5,6 +5,15 @@ const passport			= require('passport');
 const LocalStrategy		= require('passport-local').Strategy;
 const authMiddleware	= require('../../middleware/auth');
 
+
+/**
+ * @url: /admin/login
+ * @method: GET
+ * @template: views/admin/login
+ * @desc: Login Page
+ * 
+ * @todo: create registration page 
+ */
 router.get('/', (req, res) => {
 	if(req.isAuthenticated()) {
 		res.redirect('/admin/home');
@@ -14,19 +23,17 @@ router.get('/', (req, res) => {
 	res.render('admin/login');
 });
 
-router.get('/register', (req, res) => {
-	res.render('admin/register');
-});
 
 router.get('/forgot', (req, res) => {
 	res.render('admin/forgotpass');
 })
 
+
 passport.use(new LocalStrategy({usernameField: 'email'}, (email, password, done) => {
 	adminUser.getUserByEmail(email, (err, user) => {
 		if(err) throw err;
 		if(!user) return done(null, false, {message: 'Unknown User'});
-		if(!user.active) return done(null, false, { message: 'User Account pending activation' });
+		if(!user.role.active) return done(null, false, { message: 'User Account pending activation' });
 		adminUser.authenticateUser(password, user.password, (err, isMatch) => {
 			if(err) throw err;
 			if(isMatch){
@@ -48,12 +55,24 @@ passport.deserializeUser((id, done) => {
 	});
 });
 
+
+/**
+ * @url: /
+ * @method: POST
+ * @desc: Login Post call, responsible for authenticating user and settings role perms
+ */
 router.post('/', 
 	passport.authenticate('local', { successRedirect:'/admin/home', failureRedirect:'/admin/login',failureFlash: true }) ,
 	(req, res) => {
 	res.redirect('/admin/home');
 });
 
+
+/**
+ * @url /admin/login/logout
+ * @method: GET
+ * @desc: Log user out and destroy session
+ */
 router.get('/logout', authMiddleware, (req, res) => {
 	req.logout();
 	res.redirect('/admin/login');

@@ -1,0 +1,189 @@
+<div class="container-fluid">
+    <div class="row margin-top">
+        <div class="col-md-8 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <div class="float-left">
+                        <a href="/admin/campaigns"><i class="fas fa-chevron-left"></i> <b>Campaign</b></a>
+                        {{campaign.name}}
+                    </div>
+                    <div class="float-right">
+                        <a href="/admin/campaigns/new"><i class="fas fa-plus"></i></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="campaign_name" id="campaign_name" class="form-control" value="{{campaign.name}}">
+                                    <label for="campaign_name">Campaign Name <small>*</small></label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="campaign_title" id="campaign_title" class="form-control" value="{{campaign.title}}">
+                                    <label for="campaign_title">Notification Title <small>*</small></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" class="form-control" name="start_time" id="start_time" value="{{campaign.start_timestamp}}" readonly="true">
+                                    <label for="start_time">Start Date <small>*</small></label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="end_time" id="end_time" class="form-control" value="{{campaign.end_timestamp}}" readonly="true">
+                                    <label for="end_time">End Date <small>*</small></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <textarea class="md-textarea form-control" name="campaign_text" id="campaign_text" rows="5" maxlength="140" readonly="true">{{campaign.body}}</textarea>
+                                    <label for="campaign_text">Notification Body <small>*</small></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+								<label for="campaignLocation">Location <small>*</small></label>
+                                <input type="text" name="location" id="locations" readonly="true" >
+                            </div>
+                            <div class="col">
+                                <label for="tags">Tags</label>
+                                <input type="text" name="tags" id="tags" readonly="true">
+                            </div>
+                            <div class="col">
+                                <label for="filters">Filters</label>
+                                <input type="text" name="filters" id="filters" value="{{campaign.filters}}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="action" id="action" class="form-control" value="{{campaign.action}}" readonly="true">
+                                    <label for="action">Action <small>*</small></label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="applications">App <small>*</small></label>
+                                <input type="text" name="applications" id="applications" required="true" disabled="true" value="{{campaign.application.name}}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="campaign_type">Campaign Type <small>*</small></label>
+                                <input type="text" name="campaign_type" id="campaign_type" disabled="true" value="{{campaign.type}}">
+                            </div>
+                            <div class="col">
+                                <label for="contents">Content</label>
+                                <input type="text" name="content" id="contents" required="true" disabled="true" value="{{campaign.content.name}}">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    Campaign Edit Action
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+//$('#start_time').bootstrapMaterialDatePicker({ weekStart : 0, minDate: new Date(), format : 'YYYY-MM-DD HH:mm' });
+$('#end_time').bootstrapMaterialDatePicker({ format: 'YYYY-MM-DD', time: false});
+$('#start_time').bootstrapMaterialDatePicker({ weekStart : 0, minDate: new Date(), format : 'YYYY-MM-DD', time: false }).on('change', function(e, date){
+    $('#end_time').bootstrapMaterialDatePicker('setMinDate', date);
+    $('#end_time').bootstrapMaterialDatePicker('setFormat', 'YYYY-MM-DD');
+}); 
+$('#tags').selectize({
+    delimiter: ',',
+    persist: false,
+    create: function(input) {
+        return {value: input,text: input}
+    },
+    onDelete:function(value){
+        return '';
+    }
+});
+$('#filters').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    persist: false,
+    options: [ {value: "In Bag", text: "In Bag"}, {value: "In Hand", text: "In Hand"}, {value: "Walking", text: "Walking"} ],
+    onDelete:function(value){
+        return '';
+    }
+});
+$('#campaign_type').selectize({
+    delimiter: ',',
+    persist: false,
+    options: [ {value: "TEXT", text: "TEXT"}, {value: "IMAGE", text: "IMAGE"} ],
+    onDelete:function(value){
+        return '';
+    }
+});
+$('#contents').selectize({
+    delimiter: ',',
+    preload: true,
+    persist: false,
+    onDelete:function(value){
+        return '';
+    },
+    load: function(query, callback) {
+        let add = this.addOption;
+        $.ajax({
+            url: '/admin/campaigns/contents',
+            method: 'GET',
+            success: function(data) {
+                callback(data);
+            }
+        })
+    }
+});
+$('#locations').selectize({
+    delimiter: ',',
+    preload: true,
+    persist: false,
+    onDelete:function(value){
+        return '';
+    },
+    load: function(query, callback) {
+        let add = this.addOption;
+        $.ajax({
+            url: '/admin/campaigns/locations',
+            method: 'GET',
+            success: function(data) {
+                callback(data);
+            }
+        })
+    }
+});
+$('#applications').selectize({
+    delimiter: ',',
+    preload: true,
+    persist: false,
+    onDelete:function(value){
+        return '';
+    },
+    load: function(query, callback) {
+        let add = this.addOption;
+        $.ajax({
+            url: '/admin/campaigns/apps',
+            method: 'GET',
+            success: function(data) {
+                callback(data);
+            }
+        })
+    }
+});
+</script>

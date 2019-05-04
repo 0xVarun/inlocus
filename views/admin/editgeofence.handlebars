@@ -1,0 +1,254 @@
+<style>#map {height: 400px;width: 100%;}</style>
+<div class="containe-fluid">
+    <div class="row row-eq-height margin-top">
+        <div class="col-md-4 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header"><a href="/admin/geofence"><i class="fas fa-chevron-left"></i></a> Geofence</div>
+                <div class="card-body">
+                    <form action="/admin/geofence/{{fence.id}}" method="POST">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="fence_name" id="fence_name" class="form-control" required="true" value="{{fence.name}}">
+                                    <label for="fence_name">Geofence Name <small>*</small></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="latitude" id="latitude" class="form-control" readonly="true" placeholder="Latitude" value="{{fence.latitude}}">
+                                    <label for="latitude">Latitude</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="longitude" id="longitude" class="form-control" readonly="true" placeholder="Longitude" value="{{fence.longitude}}">
+                                    <label for="longitude">Longitude</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="radius" id="radius" class="form-control" readonly="true" placeholder="Radius" value="{{fence.radius}}">
+                                    <label for="radius">Radius</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="location">Location <small>*</small></label>
+                                <select name="location" id="location" class="browser-default custom-select">
+                                    <option selected="true" disabled="true">---Select---</option>
+                                    {{#select fence.locationMasterId}}
+                                    {{#each locations}}
+                                    <option value="{{id}}">{{name}}</option>
+                                    {{/each}}
+                                    {{/select}}
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" id="submitBtn" class="btn btn-success btn-user">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">Map</div>
+                <div class="card-body">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+function initMap(){
+    
+    let mLocation = undefined;
+    let map = undefined;
+    let drawingManager = undefined;
+
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition( position => {
+            mLocation = { lat: parseFloat($("#latitude").val()), lng: parseFloat($("#longitude").val()) };
+            map = new google.maps.Map(document.getElementById('map'), {zoom: 18, center: mLocation});
+
+            let all_overlays = [];
+            let selectedShape;
+            drawingManager = new google.maps.drawing.DrawingManager({
+            drawingMode: google.maps.drawing.OverlayType.MARKER,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER,
+                drawingModes: [
+                    //google.maps.drawing.OverlayType.MARKER,
+                    google.maps.drawing.OverlayType.CIRCLE,
+                    //google.maps.drawing.OverlayType.POLYGON,
+                    //google.maps.drawing.OverlayType.RECTANGLE
+                ]
+            },
+            circleOptions: {
+                fillColor: '#4d72de',
+                fillOpacity: 0.1,
+                strokeWeight: 3,
+                clickable: true,
+                editable: true,
+                zIndex: 1
+            },
+            rectangleOptions: {
+                fillColor: '#4d72de',
+                fillOpacity: 0.5,
+                strokeWeight: 3,
+                clickable: true,
+                editable: true,
+                zIndex: 1
+            }
+        });
+
+        function clearFence() {
+            if(selectedShape) {
+                selectedShape.setEditable(false);
+                selectedShape = null;
+            }
+        }
+
+        function setFence(shape) {
+            clearFence();
+            selectedShape = shape;
+            shape.setEditable(true);
+        }
+
+        function deleteSelectedFence() {
+            if (selectedShape) {
+                selectedShape.setMap(null);
+                selectedShape = null;
+            }
+        }
+
+        function deleteAllShape() {
+            for (var i = 0; i < all_overlays.length; i++) {
+                all_overlays[i].overlay.setMap(null);
+            }
+            all_overlays = [];
+        }
+
+        drawingManager.setMap(map);
+
+        google.maps.event.addListener(drawingManager, 'circlecomplete', function(circle) {
+            google.maps.event.addListener(circle, 'dragend', function() {
+                console.log('dragended')
+            })
+        });
+
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+            if(event.type == 'circle') {
+                let radius = event.overlay.getRadius();
+                let lat = event.overlay.center.lat();
+                let lng = event.overlay.center.lng();
+                $("#radius").val(radius);
+                $("#latitude").val(lat);
+                $("#longitude").val(lng);
+                $("#submitBtn").removeAttr('disabled');
+            }
+        });
+
+        google.maps.event.addListener(drawingManager, 'dragend', function(event) {
+            console.log('dragend');
+        });
+
+        createFence(map, drawingManager);
+
+        });
+    } else {
+        mLocation = { lat: parseFloat($("#latitude").val()), lng: parseFloat($("#longitude").val()) };
+        map = new google.maps.Map(document.getElementById('map'), {zoom: 18, center: mLocation});
+        drawingManager = new google.maps.drawing.DrawingManager({
+            drawingMode: google.maps.drawing.OverlayType.CIRCLE,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER,
+                drawingModes: [
+                    //google.maps.drawing.OverlayType.MARKER,
+                    google.maps.drawing.OverlayType.CIRCLE,
+                    //google.maps.drawing.OverlayType.POLYGON,
+                    //google.maps.drawing.OverlayType.RECTANGLE
+                ]
+            },
+            circleOptions: {
+                fillColor: '#4d72de',
+                fillOpacity: 0.5,
+                strokeWeight: 3,
+                clickable: true,
+                editable: true,
+                zIndex: 1
+            },
+            rectangleOptions: {
+                fillColor: '#4d72de',
+                fillOpacity: 0.5,
+                strokeWeight: 3,
+                clickable: true,
+                editable: true,
+                zIndex: 1
+            }
+        });
+        drawingManager.setMap(map);
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+            if(event.type == 'circle') {
+                let radius = event.overlay.getRadius();
+                let lat = event.overlay.center.lat();
+                let lng = event.overlay.center.lng();
+                $("#radius").val(radius);
+                $("#latitude").val(lat);
+                $("#longitude").val(lng);
+                $("#submitBtn").removeAttr('disabled');
+            }
+        });
+
+        google.maps.event.addListener(drawingManager, 'circlecomplete', function(circle) {
+            console.log('circle Complete')
+            google.maps.event.addListener(circle, 'dragend', function() {
+                console.log('dragended')
+            })
+        });
+
+        createFence(map, drawingManager);
+    }
+}
+
+function createFence(map, drawingManager) {
+    let marker = new google.maps.Marker({
+        map: map,
+        position: new google.maps.LatLng($("#latitude").val(), $("#longitude").val()),
+        editable: true
+    });
+    let cir = new google.maps.Circle({
+        map: map,
+        radius: parseFloat($("#radius").val()), 
+        fillColor: '#4d72de',
+        fillOpacity: 0.5,
+        strokeWeight: 3,
+        editable: true
+    });
+    cir.bindTo('center', marker, 'position');
+    marker.setMap(null);
+    google.maps.event.addListener(cir, 'radius_changed', function() {
+        let radius = cir.getRadius();
+        $("#radius").val(radius);
+    });
+    google.maps.event.addListener(cir, 'center_changed', function() {
+        console.log('cchanged');
+        let lat = cir.map.center.lat();
+        let lng = cir.map.center.lng();
+        $("#latitude").val(lat);
+        $("#longitude").val(lng);
+    })
+}
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgAjjr1VNy4zJCZEz-6FgIdkH3SVBS6jA&callback=initMap&libraries=drawing"></script>

@@ -1,115 +1,198 @@
-<link rel="stylesheet" href="/css/classic.css">
-<link rel="stylesheet" href="/css/classic.date.css">
-<link rel="stylesheet" href="/css/classic.time.css">
-<link rel="stylesheet" href="/css/dropify.min.css">
-<script src="/js/picker.js"></script>
-<script src="/js/picker.date.js"></script>
-<script src="/js/picker.time.js"></script>
-<script src="/js/dropify.min.js"></script>
 <div class="container-fluid">
-	<h1 class="h3 mb-2 text-gray-800">Campaigns</h1>
-
-	<div class="card shadow mb-4">
-		<div class="card-header py-3">
-			<h6 class="m-0 font-weight-bold text-primary">Create New Campaign</h6>
-		</div>
-		
-		<div class="card-body">
-			<form class="user" action="/admin/campaigns/create" method="post" enctype="multipart/form-data">
-				<div class="form-group">
-                    <input type="text" class="form-control form-control-user" name="cname" placeholder="Campagin Name" required>
+    {{#if error_msg}}
+    <div class="alert alert-danger">{{error_msg}}</div>
+    {{/if}}
+    <div class="row margin-top">
+        <div class="col-md-8 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <div class="float-left"><a href="/admin/campaigns"><i class="fas fa-chevron-left"></i></a> Campaigns</div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                        <input type="text" autocomplete="off" id="sdate" class="form-control form-control-user mdate" name="startdate" placeholder="Start Date">
-                    </div>	
-                    <div class="col-sm-6">
-                        <input type="text" autocomplete="off" id="edate" class="form-control form-control-user mdate" name="enddate" placeholder="End Date">
-                        <div class="input-group-addon">
-        					<span class="glyphicon glyphicon-th"></span>
-    					</div>
-                	</div>
+                <div class="card-body">
+                    <form action="/admin/campaigns/create" method="POST">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="campaign_name" id="campaign_name" class="form-control">
+                                    <label for="campaign_name">Campaign Name <small>*</small></label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="campaign_title" id="campaign_title" class="form-control">
+                                    <label for="campaign_title">Notification Title <small>*</small></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" class="form-control" name="start_time" id="start_time">
+                                    <label for="start_time">Start Date <small>*</small></label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="end_time" id="end_time" class="form-control">
+                                    <label for="end_time">End Date <small>*</small></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <textarea class="md-textarea form-control" name="campaign_text" id="campaign_text" rows="5" maxlength="140"></textarea>
+                                    <label for="campaign_text">Notification Body <small>*</small></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+								<label for="campaignLocation">Location <small>*</small></label>
+                                <input type="text" name="location" id="locations">
+                            </div>
+                            <div class="col">
+                                <label for="tags">Tags</label>
+                                <input type="text" name="tags" id="tags">
+                            </div>
+                            <div class="col">
+                                <label for="filters">Filters</label>
+                                <input type="text" name="filters" id="filters">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" name="action" id="action" class="form-control" >
+                                    <label for="action">Action <small>*</small></label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="applications">App <small>*</small></label>
+                                <input type="text" name="applications" id="applications" required="true">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="campaign_type">Campaign Type <small>*</small></label>
+                                <input type="text" name="campaign_type" id="campaign_type">
+                            </div>
+                            <div class="col">
+                                <label for="contents">Content</label>
+                                <input type="text" name="content" id="contents" required="true">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-light-blue">Create Campaign</button>
+                    </form>
                 </div>
-                <div class="form-group row">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                        <input type="text" autocomplete="off" id="stime" class="form-control form-control-user" name="starttime" placeholder="Start Time">
-                    </div>	
-                    <div class="col-sm-6">
-                      <input type="text" autocomplete="off" id="etime" class="form-control form-control-user" name="endtime" placeholder="End Time">
-                    <div class="input-group-addon">
-        					<span class="glyphicon glyphicon-th"></span>
-    					</div>
-                	</div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    Campaign Creation Help
                 </div>
-                <div class="form-group">
-                	<input type="text" placeholder="Campaign Text" name="content" id="Content" class="form-control form-control-user">
+                <div class="card-body">
                 </div>
-                <div class="form-group row">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                        <select class="form-control custom-select" name="location" id="location">
-                            <option value="0" disabled selected>--------</option>
-                            {{#each locations}}
-                            <option value="{{id}}">{{name}} - {{type}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="text" name="actionUri" id="actionUri" placeholder="Action URI" class="form-control form-control-user">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="container">
-                        <input type="file" name="image" id="input-file-now" class="dropify" placeholder="Camapign Image"  data-plugin="dropify" data-default-file accept="image/png, image/jpeg">
-                    </div>
-                </div>
-                <button id="submitBtn" disabled="true" type="submit" class="btn btn-primary btn-user btn-block">Create</button>
-            </form>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
-let today = moment();
-//let nextDay = moment(today, "DD-MM-YYYY").add(1, 'days');
-//let minsTime = today.hour() + 1;
-let start_date = $('#sdate').pickadate();
-let end_date = $('#edate').pickadate();
-let from_date = start_date.pickadate('picker');
-from_date.set('min', today._d);
-from_date.set('formatSubmit', 'yyyy/mm/dd');
-from_date.set('hiddenName', true);
-let to_date = end_date.pickadate('picker');
-to_date.set('min', false);
-to_date.set('formatSubmit', 'yyyy/mm/dd');
-to_date.set('hiddenName', true);
-from_date.on('set', function(event) {
-    if (event.select) {
-        let mdate = from_date.get('select');
-        to_date.clear();
-        let temp = mdate.date + 1;
-        mdate['date'] = temp;
-        to_date.set('min', mdate);
+//$('#start_time').bootstrapMaterialDatePicker({ weekStart : 0, minDate: new Date(), format : 'YYYY-MM-DD HH:mm' });
+$('#end_time').bootstrapMaterialDatePicker({ format: 'YYYY-MM-DD', time: false});
+$('#start_time').bootstrapMaterialDatePicker({ weekStart : 0, minDate: new Date(), format : 'YYYY-MM-DD', time: false }).on('change', function(e, date){
+    $('#end_time').bootstrapMaterialDatePicker('setMinDate', date);
+    $('#end_time').bootstrapMaterialDatePicker('setFormat', 'YYYY-MM-DD');
+}); 
+$('#tags').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    persist: false,
+    create: function(input) {
+        return {value: input,text: input}
+    },
+    onDelete:function(value){
+        return '';
     }
 });
-$('#stime').pickatime({
-    formatSubmit: 'HH:i',
-    hiddenName: true,
-    interval: 60,
-    hiddenSuffix: ':00'
+$('#filters').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    persist: false,
+    options: [ {value: "In Bag", text: "In Bag"}, {value: "In Hand", text: "In Hand"}, {value: "Walking", text: "Walking"} ],
+    onDelete:function(value){
+        return '';
+    }
 });
-$('#etime').pickatime({
-    formatSubmit: 'HH:i',
-    hiddenName: true,
-    interval: 60,
-    hiddenSuffix: ':00'
+$('#campaign_type').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    persist: false,
+    maxItems: 1,
+    options: [ {value: "TEXT", text: "TEXT"}, {value: "IMAGE", text: "IMAGE"} ],
+    onDelete:function(value){
+        return '';
+    }
 });
-</script>
-<script>
-$('.dropify').dropify();
-$('#location').change(function() {
-    if ($('#location').val() == 0) {
-        $("#submitBtn").prop('disabled',true);
-    } else {
-        $("#submitBtn").prop('disabled',false);
+$('#contents').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    preload: true,
+    persist: false,
+    maxItems: 1,
+    onDelete:function(value){
+        return '';
+    },
+    load: function(query, callback) {
+        let add = this.addOption;
+        $.ajax({
+            url: '/admin/campaigns/contents',
+            method: 'GET',
+            success: function(data) {
+                callback(data);
+            }
+        })
+    }
+});
+$('#locations').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    preload: true,
+    persist: false,
+    maxItems: 5,
+    onDelete:function(value){
+        return '';
+    },
+    load: function(query, callback) {
+        let add = this.addOption;
+        $.ajax({
+            url: '/admin/campaigns/locations',
+            method: 'GET',
+            success: function(data) {
+                callback(data);
+            }
+        })
+    }
+});
+$('#applications').selectize({
+    plugins:['remove_button'],
+    delimiter: ',',
+    preload: true,
+    persist: false,
+    maxItems: 1,
+    onDelete:function(value){
+        return '';
+    },
+    load: function(query, callback) {
+        let add = this.addOption;
+        $.ajax({
+            url: '/admin/campaigns/apps',
+            method: 'GET',
+            success: function(data) {
+                callback(data);
+            }
+        })
     }
 });
 </script>

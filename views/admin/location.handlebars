@@ -1,0 +1,55 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 col-xs-12 box-m mb-4">
+            <div class="card shadow margin-top">
+                <div class="card-header"><a href="/admin/location"><i class="fas fa-chevron-left"></i></a> Create Location</div>
+                <div class="card-body">
+                    <form method="POST" action="/admin/location/create">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="locationName" name="locationName" class="form-control">
+                                    <label for="locationName">Location Name <small>*</small></label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="locationType" name="locationtype" class="form-control">
+                                    <label for="locationType">Location Type <small>*</small></label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="cTags">Custom Tags</label>
+                                <input type="text" name="ctags" id="cTags">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="latitude" name="latitude" class="form-control">
+                                    <label for="latitude">Latitude <small>*</small></label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="longitude" name="longitude" class="form-control">
+                                    <label for="longitude">Longitude <small>*</small></label>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-info my-4 btn-block float-md-right" type="submit">Add Location</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <div class="card shadow margin-top">
+                <div class="card-header">Applications Creation Help</div>
+                <div class="card-body text-center">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>$('#cTags').selectize({plugins:['drag_drop'],delimiter: ',',persist: false,create: function(input){return {value: input,text: input}},onDelete:function(value){return '';}});</script>

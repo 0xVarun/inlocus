@@ -2,6 +2,9 @@
 module.exports = (sequelize, DataTypes) => {
   const geofence = sequelize.define('geofence', {
     name: DataTypes.STRING,
+    latitude: DataTypes.DOUBLE,
+    longitude: DataTypes.DOUBLE,
+    radius: DataTypes.DOUBLE
   }, {});
   geofence.associate = function(models) {
     geofence.belongsTo(models.user, {
@@ -11,7 +14,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       targetKey: 'id'
     });
-
+    geofence.belongsTo(models.location_master, {
+      foreignKey: {
+        name: 'locationMasterId',
+        allowNull: false
+      },
+      targetKey: 'id'
+    });
     geofence.hasMany(models.geolocation)
   };
   return geofence;

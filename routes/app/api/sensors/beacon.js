@@ -1,16 +1,20 @@
 const express 		= require('express');
 const router		= express.Router();
-const Sensor 		= require('../../../../utils/Sensor');
-const Campaign		= require('../../../../utils/Campaign');
-const BeaconMaster	= require('../../../../utils/BeaconMaster');
+const utils 		= require('../../../../utils');
 const apiMiddleware = require('../../../../middleware/api').apiAuth;
 const _				= require('lodash');
+const CampaignMgmt	= require('../../../../campaign/cache');
 
 /**
- * url /api/sendsor/beacon
- * method PUT
- * header authorization: Bearer <TOKEN>
- * body uuid, major, minor, rssi, distance
+ * @url: /api/sensor/beacon
+ * @method: PUT
+ * @header: authorization: Bearer <TOKEN>
+ * @body: { uuid, major, minor, rssi, distance } 
+ * @desc: Takes beacon information from device and sends
+ * 	campaign to the device if available 
+ * 
+ * @todo: Create notification payload based on campaign
+ * 	type
  */ 
 router.put('/', apiMiddleware, async (req, res) => {
 
@@ -32,7 +36,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 		let beacon = undefined;
 		let location = undefined;
 		try {
-			beacon = await Sensor.saveBeacon(payload["major"], payload["minor"], payload["uuid"], payload["rssi"], payload["distance"], deviceId);
+			beacon = await utils.Sensor.saveBeacon(payload["major"], payload["minor"], payload["uuid"], payload["rssi"], payload["distance"], deviceId);
 		} catch (err) {
 			let er = err.name;
 			er = er.replace(/Sequelize/gi, '');
@@ -41,24 +45,28 @@ router.put('/', apiMiddleware, async (req, res) => {
 			return;
 		}
 	}
-
-	let appId = res.locals.user['appId'];
-	let campaign = await BeaconMaster.getBeaconCampaign(payload["major"], payload["minor"], appId);
+	
+	let id = await utils.Campaign.getOneBeaconCampaign(res.locals.user['appId'], payload['major'], payload['minor'])
+	
+	let campaign =  undefined;
+	
+	// if(id) {
+	// 	campaign = await CampaignMgmt.getCampaign(id, deviceId);
+	// }
+	
 	if(campaign) {
-		let payload = {
-			"NotificationTitle": campaign.name,
-			"NotificationType": "Text",
-			"Text_content": {
-				"Offer_Text": campaign.content,
-				"URI": campaign.action
-			}
+		let notif_payload = {
+			"NotificationTitle": campaign.title,
+            "NotificationType": campaign.type,
+            "Text_content": {
+                "Offer_Text": campaign.body,
+                "URI": campaign.action
+            }
 		}
-		res.json(payload);
+		res.json(notif_payload);
 	} else {
-		res.sendStatus(304);
+		res.sendStatus(204);
 	}
-
-	// res.status(201).send({'title': "", 'body': {}})
 });
 
 module.exports = router;

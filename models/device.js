@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     device.hasMany(models.beacon);
     device.hasMany(models.wifi);
     device.hasMany(models.location);
+    device.hasMany(models.notify);
     // device.hasMany(models.beacon);
   };
   return device;

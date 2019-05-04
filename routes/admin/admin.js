@@ -1,106 +1,69 @@
 const express 			= require('express');
 const router			= express.Router();
-const User				= require('../../utils/User');
-const Application		= require('../../utils/Application');
-const GeoFence 			= require('../../utils/GeoFence');
-const LocationMaster	= require('../../utils/LocationMaster');
-const Sensor			= require('../../utils/Sensor');
-const BeaconMaster		= require('../../utils/BeaconMaster');
+const utils				= require('../../utils');
 const authMiddleware	= require('../../middleware/auth');
 const suMiddleware		= require('../../middleware/superadmin');
 const model 			= require('../../models');
 
 /**
- * Admin Dashboard
- * URL: /admin/home
+ * @url: /admin/home
+ * @member: GET
+ * @template: views/admin/home
+ * @desc: Admin Dashboard
  */
 router.get('/', authMiddleware, async (req, res) => {
-	let beacon = await Sensor.getLatestBeacon();
-	let repeatVisitors = await model.beacon.count();
-	let totalVisitors = repeatVisitors * 1.2;
-	res.render('admin/home', { title: 'Admin', layout: 'home', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors });
+	let beacon = await utils.Sensor.getLatestLocation();
+	let repeatVisitors = await model.location.count();
+	let totalVisitors = parseInt(repeatVisitors * 1.2);
+	let apps = await utils.SdkUser.getUsers(req.user.id);
+	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors, apps: apps });
 });
 
+
+/**
+ * @url: /admin/home/analytics
+ * @method: GET
+ * @template: views/admin/comingsoon
+ * @desc: App wise based analytics
+ * 
+ * @TODO: Implementation
+ */
 router.get('/analytics', authMiddleware, (req, res) => {
 	res.render('admin/comingsoon', { title: 'Admin', layout: 'home' });
 });
 
+
 /**
- * Graph Beacon
+ * @url: /admin/home/graph
+ * @method: GET
+ * @desc: JSON data for graph of users seen daywise
  */
-router.get('/beacon/list', async(req, res) => {
-	let data = await Sensor.countByHour();
+router.get('/graph', async(req, res) => {
+	let data = await utils.Sensor.countByHour();
 	res.json(data);
 });
 
-/**
- * Create New Geo Fence
- * URL: /admin/home/geofence/create
- */
-router.get('/geofence/create', authMiddleware, (req, res) => {
-	res.render('admin/fence', { title: 'New Fence', layout: 'home' })
+
+router.get('/pie', async(req, res) => {
+	let data = await utils.Sensor.getDeviceCount();
+	res.json(data);
 });
 
-/**
- * Save Geo Fence Name POST
- * URL: /admin/home/geofence/create
- */
-router.post('/geofence/create', authMiddleware, async (req, res) => {
-	let name = req.body.fence;
-	let user = req.user.id;
-	let mGeofence = await GeoFence.create(name, user);
-	console.log(mGeofence);
-	if(!mGeofence.id) {
-		res.redirect('/admin/home/geofence/create');
-		return;
-	}
-	res.redirect(`/admin/home/fence/maps?id=${mGeofence.id}`)
-});
 
 /**
- * Renders Maps
- * URL: /admin/home/fence/maps
- */
-router.get('/fence/maps', authMiddleware, (req, res) => {
-	res.render('admin/geofence', { title: 'Geo Fence', layout: 'geofence' });
-});
-
-/**
- * Save All GeoFence POST
- * URL: /admin/home/geofence
- */
-router.post('/geofence', authMiddleware, (req, res) => {
-	let payload = req.body;
-	console.log(payload);
-	res.sendStatus(201);
-});
-
-/**
- * View All Admin and SuperAdmin Users
- * URL: /admin/home/users
+ * @url: /admin/home/users
+ * @method: GET
+ * @template: views/superadmin/usermanagement
+ * @desc: Manage SuperUsers, Admin Users and Staff Users
+ * 
+ * @TODO: Add editing user roles and disabling login 
  */
 router.get('/users', suMiddleware, async (req, res) => {
-	let Users = await User.findAll();
-	console.log(JSON.stringify(Users));
-	res.render('superadmin/users', { title: 'Admin', layout: 'home', adminuser: JSON.parse(Users) });
+	let Users = await utils.User.findAll();
+	let staffUsers = await utils.User.findStaff();
+	res.render('superadmin/usermanagement', { title: 'Admin', layout: 'base', adminuser: JSON.parse(Users), staff: JSON.parse(staffUsers) });
 });
 
-/**
- * View All Staff Users
- * URL: /admin/home/staffs
- */
-router.get('/staffs', suMiddleware, async (req, res) => {
-	let staffUsers = await User.findStaff();
-	res.render('superadmin/staffs',  { title: 'Admin', layout: 'home', staffusers: JSON.parse(staffUsers) });
-})
-
-/**
- * Create New App View
- * URL: /admin/home/app/new
- */
-router.get('/app/new', suMiddleware, (req, res) => {
-	res.render('superadmin/application', { title: 'Admin', layout: 'home' })
-});
 
 /**
  * Create New App POST
@@ -111,7 +74,7 @@ router.post('/app/new', suMiddleware, async (req, res) => {
 	let api_key = req.body.api_key;
 	let api_secret = req.body.api_secret;
 	try {
-		let app = await Application.registerApplication(name, api_key, api_secret);
+		let app = await utils.Application.registerApplication(name, api_key, api_secret);
 	} catch (err) {
 		res.redirect('/admin/home/app/new');
 		return;
@@ -119,73 +82,48 @@ router.post('/app/new', suMiddleware, async (req, res) => {
 	res.redirect('/admin/home/apps');
 });
 
+
 /**
- * List All Apps
- * URL: /admin/home/apps
+ * @url: /admin/home/apps
+ * @method: GET
+ * @template: views/superadmin/apps.handlebars
+ * @desc: List View of all Applications
  */
 router.get('/apps', suMiddleware, async (req, res) => {
-	let apps = await Application.findAll();
-	res.render('superadmin/applications', { title: 'Admin', layout: 'home', application: apps });
+	let apps = await utils.Application.findAll();
+	res.render('superadmin/apps', { title: 'Admin', layout: 'base', application: apps });
 });
 
-/**
- * Create New Location Master View
- * URL: /admin/home/location
- */
-router.get('/location', suMiddleware, (req, res) => {
-	res.render('superadmin/location', { title: 'Location Master', layout: 'home' });
-});
 
 /**
- * Create New Location Master POST
- * URL: /admin/home/location
- */
-router.post('/location', suMiddleware, async(req, res) => {
-	let locationName = req.body.locationname;
-	let type = req.body.type;
-	await LocationMaster.createLocations(locationName, type);
-	res.redirect('/admin/home/location');
-});
-
-/**
- * Edit Location Master
- * URL: /admin/home/location/edit/:id
- */
-router.get('/location/edit/:id', suMiddleware, async(req, res) => {
-	let location = await LocationMaster.findOne(req.params.id);
-	res.render('superadmin/locationedit', { title: 'Locations Master', layout: 'home', location: location });	
-});
-
-/**
- * Edit Location Master POST
- * URL: /admin/home/location/edit/:id
- */
-router.post('/location/edit/:id', suMiddleware, async(req, res) => {
-	await LocationMaster.findOneAndUpdate(req.params.id, req.body.name, req.body.type);
-	res.redirect('/admin/home/locations')
-});
-
-/**
- * View All Location Masters
- * URL: /admin/home/locations
+ * @url: /admin/home/locations
+ * @method: GET
+ * @template: views/superadmin/managelocation.handlebars
+ * @desc: Display all available locations ( restricted to superadmins )
  */
 router.get('/locations', suMiddleware, async(req, res) => {
-	let locations = await LocationMaster.getAllLocations();
-	res.render('superadmin/locations', { title: 'Locations Master', layout: 'home', locations: locations });
+	let locations = await utils.LocationMaster.getAllSuperadminLocations();
+	res.render('superadmin/managelocation', { title: 'Locations Master', layout: 'base', locations: locations });
 });
 
+
 /**
- * Add New Beacon View
- * URL: /admin/home/beacon
+ * @url: /admin/home/beacon
+ * @method: GET
+ * @template: views/superadmin/newbeacon.handlebars
+ * @desc: Add new publicly available beacon
  */
 router.get('/beacon', suMiddleware, async(req, res) => {
-	let locations = await LocationMaster.getAllLocations();
-	res.render('superadmin/addbeacon', { title: 'Beacon Master', layout: 'home', locations: locations })
+	let locations = await utils.LocationMaster.getAllSuperadminLocations();
+	res.render('superadmin/newbeacon', { title: 'Beacon Master', layout: 'base', locations: locations })
 });
 
+
 /**
- * Add New Beacon POST
- * URL: /admin/home/beacon
+ * @url: /admin/home/beacon
+ * @method: POST
+ * @desc: Add new public beacon
+ * 
  */
 router.post('/beacon', suMiddleware, async(req, res) => {
 	let major = req.body.major;
@@ -193,32 +131,48 @@ router.post('/beacon', suMiddleware, async(req, res) => {
 	let shortlink = req.body.shortlink;
 	let uuid = req.body.uuid;
 	let location = req.body.location;
-	await BeaconMaster.addNewBeacon(major, minor, uuid, shortlink, location);
+	let ctags = req.body.ctags
+	let pretags = req.body.pretags
+	// await BeaconMaster.addNewBeacon(major, minor, uuid, shortlink, location);
+	// console.log({major,minor,shortlink,uuid,location,ctags,pretags});
 	res.redirect('/admin/home/beacon');
 });
 
+
 /**
- * View All Beacons 
- * URL: /admin/home/beacons
+ * @url: /admin/home/beacons
+ * @method: GET
+ * @template: views/superadmin/managebeacon 
+ * @desc: View all beacons in a datatable
  */
 router.get('/beacons', suMiddleware, async(req, res) => {
-	let beacons = await BeaconMaster.getAllBeacons();
-	res.render('superadmin/beacons', { title: 'Beacon Master', layout: 'home', beacons: beacons })
+	let beacons = await utils.BeaconMaster.getAllBeacons();
+	res.render('superadmin/managebeacon', { title: 'Beacon Master', layout: 'base', beacons: beacons })
 });
 
+
 /**
- * Edit Beacon
- * URL: /admin/home/beacon/:id
+ * @url: /admin/home/beacon/:id
+ * @method: GET
+ * @template: views/superadmin/beacon
+ * @desc: Edit beacon
  */
 router.get('/beacon/:id', suMiddleware, async(req, res) => {
-	let beacon = await BeaconMaster.findOne(req.params.id);
-	let locations = await LocationMaster.getAllLocations();
-	res.render('superadmin/editbeacon', { title: 'Beacon Master', layout: 'home', beacon: beacon, locations: locations })
+	let beacon = await utils.BeaconMaster.findOne(req.params.id);
+	let locations = await utils.LocationMaster.getAllSuperadminLocations();
+	let tags = [];
+	beacon.tags.map(tag => {
+		tags.push(tag.tag);
+	})
+	res.render('superadmin/beacon', { title: 'Beacon Master', layout: 'base', beacon: beacon, locations: locations, tag: tags.join(',') })
 });
 
+
 /**
- * Save Edit Beacon
- * URL: /admin/home/beacon/:id
+ * @url: /admin/home/beacon/:id
+ * @method: POST
+ * @desc: Save beacon edits
+ * 
  */
 router.post('/beacon/:id', suMiddleware, async(req, res) => {
 	let id = req.params.id;
@@ -227,8 +181,43 @@ router.post('/beacon/:id', suMiddleware, async(req, res) => {
 	let shortlink = req.body.shortlink;
 	let uuid = req.body.uuid;
 	let location = req.body.location;
-	await BeaconMaster.findOneAndUpdate(id, major, minor, uuid, shortlink, location);
+	await utils.BeaconMaster.findOneAndUpdate(id, major, minor, uuid, shortlink, location);
 	res.redirect('/admin/home/beacons');
-})
+});
+
+
+/**
+ * @url: /admin/home/profile/:id
+ * @method: GET
+ * @template: views/admin/userprofile.handlebars
+ * @desc: App User Profile
+ * 
+ * @todo: Add beacon and wifis and heat map
+ */
+router.get('/profile/:id', authMiddleware, async (req, res) => {
+	let locations = await model.location.findAll({ where: { deviceId: req.params.id } });
+	let deviceId = await model.device.findOne({where: {id: req.params.id}, include:[{model:model.appuser, include: {model:model.application}}]});
+	let countClicked = await model.notify.count({ where: { status: 'CLICKED'} });
+	let countSent = await model.notify.count({ where: { status: 'SENT'} });
+	let notif = await model.notify.findOne({where:{status: 'SENT'}, order: [['createdAt', 'DESC']] });
+	let lastNotif = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);
+	let notifc = await model.notify.findOne({where:{status: 'SENT'}, order: [['createdAt', 'DESC']] });
+	let lastNotifc = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);
+	res.render('admin/userprofile', { title: 'Admin', layout: 'base', location: locations, tid: req.params.id, device:deviceId, countClicked: countClicked, countSent: countSent, lastNotif: lastNotif, lastNotifc:lastNotifc });
+});
+
+
+/**
+ * @url: /admin/home/profile/:id/:long
+ * @method: GET
+ * @template: views/admin/viewonmap.handlebars
+ * @desc: View User Lat,Long on Map
+ */
+router.get('/profile/:id/:long', authMiddleware, async (req, res) => {
+	let data = await model.location.find({where: {id: req.params.long, deviceId: req.params.id}});
+	let deviceId = await model.device.findOne({where: {id: req.params.id}})
+	res.render('admin/viewonmap', { title: 'Admin', layout: 'base', data: data, deviceId: deviceId });
+});
+
 
 module.exports = router;
