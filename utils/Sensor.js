@@ -1,10 +1,18 @@
 const db		= require('../db/postgres');
 const model		= require('../models');
 const sequelize = require('sequelize');
+const http		= require('axios');
 
+async function getAddress(lat, lng) {
+	let api_key = 'AIzaSyD0awMda5obf1OnLxaJ1gqghu2A19Fr7Bs';
+	let url = `https://maps.googleapis.com/maps/api/geocode/json?key=${api_key}&latlng=${lat},${lng}&sensor=true`;
+	let res = await http.get(url);
+	return res.data.results[0]['formatted_address'];
+}
 
-module.exports.saveLocation = (latitude, longitude, deviceId) => {
-	return model.location.create({ latitude: latitude, longitude: longitude, deviceId: deviceId })
+module.exports.saveLocation = async (latitude, longitude, deviceId) => {
+	let address = await getAddress(latitude, longitude);
+	return model.location.create({ latitude: latitude, longitude: longitude, address: address, deviceId: deviceId })
 		.then(location => { return location })
 		.catch(err => { throw err });
 }
@@ -43,16 +51,13 @@ module.exports.saveMultiWifi = (payload, deviceId) => {
 
 module.exports.countByHour = () => {
 	return model.location.findAll({
-		// attributes: [
-		// 	[ sequelize.fn('date_trunc', '	', sequelize.col('createdAt')), 'hour'],
-    	// 	[ sequelize.fn('count', '*'), 'count']
-		// ],
-		// group: 'hour'
+		limit: 7,
 		attributes: [
 			[sequelize.literal(`DATE("createdAt")`), 'date'],
 			[sequelize.literal(`COUNT(*)`), 'count']
 		],
 		group: ['date'],
+		order: [[sequelize.literal(`DATE("createdAt")`)]]
 	})
 		.then( beacons => { return beacons; })
 		.catch( err => { return {err}; })

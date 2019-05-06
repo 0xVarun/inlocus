@@ -195,7 +195,7 @@ router.post('/beacon/:id', suMiddleware, async(req, res) => {
  * @todo: Add beacon and wifis and heat map
  */
 router.get('/profile/:id', authMiddleware, async (req, res) => {
-	let locations = await model.location.findAll({ where: { deviceId: req.params.id } });
+	let locations = await model.location.findAll({ where: { deviceId: req.params.id }, order: [['createdAt', 'DESC']] });
 	let deviceId = await model.device.findOne({where: {id: req.params.id}, include:[{model:model.appuser, include: {model:model.application}}]});
 	let countClicked = await model.notify.count({ where: { status: 'CLICKED'} });
 	let countSent = await model.notify.count({ where: { status: 'SENT'} });
