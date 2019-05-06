@@ -40,7 +40,7 @@
                             <div class="h5 mb-0 mr-3 card-box-text">{{lastNotif}}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                            <i class="fa fa-clock fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                             <div class="h5 mb-0 mr-3 card-box-text">{{lastNotifc}}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fab fa-bluetooth-b fa-2x text-gray-300"></i>
+                            <i class="fa fa-clock fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
         </div>
     </div>
     <div class="row margin-top">
-        <div class="col-md-7">
+        <div class="col-md-10">
             <div class="card shadow">
                 <div class="card-header">
 					<div class="float-left"><b>User</b>: {{device.deviceId}}</div>
@@ -103,6 +103,8 @@
                             <th class="th-sm text-center">Sr No</th>
                             <th class="th-sm text-center">Latitude</th>
                             <th class="th-sm text-center">Longitude</th>
+                            <th class="th-sm text-center">Address</th>
+                            <th class="th-sm text-center">Action</th>
                             <th class="th-sm text-center">Action</th>
                         </thead>
                         <tbody>
@@ -111,7 +113,10 @@
 								<td class="text-center">{{inc @index}}</td>
 								<td class="text-center">{{latitude}}</td>
                                 <td class="text-center">{{longitude}}</td>
-                                <td class="text-center"><a href="/admin/home/profile/{{../tid}}/{{id}}">View On Map</a></td>
+                                <td class="text-center">{{address}}</td>
+                                <td class="text-center"><a href="/admin/home/profile/{{../tid}}/{{id}}">View On Map</a>
+                                <td class="text-center">{{locale createdAt}}</td>
+                                </td>
                             </tr>
                             {{/each}}
                         </tbody>
@@ -119,7 +124,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-2">
             <div class="card shadow">
                 <div class="card-header">Actions</div>
             </div>

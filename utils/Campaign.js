@@ -74,11 +74,15 @@ module.exports.getOneBeaconCampaign = async (appId, major, minor) => {
     }
 }
 
-// TODO Link geofences with Location Master
 module.exports.getOneLocationCampaign = async (appId, lat, lng) => {
     let campaign = await model.campaign.findOne({ where: { applicationId: appId },order:[['createdAt', 'DESC']], include: { model: model.CampaignLocation, include: {model: model.location_master, include: model.geofence} } });
-    let isInsideFence = geolib.isPointInCircle({latitude: lat, longitude: lng}, 
-        {latitude: campaign.campaign_locations[0].location_master.geofences[0].latitude, longitude: campaign.campaign_locations[0].location_master.geofences[0].longitude},campaign.campaign_locations[0].location_master.geofences[0].radius);
+    let isInsideFence = false;
+    try {
+        isInsideFence = geolib.isPointInCircle({latitude: lat, longitude: lng}, 
+            {latitude: campaign.campaign_locations[0].location_master.geofences[0].latitude, longitude: campaign.campaign_locations[0].location_master.geofences[0].longitude},campaign.campaign_locations[0].location_master.geofences[0].radius);
+    } catch(err) {
+        return null
+    }
     
     if(isInsideFence) {
         return campaign.id;

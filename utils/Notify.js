@@ -17,6 +17,6 @@ module.exports.clicked = async (status, deviceId, appId, campaignId, type) => {
     }    
 }
 
-module.exports.sent = async (status, deviceId, appId, campaignId) => {
+module.exports.sent = async (status, deviceId, appId, campaignId, type) => {
     await model.notify.create({ status: status, deviceId: deviceId, applicationId: appId, campaignId: campaignId, type: type });
 }

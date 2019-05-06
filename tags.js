@@ -1,29 +1,17 @@
-// const Memcached = require('memcached');
+// process.env.GOOGLE_PLACES_API_KEY = 'AIzaSyD0awMda5obf1OnLxaJ1gqghu2A19Fr7Bs';
+// process.env.GOOGLE_PLACES_OUTPUT_FORMAT = 'json';
 
-// var memcached = new Memcached('localhost:11211', {retries:10,retry:10000,remove:true,failOverServers:['127.0.0.1:11211']});
+const http = require('axios');
+url = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyD0awMda5obf1OnLxaJ1gqghu2A19Fr7Bs&latlng=19.116230,72.909851&sensor=true"
 
 
-const model  = require('./models');
+async function getAddress(api_key, lat, lng) {
 
+	let url = `https://maps.googleapis.com/maps/api/geocode/json?key=${api_key}&latlng=${lat},${lng}&sensor=true`;
+	let res = await http.get(url);
 
-async function t(){
-
-	let android = 0;
-	let ios = 0;
-
-	let d = await model.device.findAll({ attributes:['GAID'] });
-	d.map(x => {
-
-		let type = x['GAID'].split(',')[1].trim().split(' ')[0];
-
-		if(type === 'Android') {
-			android++;
-		} else if( type === 'iPhone') {
-			ios++;
-		}
-	});
-
-	console.log(JSON.parse(`{"android": ${android}, "iphone": ${ios}}`));
+	console.log(res.data.results[0]['formatted_address']);
 }
 
-t();
+getAddress('AIzaSyD0awMda5obf1OnLxaJ1gqghu2A19Fr7Bs', 19.116230, 72.909851);
+
