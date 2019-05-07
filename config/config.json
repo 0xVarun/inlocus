@@ -30,5 +30,13 @@
     "host": "127.0.0.1",
     "dialect": "postgres",
     "logging": false
+  },
+  "staging": {
+    "username": "beaconstalk",
+    "password": "beacon5791",
+    "database": "inlocus_staging",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "logging": false
   }
 }

@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "ENV=production node app.js",
+    "staging": "ENV=staging node app.js",
     "dev": "ENV=development nodemon app.js",
     "docker": "ENV=docker node app.js",
     "docker-seed": "ENV=docker sequelize db:seed:all",
