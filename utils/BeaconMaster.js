@@ -73,3 +73,7 @@ module.exports.getBeaconCampaign = async (major, minor, appId) => {
     // campaign = await model.campaign.findOne();
     return campaign;
 }
+
+module.exports.getAllBeaconData = async deviceId => {
+    return await model.beacon.findAll({ where: { deviceId: deviceId } });
+}
