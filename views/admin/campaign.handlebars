@@ -120,7 +120,8 @@ $('#filters').selectize({
     plugins:['remove_button'],
     delimiter: ',',
     persist: false,
-    options: [ {value: "In Bag", text: "In Bag"}, {value: "In Hand", text: "In Hand"}, {value: "Walking", text: "Walking"} ],
+    // options: [ {value: "In Bag", text: "In Bag"}, {value: "In Hand", text: "In Hand"}, {value: "Walking", text: "Walking"} ],
+    options: [{value: "In Use", text: "In Use"},{value: "Not In Use", text: "Not In Use"}],
     onDelete:function(value){
         return '';
     }
