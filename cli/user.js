@@ -13,10 +13,15 @@ function gensaltedhash(password) {
 async function createSuperAdminUser( username, password, email, name ) {
 	let hash = gensaltedhash(password);
 	let user = await model.user.create({ name: name, username: username, email: email, password: hash });
-	let roles = await model.roles.create({ superadmin: true, appadmin: false, appstaff: false, advertiser: false, active: true, userId: user.id });
-
-	
+	let roles = await model.roles.create({ superadmin: true, appadmin: false, appstaff: false, advertiser: false, active: true, userId: user.id });	
 }
+
+async function createAppAdminUser( username, password, email, name ) {
+	let hash = gensaltedhash(password);
+	let user = await model.user.create({ name: name, username: username, email: email, password: hash });
+	let roles = await model.roles.create({ superadmin: false, appadmin: true, appstaff: false, advertiser: false, active: true, userId: user.id });	
+}
+
 
 async function main(){
 	program
@@ -38,6 +43,8 @@ async function main(){
 
 	if(program.superadmin) {
 		await createSuperAdminUser(program.username, program.password, program.email, program.name)
+	} else if(program.appadmin) {
+		await createAppAdminUser(program.username, program.password, program.email, program.name);
 	}	
 
 }
