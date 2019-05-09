@@ -23,6 +23,8 @@ if(process.env.ENV === 'production') {
 	env.config({ path: path.join(__dirname, 'environments/docker.env') });
 } else if(process.env.ENV === 'staging') {
   env.config({ path: path.join(__dirname, 'environments/staging.env') });
+} else if(process.env.ENV === 'test') {
+  env.config({ path: path.join(__dirname, 'environments/test.env') });
 }
 
 // set upload dir path

@@ -20,6 +20,7 @@
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "collections": "^5.1.8",
     "commander": "^2.20.0",
     "connect-flash": "^0.1.1",
     "connect-memcached": "^1.0.0",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "docsify-cli": "^4.3.0",
+    "mocha": "^6.1.4",
     "nodemon": "^1.18.9",
     "sequelize-cli": "^5.4.0"
   }
