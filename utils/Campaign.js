@@ -1,4 +1,3 @@
-const db		    = require('../db/postgres');
 const model		    = require('../models');
 const CampaignMgnt  = require('../campaign/cache');
 const geolib        = require('geolib');

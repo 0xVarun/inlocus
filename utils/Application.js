@@ -1,4 +1,3 @@
-const db		= require('../db/postgres');
 const model		= require('../models');
 
 module.exports.registerApplication = (name, url, key, secret, approved, category, production, userid) => {

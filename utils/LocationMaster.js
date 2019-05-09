@@ -1,4 +1,3 @@
-const db		= require('../db/postgres');
 const model		= require('../models');
 
 const distinct = (v, i, s) => {
