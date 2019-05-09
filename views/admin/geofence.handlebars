@@ -1,4 +1,4 @@
-<style>#map {height: 400px;width: 100%;}</style>
+<style>#map{height:400px;width:100%}.pac-card{margin:10px 10px 0 0;border-radius:2px 0 0 2px;box-sizing:border-box;-moz-box-sizing:border-box;outline:0;box-shadow:0 2px 6px rgba(0,0,0,.3);background-color:#fff;font-family:Roboto}#pac-container{padding-bottom:12px;margin-right:12px}.pac-controls{display:inline-block;padding:5px 11px}.pac-controls label{font-family:Roboto;font-size:13px;font-weight:300}#pac-input{background-color:#fff;font-family:Roboto;font-size:15px;font-weight:300;margin-left:12px;padding:0 11px 0 13px;text-overflow:ellipsis;width:400px}#pac-input:focus{border-color:#4d90fe}#title{color:#fff;background-color:#4d90fe;font-size:25px;font-weight:500;padding:6px 12px}#target{width:345px}</style>
 <div class="containe-fluid">
     <div class="row row-eq-height margin-top">
         <div class="col-md-4 col-xs-12 col-sm-12">
@@ -58,6 +58,7 @@
             <div class="card shadow">
                 <div class="card-header">Map</div>
                 <div class="card-body">
+                    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
                     <div id="map"></div>
                 </div>
             </div>
@@ -77,6 +78,9 @@ function initMap(){
         navigator.geolocation.getCurrentPosition( position => {
             mLocation = {lat: position.coords.latitude, lng: position.coords.longitude};
             map = new google.maps.Map(document.getElementById('map'), {zoom: 18, center: mLocation});
+            let searchInput = document.getElementById('pac-input');
+            let searchBox = new google.maps.places.SearchBox(searchInput);
+            map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(searchInput);
 
             let all_overlays = [];
             let selectedShape;
@@ -109,6 +113,61 @@ function initMap(){
                 zIndex: 1
             }
         });
+
+        /**
+         * Search Start
+         */
+        map.addListener('bounds_changed', function() {
+            searchBox.setBounds(map.getBounds());
+            console.log('CALLED');
+        });
+
+        var searchMarkers = [];
+
+        searchBox.addListener('places_changed', function() {
+            let searchPlaces = searchBox.getPlaces();
+
+            if(searchPlaces.length == 0) {
+                return;
+            }
+
+            searchMarkers.forEach(function(marker) {
+                marker.setMap(null);
+            });
+
+            let bounds = new google.maps.LatLngBounds();
+
+            searchPlaces.forEach(function(searchPlace) {
+                if (!searchPlace.geometry) {
+                  console.log("Returned searchPlace contains no geometry");
+                  return;
+                }
+
+                var icon = {
+                  url: searchPlace.icon,
+                  size: new google.maps.Size(71, 71),
+                  origin: new google.maps.Point(0, 0),
+                  anchor: new google.maps.Point(17, 34),
+                  scaledSize: new google.maps.Size(25, 25)
+                };
+
+                searchMarkers.push(new google.maps.Marker({
+                  map: map,
+                  icon: icon,
+                  title: searchPlace.name,
+                  position: searchPlace.geometry.location
+                }));
+
+                if (searchPlace.geometry.viewport) {
+                  // Only geocodes have viewport.
+                  bounds.union(searchPlace.geometry.viewport);
+                } else {
+                  bounds.extend(searchPlace.geometry.location);
+                }
+            });
+            map.fitBounds(bounds);
+        });
+        // Search End
 
         function clearFence() {
             if(selectedShape) {
@@ -199,4 +258,5 @@ function initMap(){
     }
 }
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgAjjr1VNy4zJCZEz-6FgIdkH3SVBS6jA&callback=initMap&libraries=drawing"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0awMda5obf1OnLxaJ1gqghu2A19Fr7Bs&callback=initMap&libraries=drawing,places"></script>
+{{!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgAjjr1VNy4zJCZEz-6FgIdkH3SVBS6jA&callback=initMap&libraries=drawing,places"></script> --}}
