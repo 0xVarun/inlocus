@@ -12,7 +12,8 @@
     "migrate": "ENV=production sequelize db:migrate",
     "migrate:undo": "ENV=production sequelize db:migrate:undo:all",
     "seed": "ENV=production sequelize db:seed:all",
-    "docs": "docsify start ./docs"
+    "docs": "docsify start ./docs",
+    "test": "NODE_ENV=development ENV=development mocha"
   },
   "author": "Varun Tewari",
   "license": "ISC",
@@ -51,6 +52,7 @@
     "uuid-apikey": "^1.4.2"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "docsify-cli": "^4.3.0",
     "mocha": "^6.1.4",
     "nodemon": "^1.18.9",
