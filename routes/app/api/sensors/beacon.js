@@ -50,9 +50,9 @@ router.put('/', apiMiddleware, async (req, res) => {
 	
 	let campaign =  undefined;
 	
-	// if(id) {
-	// 	campaign = await CampaignMgmt.getCampaign(id, deviceId);
-	// }
+	if(id) {
+		campaign = await CampaignMgmt.getCampaign(id, deviceId);
+	}
 	
 	if(campaign) {
 		let notif_payload = {

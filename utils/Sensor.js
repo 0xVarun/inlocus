@@ -1,4 +1,3 @@
-const db		= require('../db/postgres');
 const model		= require('../models');
 const sequelize = require('sequelize');
 const http		= require('axios');
@@ -57,9 +56,9 @@ module.exports.countByHour = () => {
 			[sequelize.literal(`COUNT(*)`), 'count']
 		],
 		group: ['date'],
-		order: [[sequelize.literal(`DATE("createdAt")`)]]
+		order: [[sequelize.literal(`DATE("createdAt")`), 'ASC']]
 	})
-		.then( beacons => { return beacons; })
+		.then( data => { return data; })
 		.catch( err => { return {err}; })
 }
 

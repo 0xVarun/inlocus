@@ -1,4 +1,3 @@
-const db		    = require('../db/postgres');
 const model		    = require('../models');
 const CampaignMgnt  = require('../campaign/cache');
 const geolib        = require('geolib');
@@ -63,6 +62,13 @@ module.exports.findOneCampaign = (id) => {
 
 module.exports.getOneBeaconCampaign = async (appId, major, minor) => {
     let beacon = await model.beacon_master.findOne({ where: { major: major, minor: minor } });
+    
+    // If Not such beacon in database Maybe add to list with google address location
+    if(!beacon) {
+        // Return null if no beacon in db.
+        return null;
+    }
+
     let campaign = await model.campaign.findOne({ where: {applicationId: appId }, include:[{
         model: model.CampaignLocation,
         include: {model: model.location_master, where: { id: beacon.locationMasterId }}

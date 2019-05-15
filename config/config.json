@@ -16,9 +16,9 @@
     "logging": false
   },
   "test": {
-    "username": "phypixel",
+    "username": "testuser",
     "password": "beacon5791",
-    "database": "physdk",
+    "database": "inlocus_test",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "logging": false

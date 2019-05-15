@@ -1,4 +1,3 @@
-const db		= require('../db/postgres');
 const model		= require('../models');
 
 module.exports.registerAppUser = function(userId, mobileNo, emailId, deviceId, appId) {

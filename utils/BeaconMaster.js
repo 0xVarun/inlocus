@@ -1,4 +1,3 @@
-const db		= require('../db/postgres');
 const model		= require('../models');
 const Sequelize = require('sequelize');
 const Op        = Sequelize.Op;
@@ -72,4 +71,8 @@ module.exports.getBeaconCampaign = async (major, minor, appId) => {
     } catch(err) {}
     // campaign = await model.campaign.findOne();
     return campaign;
+}
+
+module.exports.getAllBeaconData = async deviceId => {
+    return await model.beacon.findAll({ where: { deviceId: deviceId } });
 }

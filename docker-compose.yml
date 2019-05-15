@@ -26,3 +26,5 @@ services:
       - 5430:5432
   cache:
     image: memcached:1.5-alpine
+  campaigncache: 
+    image: redis:5-alpine

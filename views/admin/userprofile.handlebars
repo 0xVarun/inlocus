@@ -94,8 +94,7 @@
         <div class="col-md-10">
             <div class="card shadow">
                 <div class="card-header">
-					<div class="float-left"><b>User</b>: {{device.deviceId}}</div>
-                    <div class="float-right"><b>Make/OS</b>: {{split device.GAID}}</div>
+					<div class="float-left">Location Data</div>
 				</div>
                 <div class="card-body">
                     <table id="locations" class="table table-striped table-bordered table-sm bs-select">
@@ -130,10 +129,51 @@
             </div>
         </div>
     </div>
+
+    <div class="row margin-top">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <div class="float-left">Beacon Data</div>
+                </div>
+                <div class="card-body">
+                    <table id="beacons" class="table table-striped table-bordered table-sm bs-select">
+                        <thead>
+                            <th class="th-sm text-center">Sr No</th>
+                            <th class="th-sm text-center">Major</th>
+                            <th class="th-sm text-center">Minor</th>
+                            <th class="th-sm text-center">Timestamp</th>
+                        </thead>
+                        <tbody>
+                            {{#each beacons}}
+                            <tr>
+                                <td class="text-center">{{inc @index}}</td>
+                                <td class="text-center">{{major}}</td>
+                                <td class="text-center">{{minor}}</td>
+                                <td class="text-center">{{locale createdAt}}</td>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header">Actions</div>
+                <div class="card-body">
+                    <b>Last Beacon</b> {{lastBeacon}}
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <script>
 $(document).ready(function() {
     $('#locations').DataTable();
+    $('#beacons').DataTable();
     $('.dataTables_length').addClass('bs-select');
     $('.dataTables_filter input').addClass('form-control');
     $('.dataTables_filter input').addClass('form-control-sm');
