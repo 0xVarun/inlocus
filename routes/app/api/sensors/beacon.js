@@ -56,6 +56,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 	
 	if(campaign) {
 		let notif_payload = {
+			"CampaignId": campaign.id,
 			"NotificationTitle": campaign.title,
             "NotificationType": campaign.type,
             "Text_content": {
