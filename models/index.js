@@ -33,6 +33,7 @@ const db = {
   tags: sequelize.import('./tags'),
   content: sequelize.import('./content'),
   CampaignLocation: sequelize.import('./campaign_location'),
+  WifiMaster: sequelize.import('./wifi_master'),
 };
 
 
