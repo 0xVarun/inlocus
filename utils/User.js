@@ -13,11 +13,10 @@ module.exports.registerUser = async (name, username, email, password, applicatio
 	let roles = await model.roles.create({ superadmin: false, appadmin: true, appstaff: false, advertiser: false, active: false, userId: user.id });
 }
 
-module.exports.registerStaffUser = function(name, username, email, password, applicationId) {
+module.exports.registerStaffUser = async function(name, username, email, password, applicationId) {
 	let hash = gensaltedhash(password);
-	return model.user.create({ name: name, username: username, email: email, appadmin: false, staff: true, password: hash, active: false, superadmin: false, applicationId: applicationId })
-		.then( user => { return user; })
-		.catch( err => { throw err; });
+	let user = await model.user.create({ name: name, username: username, email: email, password: hash });
+	let roles = await model.roles.create({ superadmin: false, appadmin: false, appstaff: true, advertiser: false, active: false, userId: user.id });
 }
 
 module.exports.getUserByEmail = function(email, callback) {
