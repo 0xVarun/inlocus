@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     location_master.hasMany(models.beacon_master);
     location_master.hasMany(models.tags);
     location_master.hasMany(models.geofence);
+    location_master.hasMany(models.WifiMaster);
   };
   return location_master;
 };
