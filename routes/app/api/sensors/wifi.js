@@ -1,8 +1,10 @@
 const express 		= require('express');
 const router		= express.Router();
-const Sensor 		= require('../../../../utils/Sensor');
+const utils 		= require('../../../../utils');
 const apiMiddleware = require('../../../../middleware/api').apiAuth;
 const _				= require('lodash');
+const CampaignMgmt	= require('../../../../campaign/cache');
+
 
 /**
  * url /api/sensor/wifi
@@ -59,8 +61,31 @@ router.put('/multi', apiMiddleware, async (req, res) => {
 		return;
 	}
 	let deviceId = res.locals.user['deviceId'];
-	let wifi = await Sensor.saveMultiWifi(req.body, deviceId);
-	res.status(201).send({ message: 'created' });
+	let wifi = await utils.Sensor.saveMultiWifi(req.body, deviceId);
+
+	let id = await utils.Campaign.getOneWifiCampaign(res.locals.user['appId'], payload['major'], payload['minor'])
+	
+	let campaign =  undefined;
+	
+	if(id) {
+		campaign = await CampaignMgmt.getCampaign(id, deviceId);
+	}
+	
+	if(campaign) {
+		let notif_payload = {
+			"CampaignId": campaign.id,
+			"NotificationTitle": campaign.title,
+            "NotificationType": campaign.type,
+            "Text_content": {
+                "Offer_Text": campaign.body,
+                "URI": campaign.action
+            }
+		}
+		res.json(notif_payload);
+	} else {
+		res.sendStatus(204);
+	}
+
 });
 
 module.exports = router;
