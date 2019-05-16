@@ -1,4 +1,5 @@
 const model		= require('../models');
+const Op		= require('sequelize').Op;
 
 /**
  * Create New Geo Fence
@@ -21,7 +22,14 @@ module.exports.create = function(name, user, lat, lng, rad, location) {
  * @return 		{Object} All Fences for that User
  */
 module.exports.findAllFences = function(id) {
-	return model.geofence.findAll({ where: { userId: id }})
+	return model.geofence.findAll(
+		{ 
+			where: { 
+				userId: {
+					[Op.eq]: id
+				} 
+			}
+		})
 		.then(fences => { return fences; })
 		.catch(err => { throw err; });
 }
@@ -34,7 +42,7 @@ module.exports.findAllFences = function(id) {
  * @return		{Object} Geofence
  */
 module.exports.findOneFence = id => {
-	return model.geofence.findById(id)
+	return model.geofence.findByPk(id)
 		.then(fence => { return fence; })
 		.catch(err => { throw err; });
 };

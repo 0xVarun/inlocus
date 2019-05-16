@@ -91,7 +91,14 @@ module.exports.findAllUserApps = (id) => {
  * @return     {Array}  Returns all user apps that have been approved
  */
 module.exports.findAllUserApprovedApps = (id) => {
-	return model.application.findAll({ where: { 'userId': id } })
+	return model.application.findAll(
+		{ 
+			where: { 
+				userId: {
+					[Op.eq]: id
+				} 
+			} 
+		})
 		.then(apps => { return apps; })
 		.catch(err => { throw err; });
 }
@@ -105,7 +112,17 @@ module.exports.findAllUserApprovedApps = (id) => {
  * @return     {JSON / Error}  returns the application or Error
  */
 module.exports.findOneApp = (userId, id) => {
-	return model.application.findOne({ where: { 'userId': userId, 'id': id} })
+	return model.application.findOne(
+		{ 
+			where: { 
+				userId: {
+					[Op.eq]: userId
+				}, 
+				id: {
+					[Op.eq]: id
+				}
+			} 
+		})
 		.then(app => { return app; })
 		.catch(err => { throw err; });
 }
@@ -120,7 +137,18 @@ module.exports.findOneApp = (userId, id) => {
  */
 module.exports.isActive = function(key, secret) {
 	return model.application
-		.findOne({ where: { API_KEY: key, API_SECRET: secret } })
+		.findOne(
+			{ 
+				where: { 
+					API_KEY: {
+						[Op.eq]: key
+					}, 
+					API_SECRET: {
+						[Op.eq]: secret
+					} 
+				} 
+			}
+		)
 		.then( app => { if( app.approved ) return true; else return false })
 		.catch(err => { return err });
 }
@@ -134,7 +162,15 @@ module.exports.isActive = function(key, secret) {
  */
 module.exports.getAppId = function(key) {
 	return model.application
-		.findOne({ where: { API_KEY: key }})
+		.findOne(
+			{ 
+				where: { 
+					API_KEY: {
+						[Op.eq]: key
+					} 
+				}
+			}
+		)
 		.then( app => { return app.id })
 		.catch(err => { throw err; });
 }

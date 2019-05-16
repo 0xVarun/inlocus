@@ -1,4 +1,5 @@
 const model		= require('../models');
+const Op        = require('sequelize').Op;
 
 
 module.exports.createContent = (name, path, url, userId) => {
@@ -9,7 +10,14 @@ module.exports.createContent = (name, path, url, userId) => {
 
 
 module.exports.findAll = (userId) => {
-    return model.content.findAll({ where: { userId: userId }})
+    return model.content.findAll(
+        { 
+            where: { 
+                userId: {
+                    [Op.eq]: userId
+                } 
+            }
+        })
         .then(contents => { return contents; })
         .catch(err => { throw err; });
 }

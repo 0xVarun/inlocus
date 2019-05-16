@@ -1,4 +1,5 @@
 const model		= require('../models');
+const Op		= require('sequelize').Op;
 
 module.exports.registerAppUser = function(userId, mobileNo, emailId, deviceId, appId) {
 	return model.appuser.create({ userId: userId, mobileNo: mobileNo, emailId: emailId, deviceId: deviceId, applicationId: appId })
@@ -23,10 +24,17 @@ module.exports.updateAppUser = function(appUser){
 module.exports.getUsers = async (userId) => {
 	let apps = await model.application.findAll({ 
 		where: { 
-			userId: userId 
+			userId: {
+				[Op.eq]: userId
+			} 
 		}, 
 		include: [
-			{model:model.appuser, include: {model: model.device}},
+			{
+				model:model.appuser, 
+				include: {
+					model: model.device
+				}
+			}
 		]
 	});
 	return apps;

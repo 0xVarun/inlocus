@@ -1,4 +1,5 @@
 const model		= require('../models');
+const Op        = require('sequelize').Op;
 
 const distinct = (v, i, s) => {
     return s.indexOf(v) === i;
@@ -11,7 +12,14 @@ module.exports.createLocations = (name, type, latitude, longitude, userId) => {
 }
 
 module.exports.getAllLocations = (userId) => {
-    return model.location_master.findAll({where: {userId: userId}})
+    return model.location_master.findAll(
+        {
+            where: {
+                userId: {
+                    [Op.eq]: userId
+                }
+            }
+        })
         .then( locatonMasters => { return locatonMasters } )
         .catch( err => { throw err });
 }
@@ -24,8 +32,8 @@ module.exports.getAllSuperadminLocations = () => {
 
 module.exports.getUsableLocations = async userId => {
     let f = [];
-    let suLocations = await model.location_master.findAll({include:[{model: model.user,attributes: [],include: {model: model.roles, attributes: [], where: {superadmin: true }}}]});
-    let locations = await model.location_master.findAll({where: { userId: userId }});
+    let suLocations = await model.location_master.findAll({include:[{model: model.user,attributes: [],include: {model: model.roles, attributes: [], where: {superadmin: { [Op.eq]: true } }}}]});
+    let locations = await model.location_master.findAll({where: { userId: { [Op.eq]: userId } }});
     suLocations = JSON.parse(JSON.stringify(suLocations));
     suLocations.map(s => { f.push(s) });
     locations = JSON.parse(JSON.stringify(locations));
@@ -34,11 +42,30 @@ module.exports.getUsableLocations = async userId => {
 }
 
 module.exports.deleteLocation = (id) => {
-    return model.location_master.destroy({ where: { id: id } })
+    return model.location_master.destroy(
+        { 
+            where: { 
+                id: {
+                    [Op.eq]:id
+                } 
+            } 
+        });
 }
 
 module.exports.findOne = (id) => {
-    return model.location_master.findOne({ where: { id: id }, include: [{model: model.tags}]})
+    return model.location_master.findOne(
+        { 
+            where: { 
+                id: { 
+                    [Op.eq]: id 
+                } 
+            }, 
+            include: [
+                {
+                    model: model.tags
+                }
+            ]
+        })
         .then(loc => { return loc })
         .catch(err => { throw err });
 }

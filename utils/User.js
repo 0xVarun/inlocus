@@ -1,5 +1,6 @@
 const model		= require('../models');
 const bcrypt	= require('bcryptjs');
+const Op		= require('sequelize').Op;
 
 function gensaltedhash(password) {
 	let salt = bcrypt.genSaltSync(10);
@@ -21,21 +22,63 @@ module.exports.registerStaffUser = async function(name, username, email, passwor
 
 module.exports.getUserByEmail = function(email, callback) {
 	model.user
-		.findOne( { where: { email: email }, include: [{ model: model.roles }]} )
+		.findOne( 
+			{ 
+				where: { 
+					email: {
+						[Op.eq]: email
+					} 
+				}, 
+				include: [
+					{ 
+						model: model.roles 
+					}
+				]
+			}
+		)
 		.then( user => { callback(null, user); })
 		.catch(err => { callback(err, null) });
 }
 
 module.exports.getUserById = function(id, callback) {
 	model.user
-		.findOne({ where: { id: id }, include: [{ model: model.roles }] })
+		.findOne(
+			{ 
+				where: { 
+					id: {
+						[Op.eq]: id
+					} 
+				}, 
+				include: [
+					{ 
+						model: model.roles 
+					}
+				] 
+			}
+		)
 		.then( user => {callback(null, user);})
 		.catch(err => { callback(err, null);});
 }
 
 module.exports.findAll = function() {
 	return model.user
-		.findAll({ include: [ { model: model.application}, {model: model.roles, where: {appstaff: false}} ] })
+		.findAll(
+			{ 
+				include: [ 
+					{ 
+						model: model.application
+					}, 
+					{
+						model: model.roles, 
+						where: {
+							appstaff: {
+								[Op.eq]: false
+							}
+						}
+					} 
+				] 
+			}
+		)
 		.then( user => { return JSON.stringify(user); } )
 		.catch( err => { throw err; })
 }
@@ -51,7 +94,11 @@ module.exports.findStaff = function() {
 					{
 						model: model.roles,
 						attributes: ['superadmin', 'appadmin', 'appstaff', 'active'],
-                		where: { 'appstaff': true } 
+                		where: { 
+							appstaff: {
+								[Op.eq]: true
+							} 
+						} 
 					} 
 				] 
 			}
@@ -62,7 +109,26 @@ module.exports.findStaff = function() {
 
 module.exports.getAll = function(applicationId) {
 	return model.user
-		.findAll({ where: { applicationId: applicationId }, include: [{ model: model.roles, where: { appadmin: false, superadmin: false }}] })
+		.findAll(
+			{ 
+				where: { 
+					applicationId: applicationId 
+				}, 
+				include: [
+					{ 
+						model: model.roles, 
+						where: { 
+							appadmin: {
+								[Op.eq]: false
+							}, 
+							superadmin: {
+								[Op.eq]: false
+							} 
+						}
+					}
+				]
+			}
+		)
 		.then( user => { return JSON.stringify(user); } )
 		.catch( err => { throw err; })
 }
@@ -78,42 +144,42 @@ module.exports.authenticateUser = async function(password, hash, callback) {
 
 module.exports.activateUser = async function(id) {
 	return model.user
-		.update({ active: true }, { where: { id: id }, returning: true, plain: true });
+		.update({ active: true }, { where: { id: { [Op.eq]: id } }, returning: true, plain: true });
 }
 
 module.exports.deActivateUser = async function(id) {
 	return model.user
-		.update({ active: false }, { where: { id: id }, returning: true, plain: true });
+		.update({ active: false }, { where: { id: { [Op.eq]: id } }, returning: true, plain: true });
 }
 
 module.exports.mkSuperadmin = function(id) {
 	return model.user
-		.update({ superadmin: true }, { where: { id: id }, returning: true, plain: true });
+		.update({ superadmin: true }, { where: { id: { [Op.eq]: id } }, returning: true, plain: true });
 }
 
 module.exports.rmSuperadmin = function(id) {
 	return model.user
-		.update({ superadmin: false }, { where: { id: id }, returning: true, plain: true });
+		.update({ superadmin: false }, { where: { id: { [Op.eq]: id } }, returning: true, plain: true });
 }
 
 module.exports.mkAppAdmin = function(id) {
 	return model.user
-		.update({ appadmin: true }, { where: { id: id }, returning: true, plain: true });
+		.update({ appadmin: true }, { where: { id: { [Op.eq]: id } }, returning: true, plain: true });
 }
 
 module.exports.rmAppAdmin = function(id) {
 	return model.user
-		.update({ appadmin: false }, { where: { id: id }, returning: true, plain: true });
+		.update({ appadmin: false }, { where: { id: { [Op.eq]: id } }, returning: true, plain: true });
 }
 
 /*module.exports.mkStaff = function(id) {
 	return model.user
-		.update({ staff: true }, { where: { id: id }, returning: true, plain: true });
+		.update({ staff: true }, { where: { id: { [Op.eq]: id } }, returning: true, plain: true });
 }
 
 module.exports.rmStaff = function(id) {
 	return model.user
-		.update({ staff: false }, { where: { id: id }, returning: true, plain: true });
+		.update({ staff: false }, { where: { id: { [Op.eq]: id } }, returning: true, plain: true });
 }*/
 
 module.exports.removeUser = function(id) {

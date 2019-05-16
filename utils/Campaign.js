@@ -1,6 +1,7 @@
 const model		    = require('../models');
 const CampaignMgnt  = require('../campaign/cache');
 const geolib        = require('geolib');
+const Op            = require('sequelize').Op;
 
 const distinct = (value, index, self) => {
     return self.indexOf(value) === index;
@@ -99,5 +100,24 @@ module.exports.getOneLocationCampaign = async (appId, lat, lng) => {
 }
 
 module.exports.getOneWifiCampaign = async (appId, deviceId, wifis) => {
+    // [{ssid, bssid, rssi, freq, distance}]
+    let bssids = [];
+    try {
+        wifis.map(wifi => {
+            bssids.push({ bssid: wifi.bssid })
+        })
+    } catch(err) {
+        return null;
+    }
+
+
+    let locationMasterId = await model.WifiMaster.findAll({
+        where: {
+            [Op.or]: bssids
+        },
+        // group: 
+    });
+
+    return null;
 
 } 

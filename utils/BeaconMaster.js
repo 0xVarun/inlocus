@@ -3,8 +3,8 @@ const Sequelize = require('sequelize');
 const Op        = Sequelize.Op;
 
 
-module.exports.addNewBeacon = (major, minor, uuid, shortlink, locationMasterId, public, userId) => {
-    return model.beacon_master.create({ major: major, minor: minor, uuid: uuid, shortlink: shortlink, locationMasterId: locationMasterId, public: public, userId: userId })
+module.exports.addNewBeacon = (major, minor, uuid, shortlink, locationMasterId, isPublic, userId) => {
+    return model.beacon_master.create({ major: major, minor: minor, uuid: uuid, shortlink: shortlink, locationMasterId: locationMasterId, public: isPublic, userId: userId })
         .then(beacon => { return beacon; })
         .catch(err => { throw err; });
 }
@@ -17,13 +17,44 @@ module.exports.getAllBeacons = () => {
 }
 
 module.exports.getAllUserBeacons = (userId) => {
-    return model.beacon_master.findAll({ where: { userId: userId }, include: [{model: model.location_master}] })
+    return model.beacon_master.findAll(
+        { 
+            where: { 
+                userId: {
+                    [Op.eq]: userId
+                } 
+            }, 
+            include: [
+                {
+                    model: model.location_master
+                }
+            ] 
+        })
         .then(beacons => { return beacons; })
         .catch(err => { throw err; });
 }
 
 module.exports.findOne = (id) => {
-    return model.beacon_master.findOne({ where: {id: id}, include:[{model:model.location_master},{model:model.user, attributes: ['email']}, {model: model.tags}] })
+    return model.beacon_master.findOne(
+        { 
+            where: {
+                id: {
+                    [Op.eq]: id
+                }
+            }, 
+            include:[
+                {
+                    model:model.location_master
+                },
+                {
+                    model:model.user, 
+                    attributes: ['email']
+                }, 
+                {
+                    model: model.tags
+                }
+            ] 
+        })
         .then(beacon => { return JSON.parse(JSON.stringify(beacon)); })
         .catch(err => { throw err; });
 }
@@ -38,7 +69,19 @@ module.exports.findOneAndUpdate = (id, major, minor, uuid, shortlink, locationMa
 
 module.exports.getBeaconCampaign = async (major, minor, appId) => {
     let campaign = undefined;
-    let beacon = await model.beacon_master.findOne({ where: { major: major, minor: minor }});
+    let beacon = await model.beacon_master.findOne(
+        { 
+            where: { 
+                major: {
+                    [Op.eq]: major
+                }, 
+                minor: {
+                    [Op.eq]: minor
+                } 
+            }
+        }
+    );
+
     let date = new Date()
     try {
         if(appId == 1) {
@@ -56,8 +99,12 @@ module.exports.getBeaconCampaign = async (major, minor, appId) => {
         } else {
             campaign = await model.campaign.findOne({ 
                 where: { 
-                    locationMasterId: beacon.locationMasterId, 
-                    applicationId: appId,
+                    locationMasterId: {
+                        [Op.eq]: beacon.locationMasterId
+                    }, 
+                    applicationId: {
+                        [Op.eq]: appId
+                    },
                     start_timestamp: {
                         [Op.lte]: date
                     },
@@ -74,5 +121,13 @@ module.exports.getBeaconCampaign = async (major, minor, appId) => {
 }
 
 module.exports.getAllBeaconData = async deviceId => {
-    return await model.beacon.findAll({ where: { deviceId: deviceId } });
+    return await model.beacon.findAll(
+        { 
+            where: { 
+                deviceId: {
+                    [Op.eq]: deviceId
+                } 
+            } 
+        }
+    );
 }
