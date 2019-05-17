@@ -1,4 +1,4 @@
-const Sequelize 	= require('sequelize');
+const Sequelize 	= require('sequelize').Sequelize;
 const dbName		= process.env.DB || 'physdk';
 const username		= process.env.DB_USER || 'phypixel';
 const password		= process.env.DB_PASS || 'beacon5791';
@@ -17,12 +17,15 @@ const db			= new Sequelize(dbName, username, password, {
 	define: {
 		schema: 'core'
 	},
-	// operatorsAliases: false,
 	logging: console.log
 });
 
 db.authenticate()
-	.then( () => console.log('connected'))
-	.catch( err => { console.log('ERROR: ' + err); });
+	.then( () => {
+		if(process.env.NODE_ENV != 'test') {
+			console.log('Connected');
+		}
+	})
+	.catch( err => {});
 
 module.exports = db;
