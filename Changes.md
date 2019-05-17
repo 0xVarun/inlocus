@@ -96,3 +96,25 @@
 	1. Campagin Location
 		- All Powai
 		- Pincode
+
+
+
+```JSON
+{
+	"campaignId": <ID>,
+	"campaignType": "TEXT/IMAGE",
+	"notificationId": <ID>,
+	"campagin": {
+		"title": "<CAMPAIGN NOTIFICATION TITLE>",
+		"content": {
+			"text": "<CAMPAGIN BODY TEXT>",
+			"uri": "<CAMPAGIN ACTION URI>",
+			// Only if campagin type is IMAGE
+			"imgUrl": "<CAMPAGIN IMAGE URL" 
+		},
+		"filters": "<CAMPAGIN FILTERS>",
+		"count": "<COUNT>", // Reservered for future implementation
+		"inlousID": "<inLocus ID>" // Reserved for future implementation
+	}
+}
+```
