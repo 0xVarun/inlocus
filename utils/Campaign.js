@@ -82,7 +82,22 @@ module.exports.getOneBeaconCampaign = async (appId, major, minor) => {
 }
 
 module.exports.getOneLocationCampaign = async (appId, lat, lng) => {
-    let campaign = await model.campaign.findOne({ where: { applicationId: appId },order:[['createdAt', 'DESC']], include: { model: model.CampaignLocation, include: {model: model.location_master, include: model.geofence} } });
+    let campaign = await model.campaign.findOne(
+        { 
+            where: { 
+                applicationId: {
+                    [Op.eq]: appId
+                } 
+            },
+            order: [['createdAt', 'DESC']], 
+            include: { 
+                model: model.CampaignLocation, 
+                include: {
+                    model: model.location_master, 
+                    include: model.geofence
+                } 
+            }
+        });
     let isInsideFence = false;
     try {
         isInsideFence = geolib.isPointInCircle({latitude: lat, longitude: lng}, 
@@ -107,16 +122,50 @@ module.exports.getOneWifiCampaign = async (appId, deviceId, wifis) => {
             bssids.push({ bssid: wifi.bssid })
         })
     } catch(err) {
+        // Return null if unable to created bssid SQL string
         return null;
     }
 
-
-    let locationMasterId = await model.WifiMaster.findAll({
+    let locationMaster = await model.WifiMaster.findAll({
         where: {
             [Op.or]: bssids
         },
-        // group: 
+        attributes:['locationMasterId'],
+        group: 'locationMasterId'
     });
+
+    
+    if(!locationMaster) {
+        // Return null if no locationMasterId
+        return null
+    }
+
+    for(let i = 0; i < locationMaster.length; i++) {
+        let campaign = await model.campaign.findOne({
+            where: {
+                applicationId: {
+                    [Op.eq]: appId
+                }
+            },
+            order: [['createdAt', 'DESC']],
+            include: [
+                { 
+                    model: model.CampaignLocation, 
+                    where: { 
+                        locationMasterId: { 
+                            [Op.eq]: locationMaster[i]['locationMasterId'] 
+                        } 
+                    } 
+                }
+            ]
+        });
+
+        if(campaign) {
+            // If Campagin is Found return the function with the campaign id
+            // TODO: return only campagin id
+            return campaign;
+        }
+    }
 
     return null;
 
