@@ -195,14 +195,16 @@ router.post('/beacon/:id', suMiddleware, async(req, res) => {
  * @todo: Add beacon and wifis and heat map
  */
 router.get('/profile/:id', authMiddleware, async (req, res) => {
+	let lastNotif = '';
+	let lastNotifc = '';
 	let locations = await model.location.findAll({ where: { deviceId: req.params.id }, order: [['createdAt', 'DESC']] });
 	let deviceId = await model.device.findOne({where: {id: req.params.id}, include:[{model:model.appuser, include: {model:model.application}}]});
 	let countClicked = await model.notify.count({ where: { status: 'CLICKED', deviceId: req.params.id} });
 	let countSent = await model.notify.count({ where: { status: 'SENT', deviceId: req.params.id} });
 	let notif = await model.notify.findOne({where:{status: 'SENT', deviceId: req.params.id}, order: [['createdAt', 'DESC']] });
-	let lastNotif = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);
+	try {lastNotif = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);} catch (err) {}
 	let notifc = await model.notify.findOne({where:{status: 'SENT'}, order: [['createdAt', 'DESC']] });
-	let lastNotifc = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);
+	try {lastNotifc = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);} catch (err) {}
 	let beacons = await utils.BeaconMaster.getAllBeaconData(req.params.id);
 	let lastBeacon = await utils.BeaconMaster.lastBeacon(req.params.id);
 	res.render('admin/userprofile', { title: 'Admin', layout: 'base', location: locations, tid: req.params.id, device:deviceId, countClicked: countClicked, countSent: countSent, lastNotif: lastNotif, lastNotifc:lastNotifc, beacons: beacons });

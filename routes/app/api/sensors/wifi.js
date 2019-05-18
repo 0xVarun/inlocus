@@ -76,12 +76,14 @@ router.put('/multi', apiMiddleware, async (req, res) => {
 			"CampaignId": campaign.id,
 			"NotificationTitle": campaign.title,
             "NotificationType": campaign.type,
+            "Filters": campaign.filters,
             "Text_content": {
                 "Offer_Text": campaign.body,
                 "URI": campaign.action
             }
 		}
 		res.json(notif_payload);
+		await utils.Notify.sent("SENT", deviceId, res.locals.user['appId'], campaign.id, "WIFI");
 	} else {
 		res.sendStatus(204);
 	}
