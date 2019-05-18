@@ -114,7 +114,7 @@ module.exports.getOneLocationCampaign = async (appId, lat, lng) => {
     
 }
 
-module.exports.getOneWifiCampaign = async (appId, deviceId, wifis) => {
+module.exports.getOneWifiCampaign = async (appId, wifis) => {
     // [{ssid, bssid, rssi, freq, distance}]
     let bssids = [];
     try {
@@ -162,8 +162,7 @@ module.exports.getOneWifiCampaign = async (appId, deviceId, wifis) => {
 
         if(campaign) {
             // If Campagin is Found return the function with the campaign id
-            // TODO: return only campagin id
-            return campaign;
+            return campaign.id;
         }
     }
 
