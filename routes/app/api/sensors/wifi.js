@@ -63,7 +63,7 @@ router.put('/multi', apiMiddleware, async (req, res) => {
 	let deviceId = res.locals.user['deviceId'];
 	let wifi = await utils.Sensor.saveMultiWifi(req.body, deviceId);
 
-	let id = await utils.Campaign.getOneWifiCampaign(res.locals.user['appId'], payload['major'], payload['minor'])
+	let id = await utils.Campaign.getOneWifiCampaign(res.locals.user['appId'], req.body);
 	
 	let campaign =  undefined;
 	
