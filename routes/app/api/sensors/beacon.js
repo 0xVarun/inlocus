@@ -60,7 +60,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 			"campaignId": campaign.id,
 			"campaignType": campaign.type,
 			"notificationId": clicked.id,
-			"campagin": {
+			"campaign": {
 				"title": campaign.title,
 				"content": {
 					"text": campaign.body,
@@ -68,7 +68,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 				},
 				"filters": campaign.filters,
 				"count": "0",
-				"inlousID": "0"
+				"inlocusID": "0"
 			}
 		}
 		res.json(notif_payload);
