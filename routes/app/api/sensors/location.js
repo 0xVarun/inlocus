@@ -50,18 +50,23 @@ router.put('/', apiMiddleware, async (req, res) => {
 	if(id) {
 		let campaign = await Cache(id, deviceId);
 		if(campaign) {
+			let clicked = await utils.Notify.sent("SENT", deviceId, res.locals.user['appId'], campaign.id, "LOCATION");
 			let notif_payload = {
-				"CampaignId": campaign.id,
-				"NotificationTitle": campaign.title,
-				"NotificationType": campaign.type,
-				"Filters": campaign.filters,
-				"Text_content": {
-					"Offer_Text": campaign.body,
-					"URI": campaign.action
+				"campaignId": campaign.id,
+				"campaignType": campaign.type,
+				"notificationId": clicked.id,
+				"campagin": {
+					"title": campaign.title,
+					"content": {
+						"text": campaign.body,
+						"uri": campaign.action,
+					},
+					"filters": campaign.filters,
+					"count": "0",
+					"inlousID": "0"
 				}
 			}
 			res.json(notif_payload);
-			await utils.Notify.sent("SENT", deviceId, res.locals.user['appId'], campaign.id, "LOCATION");
 		} else {
 			res.sendStatus(204)
 		}

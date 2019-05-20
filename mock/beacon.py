@@ -63,7 +63,7 @@ def location():
     print(bea.text)
 
 def notify():
-    url = '/api/notify/7'
+    url = '/api/notify/11'
     token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcklkIjoiRFVNTVlfVVNFUl9JRCIsIm1vYmlsZU5vIjoiRFVNTVlfTlVNQkVSIiwiZGV2aWNlSWQiOjIsImFwcElkIjoxLCJlbWFpbElkIjoiRFVNTVlfRU1BSUwiLCJpYXQiOjE1NTYyNjMxODMsImV4cCI6MTU4Nzc5OTE4M30.-9ABOXxpXomxaB-PDzT4tZqll1TCtX3XRIWRRKN6hlk'
     headers = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
     bea = requests.get(HOST.format(url), headers=headers)
@@ -77,12 +77,12 @@ def wifi():
     headers = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
     body = [
         {"bssid":"14:1f:ba:74:73:08","ssid":"Joispot-wifi","freq":-42,"rssi":0,"distance":2462},
-        {"bssid":"78:32:1b:9a:e5:90","ssid":"Osmos","freq":-42,"rssi":0,"distance":2462},
-        {"bssid":"24:f5:a2:15:8b:1a","ssid":"Linksys01906","freq":-42,"rssi":0,"distance":2462}
+        {"bssid":"78:32:1b:9a:e5:901","ssid":"Osmos","freq":-42,"rssi":0,"distance":2462},
+        {"bssid":"24:f5:a2:15:8b:1a1","ssid":"Linksys01906","freq":-42,"rssi":0,"distance":2462}
     ]
 
     r = requests.put(HOST.format(url), headers=headers, data=json.dumps(body))
-    print(r.status_code)
+    # print(r.status_code)
     print(r.text)
 
 if __name__ == '__main__':
