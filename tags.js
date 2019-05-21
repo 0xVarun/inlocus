@@ -47,18 +47,27 @@
 // insertLocation();
 
 
-const utils = require('./utils');
+// const utils = require('./utils');
 
-const wifis = [
-	{"bssid":"14:1f:ba:74:73:08","ssid":"Joispot-wifi","freq":-42,"rssi":0,"distance":2462},
-	{"bssid":"78:32:1b:9a:e5:90","ssid":"Osmos","freq":-42,"rssi":0,"distance":2462},
-	{"bssid":"24:f5:a2:15:8b:1a","ssid":"Linksys01906","freq":-42,"rssi":0,"distance":2462}
-]
+// const wifis = [
+// 	{"bssid":"14:1f:ba:74:73:08","ssid":"Joispot-wifi","freq":-42,"rssi":0,"distance":2462},
+// 	{"bssid":"78:32:1b:9a:e5:90","ssid":"Osmos","freq":-42,"rssi":0,"distance":2462},
+// 	{"bssid":"24:f5:a2:15:8b:1a","ssid":"Linksys01906","freq":-42,"rssi":0,"distance":2462}
+// ]
 
-async function testWifi(){
+// async function testWifi(){
 
-	let c = await utils.Campaign.getOneWifiCampaign(1, '23', wifis);
-	console.log(JSON.parse(JSON.stringify(c)));
-}
+// 	let c = await utils.Campaign.getOneWifiCampaign(1, '23', wifis);
+// 	console.log(JSON.parse(JSON.stringify(c)));
+// }
 
-testWifi();
+// testWifi();
+
+const geolib = require('geolib');
+
+let x = geolib.isPointInCircle({latitude: '19.119896460324526', longitude: '72.91322736069561'}, 
+	{latitude: '19.1191426148654', longitude: '72.9136388137974'}, '40');
+
+// 19.1191 |     72.9136 |  35.3767
+
+console.log(x);
