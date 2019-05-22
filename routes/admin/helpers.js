@@ -2,7 +2,7 @@ const express 			= require('express');
 const router			= express.Router();
 const User				= require('../../utils/User');
 const Application 		= require('../../utils/Application');
-const LocationMaster	= require('../../utils/LocationMaster');	
+const utils				= require('../../utils');	
 const suMiddleware		= require('../../middleware/superadmin');
 const authMiddleware	= require('../../middleware/auth');
 const keys				= require('uuid-apikey');
@@ -14,7 +14,8 @@ const keys				= require('uuid-apikey');
  * @desc: Activate User By Id
  */
 router.get('/user/activate/:id', suMiddleware, async (req, res) => {
-	await User.activateUser(req.params.id);
+	let id = req.params.id;
+	await utils.User.activate(id);
 	res.redirect('/admin/home/users');
 });
 
@@ -25,7 +26,8 @@ router.get('/user/activate/:id', suMiddleware, async (req, res) => {
  * @desc: Deactivate User By Id
  */
 router.get('/user/deactivate/:id', suMiddleware, async (req, res) => {
-	await User.deActivateUser(req.params.id);
+	let id = req.params.id;
+	await utils.User.deactivate(id);
 	res.redirect('/admin/home/users');
 });
 
