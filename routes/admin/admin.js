@@ -96,7 +96,7 @@ router.post('/users/add', suMiddleware, async (req, res) => {
 		await utils.User.registerSuperadminUser(name, username, email, password);
 	} else if(roles === '1') {
 		// AppAdmin
-		await utils.User.registerUser(name, user, email, password);
+		await utils.User.registerUser(name, username, email, password);
 	}else if(roles === '2') {
 		// AppStaff
 		await utils.User.registerStaffUser(name, username, email, password);
