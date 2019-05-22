@@ -1,73 +1,113 @@
-// const models = require('./models');
+
+const models = require('./models');
+const Sequlize = require('sequelize');
+
+// let coord = {
+// 	type: 'Polygon',
+// 	coordinates: [
+// 		[19.119957838109645, 72.91253906798397],
+// 		[19.120196056932187, 72.91376215529476],
+// 		[19.119516878957633, 72.91383189272915],
+// 		[19.119243179581893, 72.91273755145107]
+// 	]
+// };
+
+const coord = { 
+	type: 'Polygon', 
+	coordinates: [
+		[ 
+			[19.118876, 72.913460], 
+			[19.119418, 72.913551], 
+			[19.119418, 72.913551],
+			[19.118812, 72.913718],
+			[19.118876, 72.913460] 
+		]
+	], 
+	crs: { 
+		type: 'name', 
+		properties: { 
+			name: 'EPSG:4326'
+		}
+	}
+};
+
+// new google.maps.LatLng(19.119957838109645, 72.91253906798397),
+// new google.maps.LatLng(19.120196056932187, 72.91376215529476),
+// new google.maps.LatLng(19.120196056932187, 72.91376215529476),
+// new google.maps.LatLng(19.119243179581893, 72.91273755145107)
+
+// models.geofence.create({
+// 	name: 'Awfis Co Working Space II',
+// 	fence: coord,
+// 	userId: 1,
+// 	locationMasterId: 1
+// })
+// .then(pos => {
+// 	console.log(JSON.stringify(pos));
+// })
+// .catch(err => {
+// 	console.log(err);
+// })
 
 
-// let data = require('./final.json');
 
-// // bssid: DataTypes.STRING,
-// // ssid: DataTypes.STRING,
-// // rssi: DataTypes.DOUBLE
-
-// async function insertWifi(wifis, locationId) {
-// 	for(let i = 0; i < wifis.length; i++) {
-// 		console.log(`${wifis[i]['ssid']} - ${wifis[i]['bssid']} - ${locationId}`);
-
-// 		let wif = await models.WifiMaster.create({
-// 			ssid: wifis[i]['ssid'] || '',
-// 			bssid: wifis[i]['bssid'],
-// 			rssi: wifis[i]['rssi'],
-// 			locationMasterId: locationId
-// 		});
-
-// 	}
-// }
+// models.geofence.findAll({
+// 	where: Sequlize.where(
+// 		Sequlize.fn('ST_Contains',
+// 			Sequlize.fn('ST_Point', '19.119130, 72.913673'),
+// 			Sequlize.fn('ST_Boundary', Sequlize.col('fence'))
+// 			),
+// 		true
+// 	)
+// })
+// .then(d => { console.log(JSON.stringify(d)) })
+// .catch(err => { console.log(err) });
 
 
-// async function insertLocation() {
-// 	for(let i = 0; i < data.length; i++) {
-
-// 		let temp = data[i];
-
-// 		console.log(`NEW LOCATION ${temp['location']['Name']} - ${temp['location']['type']}`)
-
-// 		let loc = await models.location_master.create({ 
-// 			name: temp['location']['Name'] || '',
-// 			type: temp['location']['type'],
-// 			latitude: temp['location']['latitude'],
-// 			longitude: temp['location']['longitude'],
-// 			userId: 1			 
-// 		});
-
-// 		console.log(`LOCATION CREATED WITH ID ${loc.id}`);
-
-// 		await insertWifi(temp['wifis'], loc.id);
-
-// 	}
-// }
-
-// insertLocation();
+models.geofence.findOne({
+	// where: Sequlize.where(
+	// 	Sequlize.fn('ST_ContainsProperly',
+	// 		Sequlize.fn('ST_Boundary', Sequlize.col("fence")),
+	// 		Sequlize.fn('ST_GeomFromText', 'POINT(19.119080 72.913548)', 4326)
+	// 	), 
+	// 	true
+	// ),
+	// attributes: ['locationMasterId']
+})
+.then(d => { console.log(JSON.stringify(d)) })
+.catch(err => { console.log(err) });
 
 
-// const utils = require('./utils');
+// 19.119164 72.913686
 
-// const wifis = [
-// 	{"bssid":"14:1f:ba:74:73:08","ssid":"Joispot-wifi","freq":-42,"rssi":0,"distance":2462},
-// 	{"bssid":"78:32:1b:9a:e5:90","ssid":"Osmos","freq":-42,"rssi":0,"distance":2462},
-// 	{"bssid":"24:f5:a2:15:8b:1a","ssid":"Linksys01906","freq":-42,"rssi":0,"distance":2462}
-// ]
+// SELECT "locationMasterId" FROM geofences WHERE ST_Within(ST_Boundary("geofences".fence), ST_GeomFromText('POINT(19.119130 72.913673)', 4326)) = true
 
-// async function testWifi(){
+// 19.119299, 72.913609
 
-// 	let c = await utils.Campaign.getOneWifiCampaign(1, '23', wifis);
-// 	console.log(JSON.parse(JSON.stringify(c)));
-// }
+// const geolib = require('geolib');
 
-// testWifi();
+// let x = geolib.isPointInside({latitude: 19.119080, longitude: 72.913548}, [
+// 	{latitude: 19.118876, longitude: 72.913460}, 
+// 	{latitude: 19.119418, longitude: 72.913551}, 
+// 	{latitude: 19.119418, longitude: 72.913551},
+// 	{latitude: 19.118812, longitude: 72.913718},
+// 	{latitude: 19.118876, longitude: 72.913460}
+// ]);
 
-const geolib = require('geolib');
+// console.log(x);
 
-let x = geolib.isPointInCircle({latitude: '19.119896460324526', longitude: '72.91322736069561'}, 
-	{latitude: '19.1191426148654', longitude: '72.9136388137974'}, '40');
+// let y = geolib.getCenter([{latitude: 19.118876, longitude: 72.913460}, 
+// 	{latitude: 19.119418, longitude: 72.913551}, 
+// 	{latitude: 19.119418, longitude: 72.913551},
+// 	{latitude: 19.118812, longitude: 72.913718},
+// 	{latitude: 19.118876, longitude: 72.913460}])
 
-// 19.1191 |     72.9136 |  35.3767
 
-console.log(x);
+// console.log(y);
+
+
+// SELECT "locationMasterId" FROM geofences 
+// WHERE ST_Within(geofences.fence, ST_Transform(ST_GeomFromText('POINT(19.119299 72.913609)', 4326), 4326)) = true;
+
+
+// POINT(19.1190353333333 72.9135763333333)
