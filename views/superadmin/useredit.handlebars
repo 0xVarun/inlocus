@@ -1,0 +1,75 @@
+<div class="container-fluid">
+    <div class="row margin-top">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <div class="float-left"><a href="/admin/home/users"><i class="fas fa-chevron-left"></i></a> New User</b></div>
+                    
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/admin/home/users/add">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="uername" name="username" class="form-control" value={{appUser.username}}>
+                                    <label for="uername">Username</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="email" id="email" name="email" class="form-control" value="{{appUser.email}}">
+                                    <label for="email">Email</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="md-form">
+                                    <input type="text" id="name" name="name" class="form-control" value="{{appUser.name}}">
+                                    <label for="name">Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                    <label for="active">Active</label>
+                                    <select name="active" id="active" class="browser-default custom-select">
+                                        {{#select appUser.role.active}}
+                                        <option value="false">Not Active</option>
+                                        <option value="true">Active</option>
+                                        {{/select}}
+                                    </select>
+                            </div>
+                            <div class="col">
+                                    <label for="roles">Role</label>
+                                    <select name="roles" id="roles" class="browser-default custom-select">
+                                        <option value="0">Superadmin</option>
+                                        <option value="1">App Admin</option>
+                                        <option value="2">App Staff</option>
+                                        <option value="3">Advertiser</option>
+                                    </select>
+                            </div>
+                        </div>
+                        {{!-- <div class="form-row">
+                            <div class="col">
+                                <label for="preTags">Tags</label>
+                                <input type="text" value='{{tag}}' name="pretags" id="preTags">
+                            </div>
+                            <div class="col">
+                                <label for="cTags">Custom Tags</label>
+                                <input type="text" value='{{tag}}' name="ctags" id="cTags">
+                            </div>
+                        </div> --}}
+                        {{!-- <button class="btn btn-info my-4 btn-block pull-right" type="submit">Update</button> --}}
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">User Info</div>
+                <div class="card-body container">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

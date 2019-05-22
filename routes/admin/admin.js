@@ -66,20 +66,71 @@ router.get('/users', suMiddleware, async (req, res) => {
 
 
 /**
- * Create New App POST
- * URL: /admin/home/app/new
+ * @url: /admin/home/users/add
+ * @method: GET
+ * @template: views/superadmin/user
+ * @desc: Create SuperUsers, Admin Users and Staff Users
+ * 
  */
-router.post('/app/new', suMiddleware, async (req, res) => {
-	let name = req.body.app_name;
-	let api_key = req.body.api_key;
-	let api_secret = req.body.api_secret;
-	try {
-		let app = await utils.Application.registerApplication(name, api_key, api_secret);
-	} catch (err) {
-		res.redirect('/admin/home/app/new');
-		return;
+router.get('/users/add', suMiddleware, async (req, res) => {
+	res.render('superadmin/user', { title: 'Admin', layout: 'base' });
+});
+
+
+/**
+ * @url: /admin/home/users/add
+ * @method: POST
+ * @desc: Create SuperUsers, Admin Users and Staff Users
+ * 
+ */
+router.post('/users/add', suMiddleware, async (req, res) => {
+	let username = req.body.username;
+	let email = req.body.email;
+	let password = req.body.password;
+	let rpassword = req.body.rpassword;
+	let name = req.body.name;
+	let roles = req.body.roles;
+
+	if(roles === '0') {
+		// Superadmin
+		await utils.User.registerSuperadminUser(name, username, email, password);
+	} else if(roles === '1') {
+		// AppAdmin
+		await utils.User.registerUser(name, user, email, password);
+	}else if(roles === '2') {
+		// AppStaff
+		await utils.User.registerStaffUser(name, username, email, password);
+	} else {
+		// Advertiser
+		await utils.User.registerAdvertiserUser(name, username, email, password);
 	}
-	res.redirect('/admin/home/apps');
+
+	res.redirect('/admin/home/users/add');
+});
+
+
+/**
+ * @url: /admin/home/users/edit/id
+ * @method: GET
+ * @template: views/superadmin/apps.handlebars
+ * @desc: List View of all Applications
+ */
+router.get('/users/edit/:id', suMiddleware, async (req, res) => {
+	let userId = req.params.id;
+	let appUser = await utils.User.getUserByUserId(userId);
+	console.log(JSON.parse(JSON.stringify(appUser)));
+	res.render('superadmin/useredit', { title: 'Admin', layout: 'base', appUser: appUser });
+});
+
+
+/**
+ * @url: /admin/home/users/del/id
+ * @method: GET
+ * @template: views/superadmin/apps.handlebars
+ * @desc: List View of all Applications
+ */
+router.get('/user/del/:id', suMiddleware, async (req, res) => {
+
 });
 
 

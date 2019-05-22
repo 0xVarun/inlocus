@@ -2,24 +2,99 @@ const model		= require('../models');
 const bcrypt	= require('bcryptjs');
 const Op		= require('sequelize').Op;
 
+
+/**
+ * Salt password
+ * @param {String} password password to be salted
+ * 
+ * @return Salted password
+ */
 function gensaltedhash(password) {
 	let salt = bcrypt.genSaltSync(10);
 	let hash = bcrypt.hashSync(password, salt);
 	return hash;
 }
 
-module.exports.registerUser = async (name, username, email, password, applicationId) => {
+
+/**
+ * Register App Admin User
+ */
+module.exports.registerUser = async (name, username, email, password) => {
 	let hash = gensaltedhash(password);
 	let user = await model.user.create({ name: name, username: username, email: email, password: hash });
 	let roles = await model.roles.create({ superadmin: false, appadmin: true, appstaff: false, advertiser: false, active: false, userId: user.id });
 }
 
-module.exports.registerStaffUser = async function(name, username, email, password, applicationId) {
+
+/**
+ * Register App Staff User
+ */
+module.exports.registerStaffUser = async function(name, username, email, password) {
 	let hash = gensaltedhash(password);
 	let user = await model.user.create({ name: name, username: username, email: email, password: hash });
 	let roles = await model.roles.create({ superadmin: false, appadmin: false, appstaff: true, advertiser: false, active: false, userId: user.id });
 }
 
+
+/**
+ * Register Superadmin User
+ */
+module.exports.registerSuperadminUser = async (name, username, email, password) => {
+	let hash = gensaltedhash(password);
+	let user = await model.user.create({ name: name, username: username, email: email, password: hash });
+	let roles = await model.roles.create({ superadmin: true, appadmin: false, appstaff: false, advertiser: false, active: false, userId: user.id });
+}
+
+
+/**
+ * Register Advertiser User
+ */
+module.exports.registerAdvertiserUser = async (name, username, email, password) => {
+	let hash = gensaltedhash(password);
+	let user = await model.user.create({ name: name, username: username, email: email, password: hash });
+	let roles = await model.roles.create({ superadmin: false, appadmin: false, appstaff: false, advertiser: true, active: false, userId: user.id });
+}
+
+
+module.exports.getUserByUserId = (id) => {
+	return model.user.findOne({
+		where: {
+			id: {
+				[Op.eq]: id
+			}
+		},
+		include: {
+			model: model.roles
+		}
+	})
+}
+
+
+module.exports.activate = (id) => {
+	model.roles.findOne({
+		where: {
+			userId: {
+				[Op.eq]: id
+			}
+		}
+	}).then(role => { role.update({ active: true }) })
+}
+
+
+module.exports.deactivate = (id) => {
+	model.roles.findOne({
+		where: {
+			userId: {
+				[Op.eq]: id
+			}
+		}
+	}).then(role => { role.update({ active: false }) })
+}
+
+
+/**
+ * Get User by Email
+ */
 module.exports.getUserByEmail = function(email, callback) {
 	model.user
 		.findOne( 
