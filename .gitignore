@@ -1,4 +1,5 @@
 test/venv/
 node_modules/
 **/venv/
+scripts/*.json
 public/uploads/*
