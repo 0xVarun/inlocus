@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const geofence = sequelize.define('geofence', {
     name: DataTypes.STRING,
+    type: DataTypes.STRING,
     fence: DataTypes.GEOMETRY
   }, {});
   geofence.associate = function(models) {
