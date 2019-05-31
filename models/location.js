@@ -1,8 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const location = sequelize.define('location', {
-    latitude: DataTypes.DOUBLE,
-    longitude: DataTypes.DOUBLE,
+    latlng: DataTypes.GEOMETRY,
     address: DataTypes.STRING
   }, {});
   location.associate = function(models) {

@@ -3,8 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const location_master = sequelize.define('location_master', {
     name: DataTypes.STRING,
     type: DataTypes.STRING,
-    latitude: DataTypes.STRING,
-    longitude: DataTypes.STRING
+    latlng: DataTypes.GEOMETRY
   }, {});
   location_master.associate = function(models) {
     location_master.belongsTo(models.user, {
