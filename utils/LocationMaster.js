@@ -5,10 +5,24 @@ const distinct = (v, i, s) => {
     return s.indexOf(v) === i;
 }
 
-module.exports.createLocations = (name, type, latitude, longitude, userId) => {
-    return model.location_master.create({name: name, type: type, latitude: latitude, longitude: longitude, userId: userId})
-        .then( locationMaster => { return locationMaster })
-        .catch( err => { throw err; } )
+module.exports.createLocations = async (name, type, latitude, longitude, userId) => {
+    // return model.location_master.create({name: name, type: type, latitude: latitude, longitude: longitude, userId: userId})
+    //     .then( locationMaster => { return locationMaster })
+    //     .catch( err => { throw err; } )
+
+    let point = { 
+		type: 'Point', 
+		coordinates: [latitude, longitude],
+		crs: { type: 'name', properties: { name: 'EPSG:4326'} }
+	};
+
+    try {
+        let mLocationMaster = await model.location_master.create({ name, type, latlng: point, userId });
+        return mLocationMaster;
+    } catch (err) {
+        throw err;
+    }
+
 }
 
 module.exports.getAllLocations = (userId) => {
@@ -71,9 +85,15 @@ module.exports.findOne = (id) => {
 }
 
 module.exports.findOneAndUpdate = async (id, name, type, latitude, longitude) => {
+    let point = { 
+		type: 'Point', 
+		coordinates: [latitude, longitude],
+		crs: { type: 'name', properties: { name: 'EPSG:4326'} }
+    };
+    
     model.location_master.findByPk(id)
         .then( location => {
-            location.update({ name: name, type: type, latitude: latitude, longitude: longitude });
+            location.update({ name: name, type: type, latlng: point });
         })
         .catch( err => { throw err; });
 }

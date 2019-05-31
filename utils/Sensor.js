@@ -11,9 +11,17 @@ async function getAddress(lat, lng) {
 
 module.exports.saveLocation = async (latitude, longitude, deviceId) => {
 	let address = await getAddress(latitude, longitude);
-	return model.location.create({ latitude: latitude, longitude: longitude, address: address, deviceId: deviceId })
-		.then(location => { return location })
-		.catch(err => { throw err });
+	let point = { 
+		type: 'Point', 
+		coordinates: [latitude, longitude],
+		crs: { type: 'name', properties: { name: 'EPSG:4326'} }
+	};
+	try {
+		let mLocation = await model.location.create({ latlng: point, address: address, deviceId: deviceId });
+		return mLocation;
+	} catch (err) {
+		throw err;
+	}		
 }
 
 module.exports.saveBeacon = (major, minor, uuid, rssi, distance, deviceId) => {
@@ -86,5 +94,5 @@ module.exports.getLatestLocation = async () => {
 	if(beacon.length === 0) {
 		return '';
 	}
-	return `${beacon[0].latitude}, ${beacon[0].longitude}` 
+	return beacon; 
 }
