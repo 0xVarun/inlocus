@@ -49,7 +49,7 @@ router.get('/graph', async(req, res) => {
 
 
 router.get('/pie', async(req, res) => {
-	let data = await utils.Sensor.getDeviceCount();
+	let data = await utils.Sensor.getDeviceCount(req.user.id);
 	res.json(data);
 });
 

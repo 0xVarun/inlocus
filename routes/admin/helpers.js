@@ -33,28 +33,6 @@ router.get('/user/deactivate/:id', suMiddleware, async (req, res) => {
 
 
 /**
- * @url: /admin/api/user/mksu/:id
- * @method: GET
- * @desc: Make Normal User to Superuser By Id
- */
-router.get('/user/mksu/:id', suMiddleware, async (req, res) => {
-	await User.mkSuperadmin(req.params.id);
-	res.redirect('/admin/home/users');
-});
-
-
-/**
- * @url: /admin/api/user/rmsu/:id
- * @method: GET
- * @desc: Remove superuser privileges from user by Id
- */
-router.get('/user/rmsu/:id', suMiddleware, async (req, res) => {
-	await User.rmSuperadmin(req.params.id);
-	res.redirect('/admin/home/users');
-});
-
-
-/**
  * @url: /admin/api/user/delete/:id
  * @method: GET
  * @desc: Delete User By Id
@@ -70,8 +48,8 @@ router.get('/user/delete/:id', suMiddleware, async (req, res) => {
  * @method: GET
  * @desc: Activate / Approve Application By Id
  */
-router.get('/app/activate/:id', async (req, res) => {
-	await Application.activateApp(req.params.id);
+router.get('/app/approve/:id', async (req, res) => {
+	await Application.changeStatus(true, req.user.id, req.params.id);
 	res.redirect('/admin/home/apps');
 });
 
@@ -81,8 +59,8 @@ router.get('/app/activate/:id', async (req, res) => {
  * @method: GET
  * @desc: Deactivate / Disapprove Application By Id
  */
-router.get('/app/deactivate/:id', async (req, res) => {
-	await Application.deactivateApp(req.params.id);
+router.get('/app/disapprove/:id', async (req, res) => {
+	await Application.changeStatus(false, req.user.id, req.params.id);
 	res.redirect('/admin/home/apps');
 });
 

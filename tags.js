@@ -63,11 +63,54 @@
 
 // testWifi();
 
-const geolib = require('geolib');
+// const geolib = require('geolib');
 
-let x = geolib.isPointInCircle({latitude: '19.119896460324526', longitude: '72.91322736069561'}, 
-	{latitude: '19.1191426148654', longitude: '72.9136388137974'}, '40');
+// let x = geolib.isPointInCircle({latitude: '19.119896460324526', longitude: '72.91322736069561'}, 
+// 	{latitude: '19.1191426148654', longitude: '72.9136388137974'}, '40');
 
 // 19.1191 |     72.9136 |  35.3767
 
-console.log(x);
+// console.log(x);
+
+
+const model = require('./models');
+
+
+async function test(userId) {
+	let android = 0;
+	let iPhone = 0;
+	let x = await model.appuser.findAll({
+		attributes: ['id'],
+		include:[
+			{
+				model: model.device,
+				attributes: ['GAID'],
+				// include: 
+				// }
+			},
+			{
+				model: model.application,
+				attributes: ['id'],
+				where: {
+					userId: userId
+				}
+			}
+		]
+	});
+
+	x.map(d => {
+
+		let type = d['device']['GAID']
+
+		if(type.includes('Android') || type.includes('android')) {
+			android++;
+		} else if(type.includes('iPhone')) {
+			iPhone++;
+		}
+	});
+
+	console.log({android, iPhone});
+
+}	
+
+test(1);

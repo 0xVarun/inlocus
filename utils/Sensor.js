@@ -62,14 +62,30 @@ module.exports.countByHour = () => {
 		.catch( err => { return {err}; })
 }
 
-module.exports.getDeviceCount = async () => {
+module.exports.getDeviceCount = async (userId) => {
 	let android = 0;
 	let iPhone = 0;
 
-	let d = await model.device.findAll({ attributes:['GAID'] });
-	d.map(x => {
+	let x = await model.appuser.findAll({
+		attributes: ['id'],
+		include:[
+			{
+				model: model.device,
+				attributes: ['GAID'],
+			},
+			{
+				model: model.application,
+				attributes: ['id'],
+				where: {
+					userId: userId
+				}
+			}
+		]
+	});
 
-		let type = x['GAID'].split(',')[1].trim().split(' ')[0];
+	x.map(d => {
+
+		let type = d['device']['GAID']
 
 		if(type.includes('Android') || type.includes('android')) {
 			android++;
