@@ -25,19 +25,6 @@ router.get('/', authMiddleware, async (req, res) => {
 
 
 /**
- * @url: /admin/home/analytics
- * @method: GET
- * @template: views/admin/comingsoon
- * @desc: App wise based analytics
- * 
- * @TODO: Implementation
- */
-router.get('/analytics', authMiddleware, (req, res) => {
-	res.render('admin/comingsoon', { title: 'Admin', layout: 'home' });
-});
-
-
-/**
  * @url: /admin/home/graph
  * @method: GET
  * @desc: JSON data for graph of users seen daywise
