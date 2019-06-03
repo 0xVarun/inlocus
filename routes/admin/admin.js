@@ -270,7 +270,7 @@ router.get('/profile/:id', authMiddleware, async (req, res) => {
  * @desc: View User Lat,Long on Map
  */
 router.get('/profile/:id/:long', authMiddleware, async (req, res) => {
-	let data = await model.location.find({where: {id: req.params.long, deviceId: req.params.id}});
+	let data = await model.location.findOne({where: {id: req.params.long, deviceId: req.params.id}});
 	let deviceId = await model.device.findOne({where: {id: req.params.id}})
 	res.render('admin/viewonmap', { title: 'Admin', layout: 'base', data: data, deviceId: deviceId });
 });

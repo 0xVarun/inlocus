@@ -17,7 +17,7 @@
                         <div class="form-row">
                             <div class="col">
                                 <div class="md-form">
-                                    <input type="text" name="latitude" id="latitude" class="form-control" readonly="true" placeholder="Latitude" value="{{data.latitude}}">
+                                    <input type="text" name="latitude" id="latitude" class="form-control" readonly="true" placeholder="Latitude" value="{{data.latlng.coordinates.[0]}}">
                                     <label for="latitude">Latitude</label>
                                 </div>
                             </div>
@@ -25,7 +25,7 @@
                         <div class="form-row">
                             <div class="col">
                                 <div class="md-form">
-                                    <input type="text" name="longitude" id="longitude" class="form-control" readonly="true" placeholder="Longitude" value="{{data.longitude}}">
+                                    <input type="text" name="longitude" id="longitude" class="form-control" readonly="true" placeholder="Longitude" value="{{data.latlng.coordinates.[1]}}">
                                     <label for="longitude">Longitude</label>
                                 </div>
                             </div>

@@ -110,8 +110,8 @@
                             {{#each location}}
                             <tr>
 								<td class="text-center">{{inc @index}}</td>
-								<td class="text-center">{{latitude}}</td>
-                                <td class="text-center">{{longitude}}</td>
+								<td class="text-center">{{latlng.coordinates.[0]}}</td>
+                                <td class="text-center">{{latlng.coordinates.[1]}}</td>
                                 <td class="text-center">{{address}}</td>
                                 <td class="text-center"><a href="/admin/home/profile/{{../tid}}/{{id}}">View On Map</a>
                                 <td class="text-center">{{locale createdAt}}</td>
