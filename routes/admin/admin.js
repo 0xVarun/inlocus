@@ -20,7 +20,6 @@ router.get('/', authMiddleware, async (req, res) => {
 	let repeatVisitors = await model.location.count();
 	let totalVisitors = parseInt(repeatVisitors * 1.2);
 	let apps = await utils.SdkUser.getUsers(req.user.id);
-	console.log(JSON.stringify(req.user));
 	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors, apps: apps });
 });
 
