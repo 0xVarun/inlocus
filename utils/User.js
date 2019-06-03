@@ -107,6 +107,9 @@ module.exports.getUserByEmail = function(email, callback) {
 				include: [
 					{ 
 						model: model.roles 
+					},
+					{
+						model: model.SDK
 					}
 				]
 			}
@@ -127,6 +130,9 @@ module.exports.getUserById = function(id, callback) {
 				include: [
 					{ 
 						model: model.roles 
+					},
+					{
+						model: model.SDK
 					}
 				] 
 			}
@@ -150,6 +156,9 @@ module.exports.findAll = function() {
 								[Op.eq]: false
 							}
 						}
+					},
+					{
+						model: model.SDK
 					} 
 				] 
 			}

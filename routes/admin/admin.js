@@ -4,6 +4,10 @@ const utils				= require('../../utils');
 const authMiddleware	= require('../../middleware/auth');
 const suMiddleware		= require('../../middleware/superadmin');
 const model 			= require('../../models');
+const formidable        = require('formidable');
+const fs                = require('fs');
+const path              = require('path');
+
 
 /**
  * @url: /admin/home
@@ -16,6 +20,7 @@ router.get('/', authMiddleware, async (req, res) => {
 	let repeatVisitors = await model.location.count();
 	let totalVisitors = parseInt(repeatVisitors * 1.2);
 	let apps = await utils.SdkUser.getUsers(req.user.id);
+	console.log(JSON.stringify(req.user));
 	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors, apps: apps });
 });
 
@@ -62,6 +67,39 @@ router.get('/users', suMiddleware, async (req, res) => {
 	let Users = await utils.User.findAll();
 	let staffUsers = await utils.User.findStaff();
 	res.render('superadmin/usermanagement', { title: 'Admin', layout: 'base', adminuser: JSON.parse(Users), staff: JSON.parse(staffUsers) });
+});
+
+
+/**
+ * @url: /admin/home/:id/sdk
+ * @method: GET
+ * @template: views/superadmin/usersdk
+ * @desc: Upload personalized SDK for each User
+ */
+router.get('/:id/sdk', suMiddleware, async(req, res) => {
+	res.render('superadmin/usersdk', { title: 'Admin', layout: 'base', tid: req.params.id });
+});
+
+
+/**
+ * @url: /admin/home/:id/sdk
+ * @method: POST
+ * @desc: Upload personalized SDK for each User
+ */
+router.post('/:id/sdk', suMiddleware, async(req, res) => {
+	let form = new formidable.IncomingForm();
+    form.multiples = false;
+    form.uploadDir = process.env.NODE_UPLOAD_DIR;
+    form.parse(req, async (err, fields, files) => {
+        if(err) { res.redirect(`/admin/home/${req.params.id}/sdk`); return; }
+        if(files.content.size < 1) { res.redirect(`/admin/home/${req.params.id}/sdk`); return; }
+        if(files.content.type !== 'application/zip') { res.redirect(`/admin/home/${req.params.id}/sdk`); return; }
+        let name = files.content.name.split('.')[0];
+        let ext = files.content.name.split('.')[1];
+        fs.renameSync(files.content.path, path.join(form.uploadDir, `${name}-${req.params.id}.${ext}`));
+        await utils.SDK.uploadSDK(`/uploads/${name}-${req.params.id}.${ext}`, req.params.id);
+      	res.redirect(`/admin/home/${req.params.id}/sdk`);
+    });
 });
 
 

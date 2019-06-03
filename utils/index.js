@@ -13,6 +13,7 @@ const utilExports = {
     Tag: require('./Tags'),
     Content: require('./Content'),
     Notify: require('./Notify'),
+    SDK: require('./Sdk'),
 }
 
 module.exports = utilExports;

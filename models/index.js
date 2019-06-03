@@ -34,6 +34,7 @@ const db = {
   content: sequelize.import('./content'),
   CampaignLocation: sequelize.import('./campaign_location'),
   WifiMaster: sequelize.import('./wifi_master'),
+  SDK: sequelize.import('./sdk'),
 };
 
 

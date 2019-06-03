@@ -1,0 +1,40 @@
+<div class="container-fluid">
+    <div class="row margin-top">
+        <div class="col-md-8 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <div class="float-left"><a href="/admin/home/users"><i class="fas fa-chevron-left"></i></a> SDK</div>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/home/{{tid}}/sdk" method="POST" enctype="multipart/form-data">
+                        <div class="form-row align-bottom">
+                            <div class="col">
+                                <input type="file" name="content" class="dropify" data-max-file-size="1M" required/>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-light-blue">Upload SDK</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    SDK Upload Help
+                </div>
+                <div class="card-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$('.dropify').dropify({
+    messages: {
+        'default': 'Drag and drop a file here or click',
+        'replace': 'Drag and drop or click to replace',
+        'remove':  'Remove',
+        'error':   'Ooops, something wrong happended.'
+    }
+})
+</script>
