@@ -71,9 +71,9 @@ module.exports.getDeviceCount = async () => {
 
 		let type = x['GAID'].split(',')[1].trim().split(' ')[0];
 
-		if(type === 'Android') {
+		if(type.includes('Android') || type.includes('android')) {
 			android++;
-		} else if( type === 'iPhone') {
+		} else if(type.includes('iPhone')) {
 			iPhone++;
 		}
 	});
