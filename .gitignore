@@ -2,3 +2,4 @@ test/venv/
 node_modules/
 **/venv/
 public/uploads/*
+scripts/*.json
