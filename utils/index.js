@@ -14,6 +14,7 @@ const utilExports = {
     Content: require('./Content'),
     Notify: require('./Notify'),
     SDK: require('./Sdk'),
+    Analytics: require('./Analytics'),
 }
 
 module.exports = utilExports;

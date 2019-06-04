@@ -8,28 +8,8 @@ const geolib			= require('geolib');
 
 router.get('/api/heatmap', authMiddleware, async(req, res) => {
 	let userId = req.user.id;
-
-	let data = await model.location.findAll({
-		attributes: ['latitude', 'longitude'],
-		// include: [
-		// 	{
-		// 		model: model.device,
-		// 		attributes: [],
-		// 		include: {
-		// 			model: model.appuser,
-		// 			attributes: [],
-		// 			include: {
-		// 				model: model.application,
-		// 				where: {
-		// 					userId: userId
-		// 				},
-		// 				attributes: [],
-		// 			}
-		// 		}
-		// 	}
-		// ]
-	});
-
+	let su = req.user.role.superadmin
+	let data = await utils.Analytics.getAllLocations(su, userId)
 	let center = geolib.getCenterOfBounds(JSON.parse(JSON.stringify(data)));
 	res.json({data, center});
 });

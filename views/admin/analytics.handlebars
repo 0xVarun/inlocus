@@ -19,6 +19,7 @@
     </div>
 
     <div class="card-body">
+      
       <div id="map"></div>
     </div>
 
@@ -37,7 +38,6 @@ function initMap() {
     method: 'GET',
     url: '/admin/analytics/api/heatmap',
     success: (res) => {
-      console.log(res.center);
       map = new google.maps.Map(document.getElementById('map'), {
             zoom: 13,
             center: {
@@ -84,7 +84,6 @@ function initMap() {
             heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
         }
 
-        // Heatmap data: 500 Points
         function getPoints() {
             let temp = [];
             res.data.map(data => {
