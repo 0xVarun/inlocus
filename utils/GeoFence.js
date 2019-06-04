@@ -1,5 +1,6 @@
 const model		= require('../models');
 const Op		= require('sequelize').Op;
+const geolib	= require('geolib');
 
 /**
  * Create New Geo Fence
@@ -50,6 +51,9 @@ module.exports.findOneFence = id => {
 
 /**
  * Update Fence By Id
+ *
+ * @param      {Number}  id       The identifier
+ * @param      {Object}  payload  The payload
  */
 module.exports.findOneAndUpdate = (id, payload) => {
 	// return model.geofence.update({ latitude: payload.lat, longitude: payload.lng, radius: payload.rad, name: payload.name })
@@ -60,4 +64,52 @@ module.exports.findOneAndUpdate = (id, payload) => {
             geofence.update({ latitude: payload.lat, longitude: payload.lng, radius: payload.rad, name: payload.name, locationMasterId: payload.location });
         })
         .catch( err => { throw err; });
-}
+};
+
+
+/**
+ * Returns Users seen in the geofence
+ *
+ * @param      {Number}  id      The identifier
+ * @param      {Number}  userId  The User identifier
+ * @return     {Object}  Users seen Geofence
+ */
+module.exports.usersInGeofence = async (id, userId) => {
+	let geofence = await model.geofence.findByPk(id);
+	let locations = await model.location.findAll({
+		attributes: ['latitude', 'longitude'],
+		include: [
+			{
+				model: model.device,
+				attributes: [],
+				include: {
+					model: model.appuser,
+					attributes: [],
+					include: {
+						model: model.application,
+						attributes: [],
+						// where: {
+						// 	userId: {
+						// 		[Op.eq]: userId
+						// 	}
+						// }
+					}
+				}
+			}
+		]
+	});
+	let valid = [];
+	console.log('reached here');
+	for(let i = 0; i < locations.length; i++) {
+		let isInsideFence = geolib.isPointInCircle(
+			// POINT
+			{ latitude: locations[i].latitude, longitude: locations[i].longitude },
+			// GEOFENCE
+			{ latitude: geofence.latitude, longitude: geofence.longitude}
+		);
+
+		if(isInsideFence) { valid.push(locations[i]); }
+	}
+
+	return valid;
+};

@@ -1,6 +1,13 @@
 const model 	= require('../models');
 
 
+/**
+ * Gets all locations.
+ *
+ * @param      {Boolean}  su      Return all if Superuser
+ * @param      {Number}  userId  The user identifier
+ * @return     {Object}  All locations.
+ */
 module.exports.getAllLocations = async (su, userId) => {
 	let data;
 	if(su) {

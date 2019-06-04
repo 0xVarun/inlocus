@@ -85,7 +85,7 @@
     </div>
 
     <div class="row margin-top">
-        <div class="col-md-7 col-sm-12 col-xs-12">
+        <div class="col-md-8 col-sm-12 col-xs-12">
             <div class="card shadow">
                 <div class="card-header">User</div>
                 <div class="card-body">
@@ -94,6 +94,7 @@
                             <th class="th-sm text-center">Sr No</th>
                             <th class="th-sm text-center">DeviceId</th>
                             <th class="th-sm text-center">App</th>
+                            <th class="th-sm text-center">InlocusId</th>
                         </thead>
                         <tbody>
                             {{#each apps}}
@@ -102,6 +103,7 @@
 								<td class="text-center">{{inc @index}}</td>
 								<td class="text-center"><a href="/admin/home/profile/{{deviceId}}">{{device.deviceId}}</a></td>
                                 <td class="text-center">{{../name}}</td>
+                                <td class="text-center">{{ inlocusId}}</td>
                             </tr>
                             {{/each}}
                             {{/each}}
