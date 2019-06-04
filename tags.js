@@ -114,3 +114,18 @@ async function test(userId) {
 }	
 
 test(1);
+
+
+// const uuid = require('uuid/v4');
+
+
+// async function doit(){
+// 	await model.appuser.update({ inlocusId: uuid() }, { where: { id: 1 } });
+// 	await model.appuser.update({ inlocusId: uuid() }, { where: { id: 2 } });
+// 	await model.appuser.update({ inlocusId: uuid() }, { where: { id: 3 } });
+// 	await model.appuser.update({ inlocusId: uuid() }, { where: { id: 4 } });
+// 	await model.appuser.update({ inlocusId: uuid() }, { where: { id: 5 } });
+// }
+
+
+// doit();
