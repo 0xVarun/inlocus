@@ -5,10 +5,12 @@ import json
 import pickle
 import random
 import string
+import logging
 import requests
 from argparse import ArgumentParser
 
 PROD = False
+FILE = 'config.json'
 
 class Registration(object):
     CONFIG = {}
@@ -20,7 +22,8 @@ class Registration(object):
         self.api_key = kwargs.pop('api_key', None)
 
         if not self.api_key:
-            raise Exception('Cannot register device without an API key') 
+            logging.fatal('Cannot register device without an API key') 
+            sys.exit(1)
 
         self.__register_device()
         self.__register_user()
@@ -63,17 +66,18 @@ class Registration(object):
 
     def __save_config(self):
         print(json.dumps(self.CONFIG))
-        with open('config.json', 'w') as config_:
+        with open(FILE, 'w') as config_:
             json.dump(self.CONFIG, config_, sort_keys=True, indent=4)
 
 class Login(object):
     CONFIG = None
     def __init__(self, *args, **kwargs):
-        if os.path.exists('config.json'):
-            with open('config.json', 'r') as config_:
+        if os.path.exists(FILE):
+            with open(FILE, 'r') as config_:
                 self.CONFIG = json.loads(config_.read())
         else:
-            raise Exception('Config file not found...maybe you forgot to register')
+            logging.fatal('Config file {} not found...maybe you forgot to register'.format(FILE))
+            sys.exit(1)
 
         self.__login()
         self.__save_config()
@@ -83,12 +87,14 @@ class Login(object):
         url = self.__get_host().format(uri)
         body = { 'userId': self.CONFIG['user']['appUserId'], 'deviceId': self.CONFIG['device']['deviceId'] }
         header = { 'Content-Type': 'application/json' }
-
-        res = requests.post(url, data=json.dumps(body), headers=header)
-
-        res_body = json.loads(res.text)
-
-        self.CONFIG['login'] = res_body 
+        logging.debug('requesting login at url -> {}'.format(url))
+        logging.debug('post body -> {}'.format(json.dumps(body)))
+        try:
+            res = requests.post(url, data=json.dumps(body), headers=header)
+            res_body = json.loads(res.text)
+            self.CONFIG['login'] = res_body 
+        except Exception as e:
+            logging.fatal(str(e))
 
     def __get_host(self):
         if PROD:
@@ -97,20 +103,21 @@ class Login(object):
             return 'http://localhost:3000{}'
 
     def __save_config(self):
-        print(json.dumps(self.CONFIG))
-        with open('config.json', 'w') as config_:
+        with open(FILE, 'w') as config_:
             json.dump(self.CONFIG, config_, sort_keys=True, indent=4)
 
 class Sensor(object):
     CONFIG = None
     def __init__(self, *args, **kwargs):
-        if os.path.exists('config.json'):
-            with open('config.json', 'r') as config_:
+        if os.path.exists(FILE):
+            with open(FILE, 'r') as config_:
                 self.CONFIG = json.loads(config_.read())
         else:
-            raise Exception('Config file not found...maybe you forgot to register')
+            logging.fatal('Config file {} not found...maybe you forgot to register'.format(FILE))
+            sys.exit(1)
 
         self.typeof = kwargs.pop('typeof', None)
+
         self.latitude = kwargs.pop('lat', None)
         self.longitude = kwargs.pop('lng', None)
 
@@ -138,10 +145,16 @@ class Sensor(object):
         body = { 'latitude': str(self.latitude), 'longitude': str(self.longitude) }
         header = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
 
-        res = requests.put(url, data=json.dumps(body), headers=header)
-        print('status code -> {}'.format(res.status_code))
-        print(res.text)
-    
+        logging.debug('sending location at url -> {}'.format(url))
+        logging.debug('put body -> {}'.format(json.dumps(body)))
+
+        try:
+            res = requests.put(url, data=json.dumps(body), headers=header)
+            logging.info('status code -> {}'.format(res.status_code))
+            logging.info(res.text)
+        except Exception as e:
+            logging.fatal(str(e))
+
     def __send_beacon(self):
         uri = '/api/sensor/beacon'
         url = self.__get_host().format(uri)
@@ -180,7 +193,9 @@ def main(args):
 if __name__ == '__main__':
     parser = ArgumentParser(description="inLocus User Register Flow")
 
-    parser.add_argument('--prod', type=bool, help="Use production server instead of default local server")
+    parser.add_argument('--prod', action='store_true', help="Use production server instead of default local server")
+    parser.add_argument('-f','--file', type=str, help="Path to config file, default is config.json", default="config.json")
+    parser.add_argument('--verbose', action='store_true', help="Enable verbose logging")
 
     subparser = parser.add_subparsers(dest="command")
 
@@ -204,6 +219,16 @@ if __name__ == '__main__':
 
     args = parser.parse_args(sys.argv[1:])
     
+    if args.prod:
+        PROD = True
+
+    FILE = args.file
+
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG,format='[%(levelname)s]: %(message)s')
+    else:
+        logging.basicConfig(level=logging.INFO,format='[%(levelname)s]: %(message)s')
+
     main(args)
 
 
