@@ -114,6 +114,9 @@ class Sensor(object):
         self.latitude = kwargs.pop('lat', None)
         self.longitude = kwargs.pop('lng', None)
 
+        self.major = kwargs.pop('major', None)
+        self.minor = kwargs.pop('minor', None)
+
         if self.typeof == 'location':
             self.__send_location()
         elif self.typeof == 'beacon':
@@ -140,7 +143,15 @@ class Sensor(object):
         print(res.text)
     
     def __send_beacon(self):
-        pass
+        uri = '/api/sensor/beacon'
+        url = self.__get_host().format(uri)
+        token = self.CONFIG['login']['token']
+        body = { 'major': str(self.major), 'minor': str(self.minor), 'uuid': 'f7826da6-4fa2-4e98-8024-bc5b71e0893e', 'rssi': -5.875, 'distance': 20 }
+        header = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
+
+        res = requests.put(url, data=json.dumps(body), headers=header)
+        print('status code -> {}'.format(res.status_code))
+        print(res.text)
 
     def __send_wifi(self):
         pass
@@ -160,7 +171,7 @@ def main(args):
     elif args.command == 'location':
         sensor = Sensor(typeof=args.command,lat=args.lat, lng=args.lng)
     elif args.command == 'beacon':
-        print('beacon--')
+        sensor = Sensor(typeof=args.command,major=args.major, minor=args.minor)
     elif args.command == 'wifi':
         print('wifi') 
     else:
@@ -179,7 +190,7 @@ if __name__ == '__main__':
     beacon = subparser.add_parser("beacon", help="Send Beacon Data")
     wifi = subparser.add_parser("wifi", help="Send WiFi Data")
 
-    reg.add_argument('-i', '--imei', type=str, help="Device IMIE")
+    reg.add_argument('-i', '--imei', type=str, default=''.join(random.choice(string.digits) for _ in range(10)), help="Device IMIE")
     reg.add_argument('-g', '--gaid', type=str, help="Device GAID")
     reg.add_argument('-m', '--phone', type=str, help="User Phone number")
     reg.add_argument('-e', '--email', type=str, help="User Email Address")
@@ -187,6 +198,9 @@ if __name__ == '__main__':
 
     location.add_argument('--lat', type=str, help="Latitude")
     location.add_argument('--lng', type=str, help="Longitude")
+
+    beacon.add_argument('--major', type=str, help="Beacon Major")
+    beacon.add_argument('--minor', type=str, help="Beacon Minor")
 
     args = parser.parse_args(sys.argv[1:])
     
