@@ -74,46 +74,46 @@
 
 
 const model = require('./models');
+const Sequelize = require('sequelize');
 
+// async function test(userId) {
+// 	let android = 0;
+// 	let iPhone = 0;
+// 	let x = await model.appuser.findAll({
+// 		attributes: ['id'],
+// 		include:[
+// 			{
+// 				model: model.device,
+// 				attributes: ['GAID'],
+// 				// include: 
+// 				// }
+// 			},
+// 			{
+// 				model: model.application,
+// 				attributes: ['id'],
+// 				where: {
+// 					userId: userId
+// 				}
+// 			}
+// 		]
+// 	});
 
-async function test(userId) {
-	let android = 0;
-	let iPhone = 0;
-	let x = await model.appuser.findAll({
-		attributes: ['id'],
-		include:[
-			{
-				model: model.device,
-				attributes: ['GAID'],
-				// include: 
-				// }
-			},
-			{
-				model: model.application,
-				attributes: ['id'],
-				where: {
-					userId: userId
-				}
-			}
-		]
-	});
+// 	x.map(d => {
 
-	x.map(d => {
+// 		let type = d['device']['GAID']
 
-		let type = d['device']['GAID']
+// 		if(type.includes('Android') || type.includes('android')) {
+// 			android++;
+// 		} else if(type.includes('iPhone')) {
+// 			iPhone++;
+// 		}
+// 	});
 
-		if(type.includes('Android') || type.includes('android')) {
-			android++;
-		} else if(type.includes('iPhone')) {
-			iPhone++;
-		}
-	});
+// 	console.log({android, iPhone});
 
-	console.log({android, iPhone});
+// }	
 
-}	
-
-test(1);
+// test(1);
 
 
 // const uuid = require('uuid/v4');
@@ -129,3 +129,73 @@ test(1);
 
 
 // doit();
+
+
+async function doit() {
+	let geofence = await model.geofence.findOne();
+	console.log(JSON.stringify(geofence));
+	let data = await model.location.findAll({
+		where: Sequelize.where(
+			Sequelize.fn('ST_DWithin',
+				Sequelize.fn('ST_GeomFromText', `POINT(${geofence.latitude} ${geofence.longitude})`, 4326),
+				Sequelize.fn('ST_GeomFromText', Sequelize.fn('CONCAT', 'POINT(', Sequelize.col('latitude'), ' ', Sequelize.col('longitude'), ')'), 4326),
+			geofence.radius),
+			false
+		),
+		include: [
+			{
+				model: model.device,
+				attributes: [],
+				include:{
+					model: model.appuser,
+					attributes: [],
+					include: {
+						model: model.application,
+						where: {
+							userId: 1
+						},
+						attributes: []
+					}
+				}
+			}
+		]
+	});
+
+	console.log(data.length);
+
+}
+
+doit();
+
+// SELECT ST_GeomFromText(CONCAT('POINT(', latitude, ' ', longitude, ')'), 4326) as mpoint, id 
+// FROM locations
+// WHERE ST_DWithin(ST_GeomFromText('POINT(19.0079390748637 72.8294547762655)', 4326), mpoint, 76.76123)
+
+
+// SELECT * FROM "locations" AS "location" 
+// LEFT OUTER JOIN "devices" AS "device" 
+// ON "location"."deviceId" = "device"."id" 
+// LEFT OUTER JOIN ( "appusers" AS "device->appusers" 
+// 	INNER JOIN "applications" AS "device->appusers->application" 
+// 	ON "device->appusers"."applicationId" = "device->appusers->application"."id" 
+// 	AND "device->appusers->application"."userId" = 1 
+// ) 
+// ON "device"."id" = "device->appusers"."deviceId" 
+// WHERE ST_DWithin(
+// 	ST_GeomFromText('POINT(19.0079390748637 72.8294547762655)', 4326), 
+// 	ST_GeomFromText(
+// 		CONCAT('POINT(', latitude, ' ', longitude, ')'), 4326), 
+// 	76.7612348238529
+// ) = true;
+
+
+// SELECT * FROM locations
+// WHERE ST_Contains(
+// 	ST_Buffer(
+// 		ST_GeomFromText('POINT(19.0079390748637 72.8294547762655)', 4326),
+// 		76.7612348238529
+// 	),
+// 	ST_GeomFromText(CONCAT('POINT(', latitude, ' ', longitude, ')'), 4326)
+// )
+
+// 19.008145 72.829472
