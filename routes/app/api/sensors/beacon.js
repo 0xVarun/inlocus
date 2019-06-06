@@ -68,7 +68,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 				},
 				"filters": campaign.filters,
 				"count": "0",
-				"inlocusID": "0"
+				"inlocusID": res.locals.user['inlocusId']
 			}
 		}
 		res.json(notif_payload);

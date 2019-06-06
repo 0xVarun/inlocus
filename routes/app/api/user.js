@@ -87,7 +87,8 @@ router.post('/login', async (req, res) => {
 		mobileNo: appUser['mobileNo'],
 		deviceId: appUser['deviceId'],
 		appId: appUser['applicationId'],
-		emailId: appUser['emailId']
+		emailId: appUser['emailId'],
+		inlocusId: appUser['inlocusId']
 	}
 	let token = jwt.sign(payload, "jcwirrxNiX3iyMQ075xr5k8vC6hQbiSwc5JsvJbQCfsS1gdF+hg7/qNe9duZP5dclypByeqPE18AaoDI+Ghmmw==", { expiresIn: 60 * 60 * 24 * 365 });
 	
