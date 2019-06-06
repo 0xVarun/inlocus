@@ -7,14 +7,28 @@ const geolib			= require('geolib');
 
 
 /**
- * @url: /admin/analytics/api/heatmap
+ * @url: /admin/analytics/api/heatmap/location
  * @method: GET
  * @desc: return all user coordinates, and center of all coordinates
  */
-router.get('/api/heatmap', authMiddleware, async(req, res) => {
+router.get('/api/heatmap/location', authMiddleware, async(req, res) => {
 	let userId = req.user.id;
 	let su = req.user.role.superadmin
 	let data = await utils.Analytics.getAllLocations(su, userId)
+	let center = geolib.getCenterOfBounds(JSON.parse(JSON.stringify(data)));
+	res.json({data, center});
+});
+
+
+/**
+ * @url: /admin/analytics/api/heatmap/beacon
+ * @method: GET
+ * @desc: return all user coordinates, and center of all coordinates
+ */
+router.get('/api/heatmap/beacon', authMiddleware, async(req, res) => {
+	let userId = req.user.id;
+	let su = req.user.role.superadmin
+	let data = await utils.Analytics.getAllBeaconLocations(su, userId)
 	let center = geolib.getCenterOfBounds(JSON.parse(JSON.stringify(data)));
 	res.json({data, center});
 });

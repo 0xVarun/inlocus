@@ -1,10 +1,13 @@
-<style>#map {height: 500px;width: 100%;}</style>
+<style>#map, #bmap {height: 500px;width: 100%;}</style>
 <div class="container">
   <div class="card shadow">
     <div class="card-header" style="margin: 0">
       <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item">
-          <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#heatmapPane" role="tab" aria-controls="pills-home" aria-selected="true">Heat Map</a>
+          <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#heatmapPane" role="tab" aria-controls="pills-home" aria-selected="true">Heat Map Location</a>
+        </li>
+        <li class="nav-item">
+          <a href="#heatmapBeaconPane" class="nav-link" id="pills-beacon" data-toggle="pill" role="tab" aria-controls="pills-beacon" aria-selected="false">Heat Map Beacon</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#bygeofence" role="tab" aria-controls="pills-profile" aria-selected="false">By GeoFence</a>
@@ -20,6 +23,10 @@
         
         <div class="tab-pane fade show active" id="heatmapPane" role="tabpanel" aria-labelledby="heatmapPane-tab">      
           <div id="map"></div>
+        </div>
+
+        <div class="tab-pane" id="heatmapBeaconPane" role="tabpanel" aria-labelledby="heatmapBeacon-tab">      
+          <div id="bmap"></div>
         </div>
         
         <div class="tab-pane" id="bygeofence" role="tabpanel" aria-labelledby="bygeofence-tab">
