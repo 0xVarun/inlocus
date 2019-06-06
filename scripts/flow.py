@@ -108,6 +108,7 @@ class Login(object):
 
 class Sensor(object):
     CONFIG = None
+    CAMP = None
     def __init__(self, *args, **kwargs):
         if os.path.exists(FILE):
             with open(FILE, 'r') as config_:
@@ -124,6 +125,8 @@ class Sensor(object):
         self.major = kwargs.pop('major', None)
         self.minor = kwargs.pop('minor', None)
 
+        self.notify = kwargs.pop('notify', None)
+
         if self.typeof == 'location':
             self.__send_location()
         elif self.typeof == 'beacon':
@@ -131,7 +134,10 @@ class Sensor(object):
         elif self.typeof == 'wifi':
             self.__send_wifi()
 
+        if self.notify:
+            self.__notify()
 
+            
     def __get_host(self):
         if PROD:
             return 'https://inlocus.pinprox.com{}'
@@ -151,7 +157,13 @@ class Sensor(object):
         try:
             res = requests.put(url, data=json.dumps(body), headers=header)
             logging.info('status code -> {}'.format(res.status_code))
-            logging.info(res.text)
+
+            if res.status_code != 204:
+                logging.info(res.text)
+
+            if res.status_code == 200:
+                self.CAMP = json.loads(res.text)
+
         except Exception as e:
             logging.fatal(str(e))
 
@@ -163,11 +175,29 @@ class Sensor(object):
         header = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
 
         res = requests.put(url, data=json.dumps(body), headers=header)
-        print('status code -> {}'.format(res.status_code))
-        print(res.text)
+        logging.info('status code -> {}'.format(res.status_code))
+        if res.status_code != 204:
+            logging.info(res.text)
+
+        if res.status_code == 200:
+            self.CAMP = json.loads(res.text)
+
 
     def __send_wifi(self):
         pass
+
+    def __notify(self):
+        if self.CAMP is not None:
+            notificationId = self.CAMP['notificationId']
+            uri = '/api/notify/{}'.format(notificationId)
+            url = self.__get_host().format(uri)
+            token = self.CONFIG['login']['token']
+            header = { 'authorization': 'Bearer {}'.format(token) }
+            res = requests.get(url, headers=header)
+            logging.info('status code -> {}'.format(res.status_code))
+        else:
+            logging.info('Campaign is empty')
+
 
 
 def main(args):
@@ -182,9 +212,9 @@ def main(args):
     elif args.command == 'login':
         login = Login()
     elif args.command == 'location':
-        sensor = Sensor(typeof=args.command,lat=args.lat, lng=args.lng)
+        sensor = Sensor(typeof=args.command,lat=args.lat, lng=args.lng, notify=args.notify)
     elif args.command == 'beacon':
-        sensor = Sensor(typeof=args.command,major=args.major, minor=args.minor)
+        sensor = Sensor(typeof=args.command,major=args.major, minor=args.minor, notify=args.notify)
     elif args.command == 'wifi':
         print('wifi') 
     else:
@@ -213,9 +243,11 @@ if __name__ == '__main__':
 
     location.add_argument('--lat', type=str, help="Latitude")
     location.add_argument('--lng', type=str, help="Longitude")
+    location.add_argument('-n', '--notify', action='store_true')
 
     beacon.add_argument('--major', type=str, help="Beacon Major")
     beacon.add_argument('--minor', type=str, help="Beacon Minor")
+    beacon.add_argument('-n', '--notify', action='store_true')
 
     args = parser.parse_args(sys.argv[1:])
     
