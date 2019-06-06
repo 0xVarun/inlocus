@@ -165,7 +165,7 @@ async function doit() {
 
 }
 
-doit();
+// doit();
 
 // SELECT ST_GeomFromText(CONCAT('POINT(', latitude, ' ', longitude, ')'), 4326) as mpoint, id 
 // FROM locations
