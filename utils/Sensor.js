@@ -1,5 +1,6 @@
 const model		= require('../models');
 const sequelize = require('sequelize');
+const Op 		= require('sequelize').Op;
 const http		= require('axios');
 
 async function getAddress(lat, lng) {
@@ -48,18 +49,47 @@ module.exports.saveMultiWifi = (payload, deviceId) => {
 	return returnValue;
 };
 
-module.exports.countByHour = () => {
+module.exports.countByHour = async (userId) => {
+	let devices = await model.appuser.findAll({
+		attributes: [],
+		include: [
+			{
+				model: model.device,
+				attributes: ['id']
+			},
+			{
+				model: model.application,
+				attributes: [],
+				where: {
+					userId: {
+						[Op.eq]: userId
+					}
+				}
+			}
+		]
+	});
+
+	if(devices.length <= 0 ) {
+		return {}
+	}
+
+	let deviceIds = devices.map(dev => { return dev['device']['id']; })
 	return model.location.findAll({
 		limit: 7,
 		attributes: [
 			[sequelize.literal(`DATE("createdAt")`), 'date'],
 			[sequelize.literal(`COUNT(*)`), 'count']
 		],
+		where: {
+			deviceId: {
+				[Op.or]: deviceIds
+			}
+		},
 		group: ['date'],
 		order: [[sequelize.literal(`DATE("createdAt")`), 'ASC']]
 	})
 		.then( data => { return data; })
-		.catch( err => { return {err}; })
+		.catch( err => { return {err}; }) 
 }
 
 module.exports.getDeviceCount = async (userId) => {
@@ -97,10 +127,63 @@ module.exports.getDeviceCount = async (userId) => {
 }
 
 
-module.exports.getLatestLocation = async () => {
-	let beacon = await model.location.findAll({ limit: 1, order: [['createdAt', 'DESC']]});
+module.exports.getLatestLocation = async (userId) => {
+	let devices = await model.appuser.findAll({
+		attributes: [],
+		include: [
+			{
+				model: model.device,
+				attributes: ['id']
+			},
+			{
+				model: model.application,
+				attributes: [],
+				where: {
+					userId: {
+						[Op.eq]: userId
+					}
+				}
+			}
+		]
+	});
+
+	if (devices.length == 0) {
+		return '';
+	}
+  
+	let beacon = await model.location.findAll(
+		{ 
+			limit: 1, 
+			order: [['createdAt', 'DESC']]
+		}
+	);
+
 	if(beacon.length === 0) {
 		return '';
 	}
 	return `${beacon[0].latitude}, ${beacon[0].longitude}` 
+}
+
+
+
+module.exports.getTotalDevices = async(userId) => {
+	let devices = await model.appuser.findAll({
+		attributes: [],
+		include: [
+			{
+				model: model.device,
+				attributes: ['id']
+			},
+			{
+				model: model.application,
+				attributes: [],
+				where: {
+					userId: {
+						[Op.eq]: userId
+					}
+				}
+			}
+		]
+	});
+	return devices.length;
 }

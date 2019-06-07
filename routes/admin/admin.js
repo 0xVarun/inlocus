@@ -16,8 +16,12 @@ const path              = require('path');
  * @desc: Admin Dashboard
  */
 router.get('/', authMiddleware, async (req, res) => {
-	let beacon = await utils.Sensor.getLatestLocation();
-	let repeatVisitors = await model.location.count();
+	let beacon = await utils.Sensor.getLatestLocation(req.user.id);
+	let deviceCount = await utils.Sensor.getTotalDevices(req.user.id);
+	let repeatVisitors = 0;
+	if(deviceCount != 0) {
+		repeatVisitors = await model.location.count();
+	}
 	let totalVisitors = parseInt(repeatVisitors * 1.2);
 	let apps = await utils.SdkUser.getUsers(req.user.id);
 	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors, apps: apps });
@@ -30,7 +34,7 @@ router.get('/', authMiddleware, async (req, res) => {
  * @desc: JSON data for graph of users seen daywise
  */
 router.get('/graph', async(req, res) => {
-	let data = await utils.Sensor.countByHour();
+	let data = await utils.Sensor.countByHour(req.user.id);
 	res.json(data);
 });
 

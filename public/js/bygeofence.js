@@ -1,5 +1,7 @@
 function geofenceSelect() {
 	let geofenceId = $("#geofenceSelect").find(":selected").val();
+  let prog = $("#progress");
+  prog.css('display', 'inline-block')
 	$.ajax({
 		method: 'GET',
 		url: '/admin/analytics/geofence/' + geofenceId,
@@ -7,6 +9,7 @@ function geofenceSelect() {
 			console.log(response);
 		}
 	});
+  setInterval(function(){ prog.css('display', 'none');}, 10000);
 }
 
 function GeoFenceinitMap() {

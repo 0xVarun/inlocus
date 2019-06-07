@@ -12,7 +12,7 @@ function initMap() {
               lat: parseFloat(res.center.latitude),
               lng: parseFloat(res.center.longitude)
             },
-            // mapTypeId: 'satellite'
+            mapTypeId: 'satellite'
       });
 
       heatmap = new google.maps.visualization.HeatmapLayer({
@@ -80,7 +80,7 @@ function initbMap() {
               lat: parseFloat(res.center.latitude),
               lng: parseFloat(res.center.longitude)
             },
-            // mapTypeId: 'satellite'
+            mapTypeId: 'satellite'
       });
 
       heatmap = new google.maps.visualization.HeatmapLayer({
