@@ -99,7 +99,6 @@ module.exports.usersInGeofence = async (id, userId) => {
 		]
 	});
 	let valid = [];
-	console.log('reached here');
 	for(let i = 0; i < locations.length; i++) {
 		let isInsideFence = geolib.isPointInCircle(
 			// POINT

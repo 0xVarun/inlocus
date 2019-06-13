@@ -167,6 +167,54 @@ async function doit() {
 
 // doit();
 
+
+async function geoFenceProper() {
+	let geofence1 = await model.geofence.findOne();
+	console.log(JSON.stringify(geofence1));
+	let data = await model.location.findAll({
+		where: Sequelize.where(
+			Sequelize.fn('ST_Within',
+				// POINT
+				Sequelize.fn('ST_GeomFromText',
+					Sequelize.fn('CONCAT', 
+						'POINT(',
+						Sequelize.col('latitude'),
+						' ',
+						Sequelize.col('longitude'),
+						')'
+					), // CONCAT POINT
+					4236
+				), 
+				Sequelize.fn('ST_Buffer',
+					Sequelize.fn('ST_GeomFromText',
+						Sequelize.fn('CONCAT', 'POINT(', geofence1.latitude, ' ', geofence1.longitude, ')'), 
+						4236
+						), 
+					geofence1.radius
+					)
+				), true
+			)
+	});
+	console.log(data.length);
+}
+
+geoFenceProper();
+
+
+// SELECT "id" 
+// FROM "locations" AS "location" 
+// WHERE ST_Within(
+// 	ST_GeomFromText(CONCAT('POINT(', "latitude", ' ', "longitude", ')'), 4236), 
+// 	ST_Buffer(
+// 		ST_GeomFromText(CONCAT('POINT(', 19.0079390748637, ' ', 72.8294547762655, ')'), 4236), 
+// 		76.7612348238529
+// 		)
+// 	) = true;
+
+// 18.522227, 73.822741
+
+
+
 // SELECT ST_GeomFromText(CONCAT('POINT(', latitude, ' ', longitude, ')'), 4326) as mpoint, id 
 // FROM locations
 // WHERE ST_DWithin(ST_GeomFromText('POINT(19.0079390748637 72.8294547762655)', 4326), mpoint, 76.76123)
