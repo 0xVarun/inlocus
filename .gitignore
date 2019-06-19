@@ -3,3 +3,5 @@ node_modules/
 **/venv/
 public/uploads/*
 scripts/*.json
+.log
+build/

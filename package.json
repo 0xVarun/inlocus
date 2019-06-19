@@ -2,8 +2,11 @@
   "name": "physdk",
   "version": "1.0.0",
   "description": "",
+  "gypfile": true,
   "main": "app.js",
   "scripts": {
+    "build": "node-gyp rebuild",
+    "clean": "node-gyp clean",
     "start": "ENV=production node app.js",
     "staging": "ENV=staging node app.js",
     "dev": "ENV=development nodemon app.js",
@@ -42,6 +45,7 @@
     "morgan": "^1.9.1",
     "mv": "^2.1.1",
     "mysql2": "^1.6.5",
+    "node-addon-api": "^1.6.3",
     "node-schedule": "^1.3.1",
     "nodemailer": "^5.1.1",
     "passport": "^0.4.0",
@@ -51,12 +55,14 @@
     "redis-json": "^2.2.2",
     "sequelize": "^5.8.6",
     "uuid": "^3.3.2",
-    "uuid-apikey": "^1.4.2"
+    "uuid-apikey": "^1.4.2",
+    "winnow": "^1.16.7"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "docsify-cli": "^4.3.0",
     "mocha": "^6.1.4",
+    "node-gyp": "^5.0.0",
     "nodemon": "^1.18.9",
     "sequelize-cli": "^5.4.0"
   }
