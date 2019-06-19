@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     user.hasMany(models.geolocation);
     user.hasMany(models.application);
     user.hasOne(models.roles);
+    user.hasOne(models.SDK);
     user.hasMany(models.beacon_master);
     user.hasMany(models.tags);
     user.hasMany(models.location_master);

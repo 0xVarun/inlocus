@@ -2,7 +2,10 @@
     <div class="row margin-top">
         <div class="col-md-9">
             <div class="card shadow">
-                <div class="card-header">Admin Users</div>
+                <div class="card-header">
+                  <div class="float-left">Admin Users</div>
+                  <div class="float-right"><a href="/admin/home/users/add"><i class="fas fa-plus fa-lg"></i></a></div>
+                </div>
                 <div class="card-body">
                     <table id="users" class="table table-striped table-bordered table-sm bs-select" >
                         <thead>
@@ -10,7 +13,7 @@
                                 <th class="th-sm text-center">Sr No</th>
                                 <th class="th-sm text-center">Name</th>
                                 <th class="th-sm text-center">Email</th>
-                                <th class="th-sm text-center">Application</th>
+                                <th class="th-sm text-center">Active</th>
                                 <th class="th-sm text-center">Action</th>
                             </tr>
                         </thead>
@@ -18,18 +21,24 @@
                             {{#each adminuser}}
                             <tr>
                                 <td class="text-center">{{inc @index}}</td>
-                                <td class="text-center">{{name}}</td>
+                                <td class="text-center"><b>{{name}}</b></td>
                                 <td class="text-center">{{email}}</td>
                                 <td class="text-center">
-                                  {{application.name}}
-                                  {{#each applications}}
-                                    <input type="hidden" name="application{{@index}}" value="{{name}}">
-                                  {{/each}}
+                                  {{#if role.active}}
+                                  <i style="color: #388E3C" class="fas fa-circle"></i>
+                                  {{else}}
+                                  <i style="color: #d32f2f" class="fas fa-circle"></i>
+                                  {{/if}}
                                 </td>
                                 <td class="text-center">
-                                  <a class="icon-margin" href="#"><i class="fas fa-edit"></i></a>
-                                  <a class="icon-margin" href="#"><i class="fas fa-trash-alt"></i></a>
-                                  <a class="icon-margin" href="#"><i class="fas fa-envelope"></i></a>
+                                  <a class="icon-margin" href="/admin/home/users/edit/{{id}}"><i class="fas fa-edit" style="color: #3949ab;"></i></a>
+                                  {{#if role.active}}
+                                  <a class="icon-margin" href="/admin/api/user/deactivate/{{id}}"><i class="fas fa-eye" style="color: #d32f2f"></i></a>
+                                  {{else}}
+                                  <a class="icon-margin" href="/admin/api/user/activate/{{id}}"><i class="fas fa-eye" style="color: #388E3C;"></i></a>
+                                  {{/if}}
+                                  <a href="/admin/home/{{id}}/sdk" class="icon-margin"><i class="fas fa-cubes" {{#if sdk}}style="color: #be4bdb"{{else}}style="color: #333"{{/if}}></i></a>
+                                  <a class="icon-margin" href="#"><i class="fas fa-trash-alt"  style="color: #b71c1c;"></i></a>
                                 </td>
                             </tr>
                             {{/each}}
@@ -56,7 +65,7 @@
                   <th class="th-sm text-center">Sr No</th>
                   <th class="th-sm text-center">Name</th>
                   <th class="th-sm text-center">Email</th>
-                  <th class="th-sm text-center">Application</th>
+                  <th class="th-sm text-center">Active</th>
                   <th class="th-sm text-center">Action</th>
               </tr>
           </thead>
@@ -64,18 +73,23 @@
               {{#each staff}}
               <tr>
                   <td class="text-center">{{inc @index}}</td>
-                  <td class="text-center">{{name}}</td>
+                  <td class="text-center"><b>{{name}}</b></td>
                   <td class="text-center">{{email}}</td>
                   <td class="text-center">
-                    {{application.name}}
-                    {{#each applications}}
-                      <input type="hidden" name="application{{@index}}" value="{{name}}">
-                    {{/each}}
+                    {{#if role.active}}
+                    <i style="color: #388E3C" class="fas fa-circle"></i>
+                    {{else}}
+                    <i style="color: #d32f2f" class="fas fa-circle"></i>
+                    {{/if}}
                   </td>
                   <td class="text-center">
-                    <a class="icon-margin" href="#"><i class="fas fa-edit"></i></a>
-                    <a class="icon-margin" href="#"><i class="fas fa-trash-alt"></i></a>
-                    <a class="icon-margin" href="#"><i class="fas fa-envelope"></i></a>
+                    <a class="icon-margin" href="/admin/home/users/edit/{{id}}"><i class="fas fa-edit" style="color: #3949ab;"></i></a>
+                    {{#if role.active}}
+                    <a class="icon-margin" href="/admin/api/user/deactivate/{{id}}"><i class="fas fa-eye" style="color: #d32f2f"></i></a>
+                    {{else}}
+                    <a class="icon-margin" href="/admin/api/user/activate/{{id}}"><i class="fas fa-eye" style="color: #388E3C;"></i></a>
+                    {{/if}}
+                    <a class="icon-margin" href="#"><i class="fas fa-trash-alt" style="color: #b71c1c;"></i></a>
                   </td>
               </tr>
               {{/each}}

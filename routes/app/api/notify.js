@@ -4,12 +4,9 @@ const utils 		= require('../../../utils');
 const apiMiddleware = require('../../../middleware/api').apiAuth;
 
 router.get('/:id', apiMiddleware, async (req, res) => {
-    let deviceId = res.locals.user['deviceId'];
-    let appId   = res.locals.user['appId'];
-    let campaignId = req.params.id;
-    let type = 'LOCATION';
+    let notificationId = req.params.id;
     
-    await utils.Notify.clicked("CLICKED", deviceId, appId, campaignId, type);
+    await utils.Notify.clicked(notificationId);
 
     res.sendStatus(200);
 });

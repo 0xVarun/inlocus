@@ -55,14 +55,21 @@ router.put('/', apiMiddleware, async (req, res) => {
 	}
 	
 	if(campaign) {
+		let clicked = await utils.Notify.sent("SENT", deviceId, res.locals.user['appId'], campaign.id, "BEACON");
 		let notif_payload = {
-			"CampaignId": campaign.id,
-			"NotificationTitle": campaign.title,
-            "NotificationType": campaign.type,
-            "Text_content": {
-                "Offer_Text": campaign.body,
-                "URI": campaign.action
-            }
+			"campaignId": campaign.id,
+			"campaignType": campaign.type,
+			"notificationId": clicked.id,
+			"campaign": {
+				"title": campaign.title,
+				"content": {
+					"text": campaign.body,
+					"uri": campaign.action,
+				},
+				"filters": campaign.filters,
+				"count": "0",
+				"inlocusID": res.locals.user['inlocusId']
+			}
 		}
 		res.json(notif_payload);
 	} else {

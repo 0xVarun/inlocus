@@ -1,8 +1,7 @@
 import requests
 import json
 
-HOST = 'http://localhost:3000{}'
-#HOST = 'https://inlocus.pinprox.com{}'
+HOST = 'https://inlocus.pinprox.com{}'
 
 def device_register():
     url = '/api/device/register'
@@ -52,9 +51,9 @@ def beacon():
     
 def location():
     url = '/api/sensor/location'
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcklkIjoiRFVNTVlfVVNFUl9JRCIsIm1vYmlsZU5vIjoiRFVNTVlfTlVNQkVSIiwiZGV2aWNlSWQiOjIsImFwcElkIjoxLCJlbWFpbElkIjoiRFVNTVlfRU1BSUwiLCJpYXQiOjE1NTYyNjMxODMsImV4cCI6MTU4Nzc5OTE4M30.-9ABOXxpXomxaB-PDzT4tZqll1TCtX3XRIWRRKN6hlk'
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsInVzZXJJZCI6IjIyIiwibW9iaWxlTm8iOiIzNTg5NTgwNjcyMDgxMzkiLCJkZXZpY2VJZCI6MjIsImFwcElkIjoyLCJlbWFpbElkIjoiTW90byBHICg1KSBQbHVzLmNvbSIsImlhdCI6MTU1ODA3NjcxNiwiZXhwIjoxNTg5NjEyNzE2fQ.2zmWrqFnma_xghzxK46dAH76W41S6syYlihD_Ovlv9k'
     headers = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
-    body = { 'latitude': '19.007711', 'longitude': '72.82958' }
+    body = { 'latitude': '19.119896460324526', 'longitude': '72.91322736069561' }
     # body = { 'latitude': '27.173891', 'longitude': '78.042068' }
     # 27.173891, 78.042068.
     bea = requests.put(HOST.format(url), headers=headers, data=json.dumps(body))
@@ -64,7 +63,7 @@ def location():
 
 def notify():
     url = '/api/notify/11'
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcklkIjoiRFVNTVlfVVNFUl9JRCIsIm1vYmlsZU5vIjoiRFVNTVlfTlVNQkVSIiwiZGV2aWNlSWQiOjIsImFwcElkIjoxLCJlbWFpbElkIjoiRFVNTVlfRU1BSUwiLCJpYXQiOjE1NTYyNjMxODMsImV4cCI6MTU4Nzc5OTE4M30.-9ABOXxpXomxaB-PDzT4tZqll1TCtX3XRIWRRKN6hlk'
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcklkIjoiOSIsIm1vYmlsZU5vIjoiODYyMTAzMDMwNTk4MDg5IiwiZGV2aWNlSWQiOjksImFwcElkIjoxLCJlbWFpbElkIjoiUmVkbWkgTm90ZSA0LmNvbSIsImlhdCI6MTU1NzIxODU0NiwiZXhwIjoxNTg4NzU0NTQ2fQ.O13amDeSDbGbX6bM6zjxNYMxeQoQxwRel7NOya50KnQ'
     headers = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
     bea = requests.get(HOST.format(url), headers=headers)
     
@@ -73,16 +72,16 @@ def notify():
 
 def wifi():
     url = '/api/sensor/wifi/multi'
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcklkIjoiRFVNTVlfVVNFUl9JRCIsIm1vYmlsZU5vIjoiRFVNTVlfTlVNQkVSIiwiZGV2aWNlSWQiOjIsImFwcElkIjoxLCJlbWFpbElkIjoiRFVNTVlfRU1BSUwiLCJpYXQiOjE1NTYyNjMxODMsImV4cCI6MTU4Nzc5OTE4M30.-9ABOXxpXomxaB-PDzT4tZqll1TCtX3XRIWRRKN6hlk'
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsInVzZXJJZCI6IjIyIiwibW9iaWxlTm8iOiIzNTg5NTgwNjcyMDgxMzkiLCJkZXZpY2VJZCI6MjIsImFwcElkIjoyLCJlbWFpbElkIjoiTW90byBHICg1KSBQbHVzLmNvbSIsImlhdCI6MTU1ODA3NjcxNiwiZXhwIjoxNTg5NjEyNzE2fQ.2zmWrqFnma_xghzxK46dAH76W41S6syYlihD_Ovlv9k'
     headers = { 'Content-Type': 'application/json', 'authorization': 'Bearer {}'.format(token) }
     body = [
-        {"bssid":"14:1f:ba:74:73:08","ssid":"Joispot-wifi","freq":-42,"rssi":0,"distance":2462},
+        {"bssid":"18:a6:f7:67:78:d6","ssid":"Beaconstalk","freq":-42,"rssi":0,"distance":2462},
         {"bssid":"78:32:1b:9a:e5:901","ssid":"Osmos","freq":-42,"rssi":0,"distance":2462},
         {"bssid":"24:f5:a2:15:8b:1a1","ssid":"Linksys01906","freq":-42,"rssi":0,"distance":2462}
     ]
 
     r = requests.put(HOST.format(url), headers=headers, data=json.dumps(body))
-    # print(r.status_code)
+    print(r.status_code)
     print(r.text)
 
 if __name__ == '__main__':
@@ -90,6 +89,10 @@ if __name__ == '__main__':
     #user_register()
     # login()
     # beacon()
-    # location()
+    location()
     # notify()
-    wifi()
+    # wifi()  
+
+# LAT: 19.119896460324526, 72.91322736069561
+# 8
+# INSIDE false

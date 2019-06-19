@@ -2,7 +2,7 @@ const express 			= require('express');
 const router			= express.Router();
 const User				= require('../../utils/User');
 const Application 		= require('../../utils/Application');
-const LocationMaster	= require('../../utils/LocationMaster');	
+const utils				= require('../../utils');	
 const suMiddleware		= require('../../middleware/superadmin');
 const authMiddleware	= require('../../middleware/auth');
 const keys				= require('uuid-apikey');
@@ -14,7 +14,8 @@ const keys				= require('uuid-apikey');
  * @desc: Activate User By Id
  */
 router.get('/user/activate/:id', suMiddleware, async (req, res) => {
-	await User.activateUser(req.params.id);
+	let id = req.params.id;
+	await utils.User.activate(id);
 	res.redirect('/admin/home/users');
 });
 
@@ -25,29 +26,8 @@ router.get('/user/activate/:id', suMiddleware, async (req, res) => {
  * @desc: Deactivate User By Id
  */
 router.get('/user/deactivate/:id', suMiddleware, async (req, res) => {
-	await User.deActivateUser(req.params.id);
-	res.redirect('/admin/home/users');
-});
-
-
-/**
- * @url: /admin/api/user/mksu/:id
- * @method: GET
- * @desc: Make Normal User to Superuser By Id
- */
-router.get('/user/mksu/:id', suMiddleware, async (req, res) => {
-	await User.mkSuperadmin(req.params.id);
-	res.redirect('/admin/home/users');
-});
-
-
-/**
- * @url: /admin/api/user/rmsu/:id
- * @method: GET
- * @desc: Remove superuser privileges from user by Id
- */
-router.get('/user/rmsu/:id', suMiddleware, async (req, res) => {
-	await User.rmSuperadmin(req.params.id);
+	let id = req.params.id;
+	await utils.User.deactivate(id);
 	res.redirect('/admin/home/users');
 });
 
@@ -68,8 +48,8 @@ router.get('/user/delete/:id', suMiddleware, async (req, res) => {
  * @method: GET
  * @desc: Activate / Approve Application By Id
  */
-router.get('/app/activate/:id', async (req, res) => {
-	await Application.activateApp(req.params.id);
+router.get('/app/approve/:id', async (req, res) => {
+	await Application.changeStatus(true, req.user.id, req.params.id);
 	res.redirect('/admin/home/apps');
 });
 
@@ -79,8 +59,8 @@ router.get('/app/activate/:id', async (req, res) => {
  * @method: GET
  * @desc: Deactivate / Disapprove Application By Id
  */
-router.get('/app/deactivate/:id', async (req, res) => {
-	await Application.deactivateApp(req.params.id);
+router.get('/app/disapprove/:id', async (req, res) => {
+	await Application.changeStatus(false, req.user.id, req.params.id);
 	res.redirect('/admin/home/apps');
 });
 

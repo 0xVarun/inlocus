@@ -1,6 +1,7 @@
 test/venv/
 node_modules/
 **/venv/
-public/uploads/*.jpeg
-public/uploads/*.jpg
-public/uploads/*.png
+public/uploads/*
+scripts/*.json
+.log
+build/

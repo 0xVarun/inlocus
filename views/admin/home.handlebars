@@ -68,7 +68,7 @@
     <div class="row margin-top">
         <div class="col-md-8 col-xs-12 col-sm-12 h-100">
             <div class="card shadow">
-                <div class="card-header">Timeline</div>
+                <div class="card-header">User Count</div>
                 <div class="card body ">
                     <canvas id="timeline-chart"></canvas>
                 </div>
@@ -76,16 +76,16 @@
         </div>
         <div class="col-md-4 col-xs-12 col-sm-12 d-flex">
             <div class="card shadow w-100">
-                <div class="card-header">Timeline</div>
+                <div class="card-header">Operating System</div>
                 <div class="card body flex-fill">
-                    <canvas id="pie-chart"></canvas>
+                    <canvas id="pie-chart" style="height: 90%;"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row margin-top">
-        <div class="col-md-7 col-sm-12 col-xs-12">
+        <div class="col-md-8 col-sm-12 col-xs-12">
             <div class="card shadow">
                 <div class="card-header">User</div>
                 <div class="card-body">
@@ -94,6 +94,7 @@
                             <th class="th-sm text-center">Sr No</th>
                             <th class="th-sm text-center">DeviceId</th>
                             <th class="th-sm text-center">App</th>
+                            <th class="th-sm text-center">InlocusId</th>
                         </thead>
                         <tbody>
                             {{#each apps}}
@@ -102,6 +103,7 @@
 								<td class="text-center">{{inc @index}}</td>
 								<td class="text-center"><a href="/admin/home/profile/{{deviceId}}">{{device.deviceId}}</a></td>
                                 <td class="text-center">{{../name}}</td>
+                                <td class="text-center">{{ inlocusId}}</td>
                             </tr>
                             {{/each}}
                             {{/each}}

@@ -71,6 +71,25 @@ module.exports.findAll = function() {
 }
 
 
+module.exports.changeStatus = async(status, userId, appId) => {
+	return model.application
+		.update({ 
+			approved: status 
+		}, { 
+			where: { 
+				id: {
+					[Op.eq]: appId
+				}, 
+				userId: {
+					[Op.eq]: userId
+				} 
+			}, 
+			returning: true, 
+			plain: true
+		})
+}
+
+
 /**
  * Retuns all apps created by a user
  *

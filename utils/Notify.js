@@ -1,52 +1,15 @@
 const model		= require('../models');
 const Op        = require('sequelize').Op;
 
-module.exports.clicked = async (status, deviceId, appId, campaignId, type) => {
-
-    let existing = await model.notify.findOne(
-        { 
-            where: { 
-                deviceId: {
-                    [Op.eq]:deviceId
-                }, 
-                campaignId: {
-                    [Op.eq]:campaignId
-                }, 
-                applicationId: {
-                    [Op.eq]:appId
-                } , 
-                type: {
-                    [Op.eq]:type
-                }
-            } 
-        });
-
+module.exports.clicked = async (notificationId) => {
+    let existing = await model.notify.findByPk(notificationId);
     if(existing) {
-        model.notify.findOne(
-            {
-                where: { 
-                    deviceId: {
-                        [Op.eq]: deviceId
-                    }, 
-                    campaignId: {
-                        [Op.eq]: campaignId
-                    }, 
-                    applicationId: {
-                        [Op.eq]: appId
-                    }, 
-                    type: {
-                        [Op.eq]: type
-                    } 
-                },
-            order: [['createdAt', 'DESC']]
-        }).then(notify => {
-            notify.update({ status: status });
-        })
-    } else {
-        await model.notify.create({ status: status, deviceId: deviceId, applicationId: appId, campaignId: campaignId, type: type });
-    }    
+        model.notify.findByPk(notificationId)
+            .then(notif => { notif.update({ fstatus: 'CLICKED' }) });
+    }
 }
 
 module.exports.sent = async (status, deviceId, appId, campaignId, type) => {
-    await model.notify.create({ status: status, deviceId: deviceId, applicationId: appId, campaignId: campaignId, type: type });
+    let clicked = await model.notify.create({ istatus: status, deviceId: deviceId, applicationId: appId, campaignId: campaignId, type: type });
+    return clicked;
 }

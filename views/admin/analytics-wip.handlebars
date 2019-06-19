@@ -1,0 +1,127 @@
+<style>
+#map, #bmap {height: 500px;width: 100%;}
+canvas {
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+	.chart-container {
+		width: 500px;
+		margin-left: 40px;
+		margin-right: 40px;
+		margin-bottom: 40px;
+	}
+	.container {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+</style>
+<div class="row">
+	<div class="col-md-2">
+		<ul class="nav flex-column">
+			<li class="nav-item ">
+				<a href="#submenu1" class="nav-link analytics-menu" data-toggle="collapse" data-target="#submenu1" aria-expanded="false" aria-controls="submenu1">
+					<i class="far fa-map"></i> Heat Maps<span class="mfa"><i class="fas fa-chevron-right"></i></span>
+				</a>
+				<div class="collapse" id="submenu1" aria-expanded="false">
+					<ul class="flex-column pl-2 nav">
+						<li class="nav-item">
+							<a class="nav-link py-0 analytics-menu" href="#">
+								<i class="fas fa-map-marker"></i> Location
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link py-0 analytics-menu" href="#">
+								<i class="fab fa-bluetooth-b"></i> Beacon
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link py-0 analytics-menu" href="#">
+								<i class="fas fa-wifi"></i> WiFi
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link py-0 analytics-menu" href="#">
+								<i class="fas fa-street-view"></i> Geofence
+							</a>
+						</li>
+					</ul>
+				</div>
+			</li>
+
+			<li class="nav-item">
+				<a href="#" class="nav-link analytics-menu">
+					<i class="fas fa-user-clock"></i> Dwell Time
+				</a>
+			</li>
+
+			<li class="nav-item">
+				<a href="#" class="nav-link analytics-menu">
+					<i class="fas fa-map-marker-alt"></i> Users by Location
+				</a>
+			</li>
+
+			<li class="nav-item">
+				<a href="#" class="nav-link analytics-menu">
+					<i class="fas fa-hand-pointer"></i>	Clicks by Location
+				</a>
+			</li>
+
+			<li class="nav-item">
+				<a href="#" class="nav-link analytics-menu">
+					<i class="fas fa-dot-circle"></i> Re-targetting
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="col-md-10">
+		<!-- Analytics Info -->
+		<div class="row">
+			<div class="col">
+				<div class="card analytics-info">
+					<div class="row" style="margin-bottom: 0">
+						<div class="col" style="margin: 1em 2em;">
+							<h3>Est User Interaction</h3>
+						</div>
+					</div>
+					<div class="row text-center" style="margin-top: 0em;">
+						<div class="col analytics-info-items" style="margin: 1em;">
+							<div style="color: #cdcecf;">Users Seen</div>
+							<div><h3><strong>39</strong></h3></div>
+						</div>
+						<div class="col analytics-info-items" style="margin: 1em;">
+							<div style="color: #cdcecf;">Users Clicked</div>
+							<div><h3><strong>17</strong></h3></div>
+						</div>
+						<div class="col analytics-info-items" style="margin: 1em;">
+							<div style="color: #cdcecf;">User Retargetted</div>
+							<div><h3><strong>8</strong></h3></div>
+						</div>
+						<div class="col analytics-info-items" style="margin: 1em;">
+							<div style="color: #cdcecf;">Returning Users</div>
+							<div><h3><strong>7</strong></h3></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Analytics Info -->
+		<br>
+		<div class="row">
+			<div class="col-md-5">
+				<div class="card shadow">
+					<canvas id="mchart"></canvas>
+				</div>
+			</div>
+			<div class="col-md-7">
+				<div class="card shadow">
+					<div id="map"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="/js/heatmap.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgAjjr1VNy4zJCZEz-6FgIdkH3SVBS6jA&callback=initMap&libraries=visualization"></script>

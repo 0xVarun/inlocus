@@ -4,6 +4,10 @@ const utils				= require('../../utils');
 const authMiddleware	= require('../../middleware/auth');
 const suMiddleware		= require('../../middleware/superadmin');
 const model 			= require('../../models');
+const formidable        = require('formidable');
+const fs                = require('fs');
+const path              = require('path');
+
 
 /**
  * @url: /admin/home
@@ -12,24 +16,15 @@ const model 			= require('../../models');
  * @desc: Admin Dashboard
  */
 router.get('/', authMiddleware, async (req, res) => {
-	let beacon = await utils.Sensor.getLatestLocation();
-	let repeatVisitors = await model.location.count();
+	let beacon = await utils.Sensor.getLatestLocation(req.user.id);
+	let deviceCount = await utils.Sensor.getTotalDevices(req.user.id);
+	let repeatVisitors = 0;
+	if(deviceCount != 0) {
+		repeatVisitors = await model.location.count();
+	}
 	let totalVisitors = parseInt(repeatVisitors * 1.2);
 	let apps = await utils.SdkUser.getUsers(req.user.id);
 	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors, apps: apps });
-});
-
-
-/**
- * @url: /admin/home/analytics
- * @method: GET
- * @template: views/admin/comingsoon
- * @desc: App wise based analytics
- * 
- * @TODO: Implementation
- */
-router.get('/analytics', authMiddleware, (req, res) => {
-	res.render('admin/comingsoon', { title: 'Admin', layout: 'home' });
 });
 
 
@@ -39,13 +34,13 @@ router.get('/analytics', authMiddleware, (req, res) => {
  * @desc: JSON data for graph of users seen daywise
  */
 router.get('/graph', async(req, res) => {
-	let data = await utils.Sensor.countByHour();
+	let data = await utils.Sensor.countByHour(req.user.id);
 	res.json(data);
 });
 
 
 router.get('/pie', async(req, res) => {
-	let data = await utils.Sensor.getDeviceCount();
+	let data = await utils.Sensor.getDeviceCount(req.user.id);
 	res.json(data);
 });
 
@@ -66,20 +61,104 @@ router.get('/users', suMiddleware, async (req, res) => {
 
 
 /**
- * Create New App POST
- * URL: /admin/home/app/new
+ * @url: /admin/home/:id/sdk
+ * @method: GET
+ * @template: views/superadmin/usersdk
+ * @desc: Upload personalized SDK for each User
  */
-router.post('/app/new', suMiddleware, async (req, res) => {
-	let name = req.body.app_name;
-	let api_key = req.body.api_key;
-	let api_secret = req.body.api_secret;
-	try {
-		let app = await utils.Application.registerApplication(name, api_key, api_secret);
-	} catch (err) {
-		res.redirect('/admin/home/app/new');
-		return;
+router.get('/:id/sdk', suMiddleware, async(req, res) => {
+	res.render('superadmin/usersdk', { title: 'Admin', layout: 'base', tid: req.params.id });
+});
+
+
+/**
+ * @url: /admin/home/:id/sdk
+ * @method: POST
+ * @desc: Upload personalized SDK for each User
+ */
+router.post('/:id/sdk', suMiddleware, async(req, res) => {
+	let form = new formidable.IncomingForm();
+    form.multiples = false;
+    form.uploadDir = process.env.NODE_UPLOAD_DIR;
+    form.parse(req, async (err, fields, files) => {
+        if(err) { res.redirect(`/admin/home/${req.params.id}/sdk`); return; }
+        if(files.content.size < 1) { res.redirect(`/admin/home/${req.params.id}/sdk`); return; }
+        if(files.content.type !== 'application/zip') { res.redirect(`/admin/home/${req.params.id}/sdk`); return; }
+        let name = files.content.name.split('.')[0];
+        let ext = files.content.name.split('.')[1];
+        fs.renameSync(files.content.path, path.join(form.uploadDir, `${name}-${req.params.id}.${ext}`));
+        await utils.SDK.uploadSDK(`/uploads/${name}-${req.params.id}.${ext}`, req.params.id);
+      	res.redirect(`/admin/home/${req.params.id}/sdk`);
+    });
+});
+
+
+/**
+ * @url: /admin/home/users/add
+ * @method: GET
+ * @template: views/superadmin/user
+ * @desc: Create SuperUsers, Admin Users and Staff Users
+ * 
+ */
+router.get('/users/add', suMiddleware, async (req, res) => {
+	res.render('superadmin/user', { title: 'Admin', layout: 'base' });
+});
+
+
+/**
+ * @url: /admin/home/users/add
+ * @method: POST
+ * @desc: Create SuperUsers, Admin Users and Staff Users
+ * 
+ */
+router.post('/users/add', suMiddleware, async (req, res) => {
+	let username = req.body.username;
+	let email = req.body.email;
+	let password = req.body.password;
+	let rpassword = req.body.rpassword;
+	let name = req.body.name;
+	let roles = req.body.roles;
+
+	if(roles === '0') {
+		// Superadmin
+		await utils.User.registerSuperadminUser(name, username, email, password);
+	} else if(roles === '1') {
+		// AppAdmin
+		await utils.User.registerUser(name, username, email, password);
+	}else if(roles === '2') {
+		// AppStaff
+		await utils.User.registerStaffUser(name, username, email, password);
+	} else {
+		// Advertiser
+		await utils.User.registerAdvertiserUser(name, username, email, password);
 	}
-	res.redirect('/admin/home/apps');
+
+	res.redirect('/admin/home/users/add');
+});
+
+
+/**
+ * @url: /admin/home/users/edit/id
+ * @method: GET
+ * @template: views/superadmin/apps.handlebars
+ * @desc: List View of all Applications
+ */
+router.get('/users/edit/:id', suMiddleware, async (req, res) => {
+	let userId = req.params.id;
+	let appUser = await utils.User.getUserByUserId(userId);
+	console.log(JSON.parse(JSON.stringify(appUser)));
+	res.render('superadmin/useredit', { title: 'Admin', layout: 'base', appUser: appUser });
+});
+
+
+/**
+ * @url: /admin/home/users/del/id
+ * @method: GET
+ * @template: views/superadmin/apps.handlebars
+ * @desc: List View of all Applications
+ */
+router.get('/user/del/:id', suMiddleware, async (req, res) => {
+
 });
 
 
@@ -195,17 +274,8 @@ router.post('/beacon/:id', suMiddleware, async(req, res) => {
  * @todo: Add beacon and wifis and heat map
  */
 router.get('/profile/:id', authMiddleware, async (req, res) => {
-	let locations = await model.location.findAll({ where: { deviceId: req.params.id }, order: [['createdAt', 'DESC']] });
-	let deviceId = await model.device.findOne({where: {id: req.params.id}, include:[{model:model.appuser, include: {model:model.application}}]});
-	let countClicked = await model.notify.count({ where: { status: 'CLICKED', deviceId: req.params.id} });
-	let countSent = await model.notify.count({ where: { status: 'SENT', deviceId: req.params.id} });
-	let notif = await model.notify.findOne({where:{status: 'SENT', deviceId: req.params.id}, order: [['createdAt', 'DESC']] });
-	let lastNotif = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);
-	let notifc = await model.notify.findOne({where:{status: 'SENT'}, order: [['createdAt', 'DESC']] });
-	let lastNotifc = '' + notif.createdAt.getDate() + '/' + (notif.createdAt.getMonth() + 1) + '/' + (notif.createdAt.getYear() + 1900);
-	let beacons = await utils.BeaconMaster.getAllBeaconData(req.params.id);
-	let lastBeacon = await utils.BeaconMaster.lastBeacon(req.params.id);
-	res.render('admin/userprofile', { title: 'Admin', layout: 'base', location: locations, tid: req.params.id, device:deviceId, countClicked: countClicked, countSent: countSent, lastNotif: lastNotif, lastNotifc:lastNotifc, beacons: beacons });
+	let analytics = await utils.Analytics.getAppUserLevelInfo(req.params.id);
+	res.render('admin/userprofile', analytics);
 });
 
 
@@ -216,7 +286,7 @@ router.get('/profile/:id', authMiddleware, async (req, res) => {
  * @desc: View User Lat,Long on Map
  */
 router.get('/profile/:id/:long', authMiddleware, async (req, res) => {
-	let data = await model.location.find({where: {id: req.params.long, deviceId: req.params.id}});
+	let data = await model.location.findOne({where: {id: req.params.long, deviceId: req.params.id}});
 	let deviceId = await model.device.findOne({where: {id: req.params.id}})
 	res.render('admin/viewonmap', { title: 'Admin', layout: 'base', data: data, deviceId: deviceId });
 });

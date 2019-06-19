@@ -39,7 +39,7 @@
 										</a>
 									</td>
 								{{/if}}
-								{{#if cactive}}
+								{{#if approved}}
 									<td class="text-center">
 										<a href="/admin/api/app/cdeactivate/{{id}}" class="btn btn-success btn-circle">
 											<i class="fas fa-check"></i>
@@ -47,7 +47,7 @@
 									</td>
 								{{else}}
 									<td class="text-center">
-										<a href="/admin/api/app/cactivate/{{id}}" class="btn btn-danger btn-circle">
+										<a href="/admin/api/app/activate/{{id}}" class="btn btn-danger btn-circle">
 											<i class="fas fa-times"></i>
 										</a>
 									</td>

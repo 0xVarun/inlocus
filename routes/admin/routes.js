@@ -13,6 +13,8 @@ const appBeacon     = require('./beacon');
 const content       = require('./content');
 const fence         = require('./geofence');
 const location      = require('./location');
+const downloads     = require('./downloads');
+const analytics		= require('./analytics');
 
 router.use('/login', login);
 router.use('/register', register);
@@ -26,6 +28,8 @@ router.use('/beacon', appBeacon);
 router.use('/content', content);
 router.use('/geofence', fence);
 router.use('/location', location);
+router.use('/download', downloads);
+router.use('/analytics', analytics);
 router.use('/', (req, res) => { res.redirect('/admin/login'); })
 
 module.exports = router;

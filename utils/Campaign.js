@@ -62,6 +62,7 @@ module.exports.findOneCampaign = (id) => {
 }
 
 module.exports.getOneBeaconCampaign = async (appId, major, minor) => {
+    console.log(`MAJOR: ${major}, MINOR: ${minor}`);
     let beacon = await model.beacon_master.findOne({ where: { major: major, minor: minor } });
     
     // If Not such beacon in database Maybe add to list with google address location
@@ -82,6 +83,7 @@ module.exports.getOneBeaconCampaign = async (appId, major, minor) => {
 }
 
 module.exports.getOneLocationCampaign = async (appId, lat, lng) => {
+    console.log(`LAT: ${lat}, LNG: ${lng}`);
     let campaign = await model.campaign.findOne(
         { 
             where: { 
@@ -116,6 +118,9 @@ module.exports.getOneLocationCampaign = async (appId, lat, lng) => {
 
 module.exports.getOneWifiCampaign = async (appId, wifis) => {
     // [{ssid, bssid, rssi, freq, distance}]
+    console.log('------');
+    console.log(wifis);
+    console.log('------');
     let bssids = [];
     try {
         wifis.map(wifi => {

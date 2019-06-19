@@ -9,6 +9,7 @@
     <style>.card{border: none}</style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.5/css/mdb.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -39,9 +40,13 @@
     <!-- Lightbox -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.0/css/lightbox.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.0/js/lightbox.min.js"></script>
+    <style>.cursor-pointer:hover { background-color: #4e73df; color: #fff; }</style>
+
+    <!-- D3 JS -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -73,6 +78,8 @@
                         <a href="/admin/app" class="dropdown-item cursor-pointer">Manage Apps</a>
                         <a href="/admin/beacon" class="dropdown-item cursor-pointer">Manage Beacons</a>
                         <a href="/admin/location" class="dropdown-item cursor-pointer">Manage Locations</a>
+                        <a href="/admin/analytics" class="dropdown-item cursor-pointer">Analytics</a>
+                        <a href="{{user.sdk.sdk_path}}" class="dropdown-item cursor-pointer">Download SDK</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown lf-margin">
@@ -101,12 +108,12 @@
             </ul>
         </div>
         <div class="mx-auto order-0">
-            <a class="navbar-brand mx-auto" href="/admin/home"><i style="color: #4e73df;" class="fas fa-map-marker-alt"></i> inLocus</a>
+            <a class="navbar-brand mx-auto" href="/admin/home"><i style="color: #4e73df;" class="fas fa-map-marker-alt"></i> InLocus</a>
         </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" style="margin-right: 1.5em;">
-                    <a class="nav-link" href="/docs"><i class="fas fa-book"></i> Docs</a>
+                    <a class="nav-link" href="/docs/inLocusSDK_V1-2.pdf"><i class="fas fa-book"></i> Docs</a>
                 </li>
                 <li class="nav-item" style="margin-right: 1.5em;">
                     <a href="#" class="nav-link"><i class="fas fa-headset"></i> Support</a>
@@ -129,7 +136,7 @@
     <hr>
     <footer class="footer mt-auto py-3">
         <div class="container">
-            <span class="text-muted">&copy; inLocus</span>
+            <span class="text-muted">&copy; InLocus</span>
         </div>
     </footer>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.6/js/mdb.min.js"></script>

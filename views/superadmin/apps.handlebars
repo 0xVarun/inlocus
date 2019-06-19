@@ -14,6 +14,7 @@
                                 <th scope="col">App Link</th>
                                 <th scope="col">Category</th>
                                 <th scope="col">Production</th>
+                                <th scope="col">Approved</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -34,27 +35,27 @@
                                         {{/if}}
                                     </td>
                                     <td>
+                                        {{#if approved}}
+                                        <i style="color: #388E3C" class="fas fa-circle"></i>
+                                        {{else}}
+                                        <i style="color: #d32f2f" class="fas fa-circle"></i>
+                                        {{/if}}
+                                    </td>
+                                    <td>
                                         {{!-- EDIT --}}
-                                        <a style="margin-right: 5px;" href="#"><i class="fas fa-edit"></i></a>
+                                        <a style="margin-right: 5px;" href="#"><i class="fas fa-eye"></i></a>
                                         {{!-- END EDIT --}}
                                         {{!-- ACTIVATE --}}
-                                        {{#if cactive}}
-                                        <a style="margin-right: 5px;" href="/admin/api/app/cdeactivate/{{id}}"><i class="fas fa-bell-slash"></i></a>
+                                        {{#if approved}}
+                                        <a style="margin-right: 5px;color: red" href="/admin/api/app/disapprove/{{id}}"><i class="fas fa-bell-slash"></i></a>
                                         {{else}}
-                                        <a style="margin-right: 5px;" href="/admin/api/app/cactivate/{{id}}"><i class="fas fa-bell"></i></a>
+                                        <a style="margin-right: 5px; color: green" href="/admin/api/app/approve/{{id}}"><i class="fas fa-bell"></i></a>
                                         {{/if}}
                                         {{!-- END ACTIVATE --}}
                                         {{!-- DELETE --}}
                                         <a style="margin-right: 5px;" href="#"><i class="fas fa-trash-alt"></i></a>
                                         {{!-- END DELETE --}}
                                     </td>
-                                    {{!-- <td><a href="#"><i class="fas fa-edit"></i></a></td>
-                                    {{#if cactive}}
-                                    <td><a href="/admin/api/app/cdeactivate/{{id}}"><i class="fas fa-bell-slash"></i></a></td>
-                                    {{else}}
-                                    <td><a href="/admin/api/app/cactivate/{{id}}"><i class="fas fa-bell"></i></a></td>
-                                    {{/if}}
-                                    <td><a href="#"><i class="fas fa-trash-alt"></i></a></td> --}}
                                 </tr>
                             {{/each}}
                         </tbody>
