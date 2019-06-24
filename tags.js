@@ -198,7 +198,7 @@ async function geoFenceProper() {
 	console.log(data.length);
 }
 
-geoFenceProper();
+// geoFenceProper();
 
 
 // SELECT "id" 
@@ -247,3 +247,125 @@ geoFenceProper();
 // )
 
 // 19.008145 72.829472
+
+const geoq = require('winnow');
+
+
+async function geoquery() {
+	let geofence = JSON.parse(JSON.stringify(await model.geofence.findAll()));
+	let locations = JSON.parse(JSON.stringify(await model.location.findAll()));
+
+	let geojson = [];
+
+	let geofenceJSON = [];
+	let geofenceRadius = [];
+
+	for(let i = 0; i < locations.length; i++) {
+		let clocation = locations[i];
+		let lat = clocation.latitude;
+		let lng = clocation.longitude;
+		let tempGeoJson = {
+			"type": "point",
+			"coordinates": [lng, lat]
+		};
+		geojson.push(tempGeoJson);
+	}
+
+	let temp = { type: 'Point',
+     coordinates: [72.91381804806417, 19.11937850573807] };
+     // coordinates: [ 19.119162380217592, 72.91362758914738 ] };
+
+    geojson.push(temp);
+
+	let options = {
+		spatialPredicate: 'ST_Contains',
+		geometry: {
+			"type": "Polygon",
+			"coordinates": [
+				[
+					[ 72.91381804806417, 19.11937850573807], 
+					[ 72.91354982716268, 19.119424122294816], 
+					[ 72.91344766117379, 19.118885173915757], 
+					[ 72.91369710661218, 19.118839557210265],
+					[ 72.91381804806417, 19.11937850573807]
+				]
+			]
+		}
+	};
+
+	const filter = geoq.prepareQuery(options);
+	console.log(filter(geojson));
+
+	// for(let i = 0; i < geofence.length; i++) {
+	// 	let cgeo = geofence[i];
+	// 	let tempGeoJson = {
+	// 		"type": "point",
+	// 		"coordinates": [cgeo['latitude'], cgeo.longitude]
+	// 	};
+		
+	// 	options['geometry'] = tempGeoJson;
+	// 	options['offset'] = cgeo.radius;
+
+	// 	console.log(options)
+
+	// 	const filter = geoq.prepareQuery(options)
+
+	// 	const filtered = filter(geojson);
+
+	// 	console.log(`Fence: ${cgeo.id}, count: ${filtered.length}`);
+	// 	console.log(filtered);
+	// }	
+
+
+
+
+}
+
+// geoquery();
+
+
+async function testing() {
+	let locations = await model.location.findAll({
+		attributes: [
+			[Sequelize.literal(`DATE_TRUNC('day', "createdAt")`), 'timestamp'],
+			'id',
+			'createdAt'
+		],
+		order: Sequelize.literal('timestamp DESC')
+	});
+
+	let l = locations.map(loc => {
+		let x = loc['id'];
+		// let y = new Date(loc['createdAt']);
+		let y = '1';
+		try {
+			var z = new Date(loc['timestamp']);
+		} catch (er) {
+			console.log(z);
+		}
+		return { 'id': x, 'created': y, 'timestamp': z }
+	})
+
+	console.log(JSON.stringify(l));
+
+	process.exit(0);
+}
+
+// testing();
+
+
+// const addon = require('./build/Release/sort.node');
+async function test() {
+	let data = await model.geofence.findAll({ limit: 10 });
+	// addon.sort(JSON.parse(JSON.stringify(data)), (err, data) => {
+	// 	console.log(err);
+	// 	console.log('----');
+	// 	console.log(data);
+	// });
+	// 
+	console.log(JSON.stringify(data));
+}
+
+test();
+
+// console.log(addon.sort(1,2));

@@ -3,10 +3,12 @@
 		{
 			"target_name": "sort",
 			"include_dirs": [
-				"<!(node -e \"require('nan')\")",
-				"./native/"
+				"native"
 			],
-			"sources": ["native/sort.cc", "native/worker.cc"]
+			"sources": [
+				"native/sort.cc",
+				"native/inlocus.cc"
+			],
 		}
 	]
 }
