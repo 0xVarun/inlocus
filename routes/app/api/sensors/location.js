@@ -25,6 +25,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 
 	let payload = req.body;
 	let deviceId = res.locals.user['deviceId'];
+	let location = undefined;
 
 	let expected_keys = ["latitude", "longitude"];
 	let actual_keys = Object.keys(payload);
@@ -33,7 +34,6 @@ router.put('/', apiMiddleware, async (req, res) => {
 		res.sendStatus(400);
 		return;
 	} else {
-		let location = undefined;
 		try {
 			location = await utils.Sensor.saveLocation(payload["latitude"], payload["longitude"], deviceId);
 		} catch(err) {
@@ -45,7 +45,7 @@ router.put('/', apiMiddleware, async (req, res) => {
 		}
 	}
 
-	let id = await utils.Campaign.getOneLocationCampaign(res.locals.user['appId'], payload['latitude'], payload['longitude']);
+	let id = await utils.Campaign.getOneLocationCampaign(res.locals.user['appId'], payload['latitude'], payload['longitude'], location);
 
 	if(id) {
 		let campaign = await Cache(id, deviceId);

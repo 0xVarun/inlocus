@@ -1,6 +1,8 @@
-const model		= require('../models');
-const Op		= require('sequelize').Op;
-const geolib	= require('geolib');
+const model				= require('../models');
+const sequelize			= require('sequelize');
+const Op				= require('sequelize').Op;
+const geolib			= require('geolib');
+const circleToPolygon	= require('circle-to-polygon');
 
 /**
  * Create New Geo Fence
@@ -10,7 +12,22 @@ const geolib	= require('geolib');
  * @return     {geofence}  Newly created Geo Fence
  */
 module.exports.create = function(name, user, lat, lng, rad, location) {
-	return model.geofence.create({ name: name, userId: user, latitude: lat, longitude: lng, radius: rad, locationMasterId: location })
+	return model.geofence.create({ 
+			name: name, 
+			userId: user, 
+			latitude: lat, 
+			longitude: lng, 
+			radius: parseInt(rad), 
+			locationMasterId: location, 
+			geometry: sequelize.cast(sequelize.fn('St_Buffer',
+				sequelize.cast(
+				sequelize.fn('St_SetSRID', 
+					sequelize.fn('St_Point', lng, lat),
+					4326
+				), 'geography'),
+				parseInt(rad) 
+			), 'geometry')
+		})
 		.then( fence => { return fence })
 		.catch( err => { throw err; })
 };

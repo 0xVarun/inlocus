@@ -12,7 +12,12 @@ async function getAddress(lat, lng) {
 
 module.exports.saveLocation = async (latitude, longitude, deviceId) => {
 	let address = await getAddress(latitude, longitude);
-	return model.location.create({ latitude: latitude, longitude: longitude, address: address, deviceId: deviceId })
+	let point = { 
+		type: 'Point',
+		coordinates: [longitude, latitude],
+		crs: { type: 'name', properties: { name: 'EPSG:4326' }}
+	}
+	return model.location.create({ latitude: latitude, longitude: longitude, address: address, deviceId: deviceId, geometry: point })
 		.then(location => { return location })
 		.catch(err => { throw err });
 }

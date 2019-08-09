@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     latitude: DataTypes.DOUBLE,
     longitude: DataTypes.DOUBLE,
+    geometry: DataTypes.GEOMETRY,
     radius: DataTypes.DOUBLE
   }, {});
   geofence.associate = function(models) {
