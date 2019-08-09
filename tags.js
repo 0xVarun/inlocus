@@ -366,6 +366,26 @@ async function test() {
 	console.log(JSON.stringify(data));
 }
 
-test();
+// test();
 
 // console.log(addon.sort(1,2));
+
+
+async function finalTest() {
+	let location = await model.location.findOne({ where: { id: 19 } });
+	// let geofence = await model.geofence.findOne({
+	// 	where: Sequelize.fn('ST_Within', 
+	// 		Sequelize.fn('ST_GeomFromGeoJSON', location.geometry), 
+	// 		Sequelize.col('geometry')
+	// 	)
+	// });
+	let res = await model.sequelize.query(`select geofences."locationMasterId" 
+		from locations, geofences 
+		where ST_Within(locations.geometry, geofences.geometry) 
+		and locations.id = ${location.id}`, 
+		{ type: Sequelize.QueryTypes.SELECT}
+	)
+	console.log(JSON.stringify(res));
+}
+
+finalTest();

@@ -21,7 +21,7 @@ function GeoFenceinitMap() {
 	url: '/admin/analytics/geofence/' + geofenceId,
     success: (res) => {
       map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 13,
+            zoom: 11,
             center: {
               lat: parseFloat(res.center.latitude),
               lng: parseFloat(res.center.longitude)
