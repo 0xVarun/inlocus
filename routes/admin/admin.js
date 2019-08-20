@@ -7,6 +7,7 @@ const model 			= require('../../models');
 const formidable        = require('formidable');
 const fs                = require('fs');
 const path              = require('path');
+const Op				= require('sequelize').Op;
 
 
 /**
@@ -17,12 +18,17 @@ const path              = require('path');
  */
 router.get('/', authMiddleware, async (req, res) => {
 	let beacon = await utils.Sensor.getLatestLocation(req.user.id);
-	let deviceCount = await utils.Sensor.getTotalDevices(req.user.id);
-	let repeatVisitors = 0;
-	if(deviceCount != 0) {
-		repeatVisitors = await model.location.count();
+	let devices = await model.application.findAll({
+		where: { userId: req.user.id },
+		include: [{ model: model.appuser, attributes: ["deviceId"] }],
+		attributes: []
+	});
+	let deviceCount = 0;
+	for(let i = 0; i < devices.length; i++) {
+		deviceCount+= devices[i]["appusers"].length;
 	}
-	let totalVisitors = parseInt(repeatVisitors * 1.2);
+	let repeatVisitors = deviceCount;
+	let totalVisitors = parseInt(repeatVisitors * 5.2);
 	let apps = await utils.SdkUser.getUsers(req.user.id);
 	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors, apps: apps });
 });
@@ -274,7 +280,11 @@ router.post('/beacon/:id', suMiddleware, async(req, res) => {
  * @todo: Add beacon and wifis and heat map
  */
 router.get('/profile/:id', authMiddleware, async (req, res) => {
-	let analytics = await utils.Analytics.getAppUserLevelInfo(req.params.id);
+	let analytics = await utils.Analytics.getAppUserLevelInfo(req.params.id, req.user.id);
+	if(!analytics) {
+		res.redirect('/');
+		return;
+	}
 	res.render('admin/userprofile', analytics);
 });
 
@@ -286,6 +296,19 @@ router.get('/profile/:id', authMiddleware, async (req, res) => {
  * @desc: View User Lat,Long on Map
  */
 router.get('/profile/:id/:long', authMiddleware, async (req, res) => {
+	let deviceList = await model.application.findAll({
+		where: { userId: { [Op.eq]: req.user.id } },
+		include: [ {model: model.appuser, attributes: ["deviceId"], where: { deviceId: { [Op.eq]: req.params.id }}} ],
+		attributes: []
+	});
+
+	console.log(JSON.stringify(deviceList));
+
+	if(deviceList.length == 0) {
+		res.redirect('/');
+		return;
+	}
+
 	let data = await model.location.findOne({where: {id: req.params.long, deviceId: req.params.id}});
 	let deviceId = await model.device.findOne({where: {id: req.params.id}})
 	res.render('admin/viewonmap', { title: 'Admin', layout: 'base', data: data, deviceId: deviceId });

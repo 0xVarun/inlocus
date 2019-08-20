@@ -57,6 +57,7 @@ module.exports.saveMultiWifi = (payload, deviceId) => {
 module.exports.countByHour = async (userId) => {
 	let devices = await model.appuser.findAll({
 		attributes: [],
+		order: [['createdAt', 'DESC']],
 		include: [
 			{
 				model: model.device,
@@ -166,7 +167,7 @@ module.exports.getLatestLocation = async (userId) => {
 	if(beacon.length === 0) {
 		return '';
 	}
-	return `${beacon[0].latitude}, ${beacon[0].longitude}` 
+	return `${new String(beacon[0].latitude).substring(0, 4)}, ${new String(beacon[0].longitude).substring(0, 4)}` 
 }
 
 

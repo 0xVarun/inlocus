@@ -72,6 +72,11 @@ app.engine('handlebars', handlebars({
     },
     locale: function(value, options) {
       return value.toLocaleString('en-US', { timeZone: 'asia/kolkata' });
+    },
+    dateOnly: function(value, option) {
+      let dt = new Date(value);
+      let dtStr = dt.getFullYear() + "-" +  ("0" + (dt.getMonth() + 1)).slice(-2) + "-" + dt.getDate();
+      return dtStr; 
     }
   } 
 }));

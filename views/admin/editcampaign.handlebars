@@ -30,13 +30,13 @@
                         <div class="form-row">
                             <div class="col">
                                 <div class="md-form">
-                                    <input type="text" class="form-control" name="start_time" id="start_time" value="{{campaign.start_timestamp}}" readonly="true">
+                                    <input type="text" class="form-control" name="start_time" id="start_time" value="{{dateOnly campaign.start_timestamp}}" readonly="true">
                                     <label for="start_time">Start Date <small>*</small></label>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="md-form">
-                                    <input type="text" name="end_time" id="end_time" class="form-control" value="{{campaign.end_timestamp}}" readonly="true">
+                                    <input type="text" name="end_time" id="end_time" class="form-control" value="{{dateOnly campaign.end_timestamp}}" readonly="true">
                                     <label for="end_time">End Date <small>*</small></label>
                                 </div>
                             </div>
@@ -51,8 +51,8 @@
                         </div>
                         <div class="form-row">
                             <div class="col">
-								<label for="campaignLocation">Location <small>*</small></label>
-                                <input type="text" name="location" id="locations" readonly="true" >
+								<label for="campaignLocation">Location<small>*</small></label>
+                                <input type="text" name="location" id="locations" readonly="true" data-data="{{#each campaign_locations}}{{location_master.name}}{{/each}}" >
                             </div>
                             <div class="col">
                                 <label for="tags">Tags</label>
@@ -119,7 +119,7 @@ $('#filters').selectize({
     plugins:['remove_button'],
     delimiter: ',',
     persist: false,
-    options: [ {value: "In Bag", text: "In Bag"}, {value: "In Hand", text: "In Hand"}, {value: "Walking", text: "Walking"} ],
+    options: [{value: "In Use", text: "In Use"},{value: "Not In Use", text: "Not In Use"}],
     onDelete:function(value){
         return '';
     }

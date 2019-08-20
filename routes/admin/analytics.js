@@ -62,6 +62,17 @@ router.get('/data', authMiddleware, (req, res) => {
 
 
 /**
+ * @url: /admin/analytics/dwell
+ * @method: GET
+ * @template: views/admin/dwelltime.handlebars
+ * @desc: App Wise user dwell time
+ */
+router.get('/dwell', authMiddleware, async(req, res) => {
+	res.render('admin/dwelltime', { title: 'Admin', layout: 'base' });
+});
+
+
+/**
  * @url: /admin/analytics
  * @method: GET
  * @template: views/admin/analytics

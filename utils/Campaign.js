@@ -57,7 +57,23 @@ module.exports.findAllCampaigns = (userId) => {
 
 
 module.exports.findOneCampaign = (id) => {
-    return model.campaign.findOne({where: {id: id}, include: [{model: model.content}, {model: model.application}, {model: model.CampaignLocation}]})
+    return model.campaign.findOne(
+        {
+            where: {id: id}, 
+            include: [
+                {
+                    model: model.content
+                }, 
+                {
+                    model: model.application
+                }, 
+                {
+                    model: model.CampaignLocation,
+                    include: { model: model.location_master }
+                }
+            ]
+        }
+    )
         .then(campaign => { return campaign; })
         .catch(err => { throw err; });
 }

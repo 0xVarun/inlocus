@@ -87,9 +87,21 @@ module.exports.getAllBeaconLocations = async (su, userId) => {
  * Gets the application user level information.
  *
  * @param      {Number}  mdeviceId  The mdevice identifier
+ * @param      {Number}  userId  	User Id
  * @return     {Object}  			The application user level information.
  */
-module.exports.getAppUserLevelInfo = async (mdeviceId) => {
+module.exports.getAppUserLevelInfo = async (mdeviceId, userId) => {
+
+	let deviceList = await model.application.findAll({
+		where: { userId: { [Op.eq]: userId } },
+		include: [ {model: model.appuser, attributes: ["deviceId"], where: { deviceId: { [Op.eq]: mdeviceId }}} ],
+		attributes: []
+	});
+
+	if(deviceList.length == 0) {
+		return null;
+	}
+
 	let locations = await model.location.findAll({ where: { deviceId: mdeviceId }, order: [['createdAt', 'DESC']] });
 	
 	let deviceId = await model.device.findOne({where: {id: mdeviceId}, include:[{model:model.appuser, include: {model:model.application}}]});

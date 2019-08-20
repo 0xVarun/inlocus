@@ -388,4 +388,22 @@ async function finalTest() {
 	console.log(JSON.stringify(res));
 }
 
-finalTest();
+// finalTest();
+
+async function appLevel() {
+	let devices = await model.application.findAll({
+		where: { userId: 2 },
+		include: [{ model: model.appuser, attributes: ["deviceId"] }],
+		attributes: []
+	});
+
+	let deviceCount = 0;
+	// console.log(JSON.stringify(devices));
+	for(let i = 0; i < devices.length; i++) {
+		deviceCount+= devices[i]["appusers"].length;
+	}
+
+	console.log(deviceCount);
+}
+
+appLevel();

@@ -104,7 +104,6 @@ router.get('/apps', authMiddleware, async(req, res) => {
 router.get('/edit/:id', authMiddleware, async (req, res) => {
 	let campaign = await utils.Campaign.findOneCampaign(req.params.id);
 	campaign = JSON.parse(JSON.stringify(campaign));
-	console.log(campaign);
 	res.render('admin/editcampaign', { title: 'Edit Campaigns', layout: 'base', campaign: campaign });
 });
 
