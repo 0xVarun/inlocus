@@ -4,7 +4,27 @@
 <div class="row">
     <div class="col-md-5">
         <div class="card shadow">
-            <canvas id="mchart"></canvas>
+            <div class="card-header">Locations</div>
+            <div class="card-body">
+                <table id="beacons" class="table table-striped table-bordered table-sm bs-select">
+                    <thead>
+                        <th class="th-sm text-center">Sr No</th>
+                        <th class="th-sm text-center">Latitude</th>
+                        <th class="th-sm text-center">Longitude</th>
+                        <th class="th-sm text-center">Device Id</th>
+                    </thead>
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td class="text-center">{{inc @index}}</td>
+                            <td class="text-center">{{latitude}}</td>
+                            <td class="text-center">{{longitude}}</td>
+                            <td class="text-center">{{device.deviceId}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div class="col-md-7">
@@ -16,3 +36,13 @@
 
 <script src="/js/analytics/heatmap.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgAjjr1VNy4zJCZEz-6FgIdkH3SVBS6jA&callback=initMap&libraries=visualization"></script>
+<script>
+$(document).ready(function() {
+    $('#beacons').DataTable({ responsive: true });
+    $('.dataTables_length').addClass('bs-select');
+    $('.dataTables_filter input').addClass('form-control');
+    $('.dataTables_filter input').addClass('form-control-sm');
+    $('.paginate_button').addClass('page-item');
+    $('.paginate_button').addClass('active');
+});
+</script>

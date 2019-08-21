@@ -96,11 +96,14 @@ router.get('/dwell', authMiddleware, async(req, res) => {
  */
 router.get('/heatmap', authMiddleware, async(req, res) => {
 	let heatmapType = req.query['type'];
-	if(!heatmapType || ( heatmapType )) {
+	let data = {};
+	if(!heatmapType) {
 		res.redirect('/');
 		return;
 	}
-	res.render(`admin/heatmap-${heatmapType}`, { title: 'Admin', layout: 'analytics' });
+	if (heatmapType == 'beacon') { data = await model.beacon.findAll({ include: { model: model.device } }); } 
+	if (heatmapType == 'location') { data = await model.location.findAll({ include: { model: model.device } }); } 
+	res.render(`admin/heatmap-${heatmapType}`, { title: 'Admin', layout: 'analytics', data: data });
 })
 
 
