@@ -54,6 +54,7 @@ const app_routes	= require('./routes/app/routes.js');
 app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', handlebars({ 
   defaultLayout: 'layout',
+  partialsDir: path.join(__dirname, 'views', 'partials'),
   helpers: {
     inc: function(value, option) {
       return parseInt(value) + 1;

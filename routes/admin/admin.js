@@ -30,6 +30,8 @@ router.get('/', authMiddleware, async (req, res) => {
 	let repeatVisitors = deviceCount;
 	let totalVisitors = parseInt(repeatVisitors * 5.2);
 	let apps = await utils.SdkUser.getUsers(req.user.id);
+	// var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	// console.log(ip);
 	res.render('admin/home', { title: 'Admin', layout: 'base', beacon: beacon, repeatVisitors: repeatVisitors, total: totalVisitors, apps: apps });
 });
 
