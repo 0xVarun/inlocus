@@ -48,6 +48,21 @@ router.get('/api/heatmap/location', authMiddleware, async(req, res) => {
 });
 
 
+/**
+ * @url: /admin/analytics/api/userCount?app={id}
+ * @method: GET
+ * @desc: return date wise user count
+ */
+router.get('/api/userCount', authMiddleware, async(req, res) => {
+	let appId = req.query['id'];
+	if(!appId) {
+		appId = await model.application.findOne({ where: { userId: req.user.id }, attributes: ["id"] });
+		appId = appId["id"];
+	}
+	let data = await utils.Sensor.userCountAnalytics(appId, req.user.id);
+	res.json(data);
+});
+
 
 /**
  * @url: /admin/analytics/geofence/:id
@@ -116,9 +131,8 @@ router.get('/heatmap', authMiddleware, async(req, res) => {
  * @todo: UI design
  */
 router.get('/', authMiddleware, async (req, res) => {
-	// let geofences = await utils.GeoFence.findAllFences(req.user.id)
-	// res.render('admin/analytics', { title: 'Admin', layout: 'base', geofence: geofences });
-	res.render('admin/analytics', { title: 'Admin', layout: 'analytics' });
+	let apps = await model.application.findAll({ where: { userId: req.user.id }, attributes: ["id", "name"] });
+	res.render('admin/analytics', { title: 'Admin', layout: 'analytics', apps: apps });
 });
 
 

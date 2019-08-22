@@ -75,6 +75,7 @@
 
 const model = require('./models');
 const Sequelize = require('sequelize');
+const Op = require('sequelize').Op;
 
 // async function test(userId) {
 // 	let android = 0;
@@ -406,4 +407,57 @@ async function appLevel() {
 	console.log(deviceCount);
 }
 
-appLevel();
+// appLevel();
+
+async function userCount(appId, userId) {
+	let appId = 1;
+	let deviceId = 3;
+
+	let devices = await model.appuser.findAll({
+		attributes: [],
+		order: [['createdAt', 'DESC']],
+		include: [
+			{
+				model: model.device,
+				attributes: ['id']
+			},
+			{
+				model: model.application,
+				attributes: [],
+				where: {
+					id: {
+						[Op.eq]: appId
+					},
+					userId: {
+						[Op.eq]: 1
+					}
+				}
+			}
+		]
+	});
+
+	if(devices.length <= 0 ) {
+		return {}
+	}
+
+	let deviceIds = devices.map(dev => { return dev['device']['id']; })
+	let data = await model.location.findAll({
+		// limit: 7,
+		attributes: [
+			[Sequelize.literal(`DATE("createdAt")`), 'date'],
+			[Sequelize.cast(Sequelize.literal(`COUNT(*)`), "int"), 'count']
+		],
+		where: {
+			deviceId: {
+				[Op.or]: deviceIds
+			}
+		},
+		group: ['date'],
+		order: [[Sequelize.literal(`DATE("createdAt")`), 'ASC']]
+	});
+
+	console.log(JSON.stringify(data));
+
+}
+
+userCount();
