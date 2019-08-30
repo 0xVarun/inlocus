@@ -58,10 +58,9 @@ router.post('/create', authMiddleware, async (req, res) => {
  * @returns: JSON array of Locations
  * @desc: Used by new campaigns to provide list of locations
  * 
- * @todo: Send all superuser created locations and admin only created locations
  */
 router.get('/locations', authMiddleware, async(req, res) => {
-	let locations = await utils.LocationMaster.getAllSuperadminLocations();
+	let locations = await utils.LocationMaster.getAllSuperadminLocations(req.user.id);
 	let d = [];
 	locations.map(loc => {d.push({ "value": loc.id, "text": loc.name + '(' + loc.type + ')' });});
 	res.json(d);
