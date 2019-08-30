@@ -3,7 +3,8 @@ const path			        = require('path');
 const env			          = require('dotenv');
 const handlebars	      = require('express-handlebars');
 const session		        = require('express-session');
-const MemcachedStore    = require('connect-memcached')(session);
+// const MemcachedStore    = require('connect-memcached')(session);
+const RedisStore        = require('connect-redis')(session);
 const validator		      = require('express-validator');
 const cookieParser	    = require('cookie-parser');
 const bodyParser	      = require('body-parser');
@@ -13,6 +14,7 @@ const LocalStrategy	    = require('passport-local').Strategy;
 const logger            = require('morgan');
 const models            = require('./models');
 const cacheAll          = require('./cache');
+const redis             = require('./db/redis').redis;
 
 // process environment initialize
 if(process.env.ENV === 'production') {
@@ -62,6 +64,9 @@ app.engine('handlebars', handlebars({
     hide: function(value, option) {
       return '****' + value.substring(value.length - 4);
     },
+    trunc: function(value, option) {
+      return value.substring(0, 8);
+    },
     select: function(value, options) { // Select helper to select the default option for each question
       return options.fn(this).split('\n').map(function(v) {
           var t = 'value="' + value + '"';
@@ -94,9 +99,7 @@ app.use(session({
 	secret:  'B2LrgoFLlkzr0mssrLAhz4Z11jfaW7JTaRijud9Q/j8lWdF1919+ruCOYcMH8+1/6p9BJDEmKoNVcWgmB81IoA==',
 	saveUninitialized: true,
 	resave: true,
-  store: new MemcachedStore({
-    host: [process.env.MEMCACHE] 
-  })
+  store: new RedisStore({ client: redis })
   // cookie: { secure: true }
 }));
 // flash
@@ -159,4 +162,11 @@ models.sequelize.sync(/*{ force: true }*/ /*{ alter: true }*/).then(() => {
     console.log(`Running on port ${port}`);
     cacheAll();
   });
+});
+
+process.once('SIGINT',async signal => {
+  console.log(`GOT ${signal}. Exitting gracefully.`);
+  let res = await redis.quit();
+  console.log(res);
+  console.log(models.sequelize.close());
 });
