@@ -1,3 +1,4 @@
+.vscode/
 test/venv/
 node_modules/
 **/venv/

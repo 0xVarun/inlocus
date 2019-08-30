@@ -2,6 +2,7 @@ const model		    = require('../models');
 const CampaignMgnt  = require('../campaign/cache');
 const geolib        = require('geolib');
 const Op            = require('sequelize').Op;
+const Sequelize     = require('sequelize');
 
 const distinct = (value, index, self) => {
     return self.indexOf(value) === index;
@@ -56,7 +57,23 @@ module.exports.findAllCampaigns = (userId) => {
 
 
 module.exports.findOneCampaign = (id) => {
-    return model.campaign.findOne({where: {id: id}, include: [{model: model.content}, {model: model.application}, {model: model.CampaignLocation}]})
+    return model.campaign.findOne(
+        {
+            where: {id: id}, 
+            include: [
+                {
+                    model: model.content
+                }, 
+                {
+                    model: model.application
+                }, 
+                {
+                    model: model.CampaignLocation,
+                    include: { model: model.location_master }
+                }
+            ]
+        }
+    )
         .then(campaign => { return campaign; })
         .catch(err => { throw err; });
 }
@@ -82,8 +99,18 @@ module.exports.getOneBeaconCampaign = async (appId, major, minor) => {
     }
 }
 
-module.exports.getOneLocationCampaign = async (appId, lat, lng) => {
-    console.log(`LAT: ${lat}, LNG: ${lng}`);
+module.exports.getOneLocationCampaign = async (appId, lat, lng, location) => {
+    let locations = await model.sequelize.query(`select geofences."locationMasterId" 
+		from locations, geofences 
+		where ST_Within(locations.geometry, geofences.geometry) 
+		and locations.id = ${location.id}`, 
+		{ type: Sequelize.QueryTypes.SELECT}
+    )
+
+    if(locations.length === 0) {
+        return null;
+    }
+
     let campaign = await model.campaign.findOne(
         { 
             where: { 
@@ -91,24 +118,19 @@ module.exports.getOneLocationCampaign = async (appId, lat, lng) => {
                     [Op.eq]: appId
                 } 
             },
-            order: [['createdAt', 'DESC']], 
             include: { 
-                model: model.CampaignLocation, 
-                include: {
-                    model: model.location_master, 
-                    include: model.geofence
-                } 
+                model: model.CampaignLocation,
+                where: {
+                    locationMasterId: {
+                        [Op.eq]: locations[0]["locationMasterId"]
+                    }
+                }
             }
-        });
-    let isInsideFence = false;
-    try {
-        isInsideFence = geolib.isPointInCircle({latitude: lat, longitude: lng}, 
-            {latitude: campaign.campaign_locations[0].location_master.geofences[0].latitude, longitude: campaign.campaign_locations[0].location_master.geofences[0].longitude},campaign.campaign_locations[0].location_master.geofences[0].radius);
-    } catch(err) {
-        return null
-    }
+        }
+    );
+
     
-    if(isInsideFence) {
+    if(campaign) {
         return campaign.id;
     } else {
         return null;

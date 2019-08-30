@@ -35,6 +35,36 @@ router.get('/api/heatmap/beacon', authMiddleware, async(req, res) => {
 
 
 /**
+ * @url: /admin/analytics/api/heatmap/location
+ * @method: GET
+ * @desc: return all user coordinates, and center of all coordinates
+ */
+router.get('/api/heatmap/location', authMiddleware, async(req, res) => {
+	let userId = req.user.id;
+	let su = req.user.role.superadmin
+	let data = await utils.Analytics.getAllLocations(su, userId)
+	let center = geolib.getCenterOfBounds(JSON.parse(JSON.stringify(data)));
+	res.json({data, center});
+});
+
+
+/**
+ * @url: /admin/analytics/api/userCount?app={id}
+ * @method: GET
+ * @desc: return date wise user count
+ */
+router.get('/api/userCount', authMiddleware, async(req, res) => {
+	let appId = req.query['id'];
+	if(!appId) {
+		appId = await model.application.findOne({ where: { userId: req.user.id }, attributes: ["id"] });
+		appId = appId["id"];
+	}
+	let data = await utils.Sensor.userCountAnalytics(appId, req.user.id);
+	res.json(data);
+});
+
+
+/**
  * @url: /admin/analytics/geofence/:id
  * @method: GET
  * @desc: return all coordinates inside the geofence id
@@ -62,6 +92,53 @@ router.get('/data', authMiddleware, (req, res) => {
 
 
 /**
+ * @url: /admin/analytics/dwell
+ * @method: GET
+ * @template: views/admin/dwelltime.handlebars
+ * @desc: App Wise user dwell time
+ */
+router.get('/dwell', authMiddleware, async(req, res) => {
+	res.render('admin/dwelltime', { title: 'Admin', layout: 'analytics' });
+});
+
+
+
+/**
+ * @url: /admin/analytics/heatmap?type={location, beacon, wifi, geofence}
+ * @method: GET
+ * @template: views/admin/heatmap-{location, beacon, wifi, geofence}.handlebars
+ * @desc: Application Heatmap
+ */
+router.get('/heatmap', authMiddleware, async(req, res) => {
+	let heatmapType = req.query['type'];
+	let data = {};
+	if(!heatmapType) {
+		res.redirect('/');
+		return;
+	}
+	if (heatmapType == 'beacon') { data = await model.beacon.findAll({ include: { model: model.device } }); } 
+	if (heatmapType == 'location') { data = await model.location.findAll({ include: { model: model.device } }); } 
+	res.render(`admin/heatmap-${heatmapType}`, { title: 'Admin', layout: 'analytics', data: data });
+})
+
+
+/**
+ * @url: /admin/analytics/user?type=location
+ * @method: GET
+ * @template: views/admin/userbylocation.handlebars
+ * @desc: User analytics
+ */
+router.get('/user', authMiddleware, async(req, res) => {
+	let type = req.query['type'];
+	if(!type || type !== 'location') {
+		res.redirect('/');
+		return;
+	}
+	res.render('admin/usersbylocation', { title: 'Admin', layout: 'analytics' });
+})
+
+
+/**
  * @url: /admin/analytics
  * @method: GET
  * @template: views/admin/analytics
@@ -70,9 +147,8 @@ router.get('/data', authMiddleware, (req, res) => {
  * @todo: UI design
  */
 router.get('/', authMiddleware, async (req, res) => {
-	// let geofences = await utils.GeoFence.findAllFences(req.user.id)
-	// res.render('admin/analytics', { title: 'Admin', layout: 'base', geofence: geofences });
-	res.render('admin/analytics-wip', { title: 'Admin', layout: 'base' });
+	let apps = await model.application.findAll({ where: { userId: req.user.id }, attributes: ["id", "name"] });
+	res.render('admin/analytics', { title: 'Admin', layout: 'analytics', apps: apps });
 });
 
 

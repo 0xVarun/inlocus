@@ -7,7 +7,7 @@ function initMap() {
     url: '/admin/analytics/api/heatmap/location',
     success: (res) => {
       map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 13,
+            zoom: 6,
             center: {
               lat: parseFloat(res.center.latitude),
               lng: parseFloat(res.center.longitude)

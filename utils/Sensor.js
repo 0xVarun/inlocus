@@ -12,7 +12,12 @@ async function getAddress(lat, lng) {
 
 module.exports.saveLocation = async (latitude, longitude, deviceId) => {
 	let address = await getAddress(latitude, longitude);
-	return model.location.create({ latitude: latitude, longitude: longitude, address: address, deviceId: deviceId })
+	let point = { 
+		type: 'Point',
+		coordinates: [longitude, latitude],
+		crs: { type: 'name', properties: { name: 'EPSG:4326' }}
+	}
+	return model.location.create({ latitude: latitude, longitude: longitude, address: address, deviceId: deviceId, geometry: point })
 		.then(location => { return location })
 		.catch(err => { throw err });
 }
@@ -52,6 +57,7 @@ module.exports.saveMultiWifi = (payload, deviceId) => {
 module.exports.countByHour = async (userId) => {
 	let devices = await model.appuser.findAll({
 		attributes: [],
+		order: [['createdAt', 'DESC']],
 		include: [
 			{
 				model: model.device,
@@ -78,7 +84,7 @@ module.exports.countByHour = async (userId) => {
 		limit: 7,
 		attributes: [
 			[sequelize.literal(`DATE("createdAt")`), 'date'],
-			[sequelize.literal(`COUNT(*)`), 'count']
+			[sequelize.literal(`COUNT(DISTINCT("deviceId"))`), 'count']
 		],
 		where: {
 			deviceId: {
@@ -86,7 +92,7 @@ module.exports.countByHour = async (userId) => {
 			}
 		},
 		group: ['date'],
-		order: [[sequelize.literal(`DATE("createdAt")`), 'ASC']]
+		order: [[sequelize.literal(`DATE("createdAt")`), 'DESC']]
 	})
 		.then( data => { return data; })
 		.catch( err => { return {err}; }) 
@@ -161,7 +167,7 @@ module.exports.getLatestLocation = async (userId) => {
 	if(beacon.length === 0) {
 		return '';
 	}
-	return `${beacon[0].latitude}, ${beacon[0].longitude}` 
+	return `${new String(beacon[0].latitude).substring(0, 4)}, ${new String(beacon[0].longitude).substring(0, 4)}` 
 }
 
 
@@ -186,4 +192,53 @@ module.exports.getTotalDevices = async(userId) => {
 		]
 	});
 	return devices.length;
+}
+
+
+module.exports.userCountAnalytics = async (appId, userId) => {
+
+	let devices = await model.appuser.findAll({
+		attributes: [],
+		order: [['createdAt', 'DESC']],
+		include: [
+			{
+				model: model.device,
+				attributes: ['id']
+			},
+			{
+				model: model.application,
+				attributes: [],
+				where: {
+					id: {
+						[Op.eq]: appId
+					},
+					userId: {
+						[Op.eq]: userId
+					}
+				}
+			}
+		]
+	});
+
+	if(devices.length <= 0 ) {
+		return {}
+	}
+
+	let deviceIds = devices.map(dev => { return dev['device']['id']; })
+	let data = await model.location.findAll({
+		limit: 60,
+		attributes: [
+			[sequelize.literal(`DATE("createdAt")`), 'date'],
+			[sequelize.literal(`COUNT(DISTINCT("deviceId"))`), 'count']
+		],
+		where: {
+			deviceId: {
+				[Op.or]: deviceIds
+			}
+		},
+		group: ['date'],
+		order: [[sequelize.literal(`DATE("createdAt")`), 'ASC']]
+	});
+
+	return data;
 }

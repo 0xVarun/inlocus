@@ -1,0 +1,79 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/admin/home"><i class="fas fa-home"></i> Home</a>
+            </li>
+            {{#if user.role.superadmin}}
+            <li class="nav-item dropdown lf-margin">
+                <a class="nav-link dropdown-toggle" id="actions" href="#" data-toggle="dropdown" aria-expanded="false">Superuser</a>
+                <div class="dropdown-menu" aria-labelledby="actions">
+                    <div class="dropdown-header">Super Admin</div>
+                    <a href="/admin/home/apps" class="dropdown-item cursor-pointer">Manage Apps</a>
+                    <a href="/admin/home/users" class="dropdown-item cursor-pointer">Manager Users</a>
+                    <a href="/admin/home/locations" class="dropdown-item cursor-pointer">Manage Location</a>
+                    <a href="/admin/home/beacons" class="dropdown-item cursor-pointer">Manage Beacons</a>
+                    <a href="#" class="dropdown-item cursor-pointer">Manage WiFi AP</a>
+                    <a href="#" class="dropdown-item cursor-pointer">Manage Advertisers</a>
+                    <a href="/admin/home/tokens" class="dropdown-item cursor-pointer">Manage Tokens</a>
+                </div>
+            </li>
+            {{/if}} {{#if user.role.appadmin}}
+            <li class="nav-item dropdown lf-margin">
+                <a href="#" class="nav-link dropdown-toggle" id="appadmin" data-toggle="dropdown" aria-expanded="false">Admin</a>
+                <div class="dropdown-menu" aria-labelledby="appadmin">
+                    <div class="dropdown-header">App Admin</div>
+                    <a href="/admin/user" class="dropdown-item cursor-pointer">Manage Users</a>
+                    <a href="/admin/app" class="dropdown-item cursor-pointer">Manage Apps</a>
+                    <a href="/admin/beacon" class="dropdown-item cursor-pointer">Manage Beacons</a>
+                    <a href="/admin/location" class="dropdown-item cursor-pointer">Manage Locations</a>
+                    <a href="/admin/analytics" class="dropdown-item cursor-pointer">Analytics</a>
+                    <a href="{{user.sdk.sdk_path}}" class="dropdown-item cursor-pointer">Download SDK</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown lf-margin">
+                <a href="#" class="nav-link dropdown-toggle" id="campaigns" data-toggle="dropdown" aria-expanded="false">Campaigns</a>
+                <div class="dropdown-menu" aria-labelledby="campaigns">
+                    <div class="dropdown-header">Campaign Management</div>
+                    <a href="/admin/campaigns" class="dropdown-item cursor-pointer">Manage Campaigns</a>
+                    <hr>
+                    <div class="dropdown-header">Content Management</div>
+                    <a href="/admin/content" class="dropdown-item cursor-pointer">Manage Contents</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown lf-margin">
+                <a href="#" class="nav-link dropdown-toggle" id="geofence" data-toggle="dropdown" aria-expanded="false">Geofences</a>
+                <div class="dropdown-menu" aria-labelledby="geofence">
+                    <div class="dropdown-header">Geofence Management</div>
+                    <a href="/admin/geofence/create" class="dropdown-item cursor-pointer">New Fence</a>
+                    <a href="/admin/geofence" class="dropdown-item cursor-pointer">View all Fences</a>
+                </div>
+            </li>
+            {{/if}} {{#if user.role.appstaff}} {{/if}} {{#if user.role.advertiser}} {{/if}}
+        </ul>
+    </div>
+    <div class="mx-auto order-0">
+        <a class="navbar-brand mx-auto" href="/admin/home"><i style="color: #4e73df;" class="fas fa-map-marker-alt"></i> InLocus</a>
+    </div>
+    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" style="margin-right: 1.5em;">
+                <a class="nav-link" href="/docs/inLocusSDK_V1-2.pdf"><i class="fas fa-book"></i> Docs</a>
+            </li>
+            <li class="nav-item" style="margin-right: 1.5em;">
+                <a href="/docs/inLocusSKD_V1-1-ios.pdf" class="nav-link"><i class="fas fa-book"></i> iOS Docs</a>
+            </li>
+            <li class="nav-item dropdown" style="margin-right: 1.5em;">
+                <a class="nav-link dropdown-toggle text-success" id="userAction" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-user"></i> {{user.name}}</a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userAction">
+                    <a class="dropdown-item" href="#"><i style="color: #4b70dd;" class="fas fa-users"></i> Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/admin/login/logout"><i style="color: #4b70dd;" class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>

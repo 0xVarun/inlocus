@@ -1,0 +1,51 @@
+<div class="container-fluid">
+    <div class="row margin-top">
+        <div class="col-md-9">
+            <div class="card shadow">
+                <div class="card-header">
+                    <div class="float-left"><b>Auth Token</b></div>
+                    {{!-- <div class="float-right"><a href="/admin/beacon/create"><i class="fas fa-plus fa-lg"></i></a></div> --}}
+                </div>
+                <div class="card-body">
+                    <table id="beacons" class="table table-striped table-bordered table-sm bs-select">
+                        <thead>
+                            <th class="th-sm text-center">Sr No</th>
+                            <th class="th-sm text-center">Key</th>
+                            <th class="th-sm text-center">Token</th>
+                            <th class="th-sm text-center">inlocusId</th>
+                            <th class="th-sm text-center">Action</th>
+                        </thead>
+                        <tbody>
+                            {{#each tokens}}
+                            <tr>
+                                <td class="text-center">{{ inc @index }}</td>
+                                <td class="text-center">{{ key }}</td>
+                                <td class="text-center">{{ trunc token }}...<input type="hidden" value="{{token}}"/></td>
+                                <td class="text-center">{{ trunc data.inlocusId }}...</td>
+                                <td class="text-center">
+                                    <a href="#" class="icon-margin"><i class="fas fa-trash-alt" style="color: #b71c1c;"></i></a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow">
+                <div class="card-header">Authentication</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function() {
+    $('#beacons').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+    $('.dataTables_filter input').addClass('form-control');
+    $('.dataTables_filter input').addClass('form-control-sm');
+    $('.paginate_button').addClass('page-item');
+    $('.paginate_button').addClass('active');
+});
+</script>

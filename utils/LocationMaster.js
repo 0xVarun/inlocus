@@ -1,5 +1,6 @@
 const model		= require('../models');
 const Op        = require('sequelize').Op;
+const Sequelize = require('sequelize');
 
 const distinct = (v, i, s) => {
     return s.indexOf(v) === i;
@@ -20,25 +21,20 @@ module.exports.getAllLocations = (userId) => {
                 }
             }
         })
-        .then( locatonMasters => { return locatonMasters } )
+        .then( locatonMasters => { console.log(JSON.stringify(locatonMasters));return locatonMasters } )
         .catch( err => { throw err });
 }
 
-module.exports.getAllSuperadminLocations = () => {
-    return model.location_master.findAll({include:[{model: model.user, include: [{model: model.roles}]}]})
-        .then(location => { return location; })
-        .catch(err => { throw err; });
+module.exports.getAllSuperadminLocations = async (userId) => {
+    let location = await model.sequelize.query(`SELECT DISTINCT * FROM location_masters WHERE "userId" = ${userId} OR "userId" in (SELECT "userId" FROM roles WHERE roles.superadmin = true)`, { type: Sequelize.QueryTypes.SELECT });
+    console.log(JSON.stringify(location))
+    return location;
 }
 
 module.exports.getUsableLocations = async userId => {
-    let f = [];
-    let suLocations = await model.location_master.findAll({include:[{model: model.user,attributes: [],include: {model: model.roles, attributes: [], where: {superadmin: { [Op.eq]: true } }}}]});
-    let locations = await model.location_master.findAll({where: { userId: { [Op.eq]: userId } }});
-    suLocations = JSON.parse(JSON.stringify(suLocations));
-    suLocations.map(s => { f.push(s) });
-    locations = JSON.parse(JSON.stringify(locations));
-    locations.map(s => { f.push(s) });
-    return f.filter(distinct);
+    let location = await model.sequelize.query(`SELECT DISTINCT * FROM location_masters WHERE "userId" = ${userId} OR "userId" in (SELECT "userId" FROM roles WHERE roles.superadmin = true)`, { type: Sequelize.QueryTypes.SELECT });
+    console.log(JSON.stringify(location))
+    return location;
 }
 
 module.exports.deleteLocation = (id) => {

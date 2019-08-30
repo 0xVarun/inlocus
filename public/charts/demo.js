@@ -28,7 +28,7 @@ $.ajax({
       let lables_chart = [];
       let count_chart = [];
       let date_chart = [];
-      response.map(res => {
+      response.reverse().map(res => {
         let daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat'];
         let mdate = new Date(res['date']);
         date_chart.push(res['date']);
@@ -87,6 +87,10 @@ $.ajax({
                 drawBorder: false,
                 borderDash: [2],
                 zeroLineBorderDash: [2]
+              },
+              ticks: {
+                beginAtZero: true,
+                stepSize: 1
               }
             }],
           },
