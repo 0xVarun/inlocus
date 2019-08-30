@@ -123,6 +123,22 @@ router.get('/heatmap', authMiddleware, async(req, res) => {
 
 
 /**
+ * @url: /admin/analytics/user?type=location
+ * @method: GET
+ * @template: views/admin/userbylocation.handlebars
+ * @desc: User analytics
+ */
+router.get('/user', authMiddleware, async(req, res) => {
+	let type = req.query['type'];
+	if(!type || type !== 'location') {
+		res.redirect('/');
+		return;
+	}
+	res.render('admin/usersbylocation', { title: 'Admin', layout: 'analytics' });
+})
+
+
+/**
  * @url: /admin/analytics
  * @method: GET
  * @template: views/admin/analytics
