@@ -37,6 +37,7 @@ function drawGraph(id, appName) {
                     scales: {
                         xAxes: [{
                             type: 'time',
+                            time: { unit: 'day' },
                             distribution: 'series',
                             ticks: {
                                 source: 'data',
