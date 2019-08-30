@@ -92,7 +92,7 @@ module.exports.countByHour = async (userId) => {
 			}
 		},
 		group: ['date'],
-		order: [[sequelize.literal(`DATE("createdAt")`), 'ASC']]
+		order: [[sequelize.literal(`DATE("createdAt")`), 'DESC']]
 	})
 		.then( data => { return data; })
 		.catch( err => { return {err}; }) 
