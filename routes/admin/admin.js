@@ -8,6 +8,9 @@ const formidable        = require('formidable');
 const fs                = require('fs');
 const path              = require('path');
 const Op				= require('sequelize').Op;
+const redis				= require('../../db/redis').redis;
+const tokenCache		= require('../../db/redis').tokenCache;
+const jwt 				= require('jsonwebtoken');
 
 
 /**
@@ -314,6 +317,25 @@ router.get('/profile/:id/:long', authMiddleware, async (req, res) => {
 	let data = await model.location.findOne({where: {id: req.params.long, deviceId: req.params.id}});
 	let deviceId = await model.device.findOne({where: {id: req.params.id}})
 	res.render('admin/viewonmap', { title: 'Admin', layout: 'base', data: data, deviceId: deviceId });
+});
+
+
+
+router.get('/tokens', suMiddleware, async (req, res) => {
+	let tokens = []
+	let tokenKeys = await redis.keys('token:*');
+	for(let i = 0; i < tokenKeys.length; i++) {
+		let key = tokenKeys[i];
+		let token = await redis.get(key.toString());
+		let data = undefined;
+		try { 
+			data = jwt.verify(token, 'jcwirrxNiX3iyMQ075xr5k8vC6hQbiSwc5JsvJbQCfsS1gdF+hg7/qNe9duZP5dclypByeqPE18AaoDI+Ghmmw==')
+		} catch(err) {
+			data = {}
+		}
+		tokens.push({token: token, key, data});
+	}
+	res.render('superadmin/token', { title: 'Admin', layout: 'base', tokens });
 });
 
 
