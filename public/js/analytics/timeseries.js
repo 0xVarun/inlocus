@@ -1,6 +1,6 @@
 function drawGraph(id, appName) {
     let url = (!id) ? `/admin/analytics/api/userCount` : `/admin/analytics/api/userCount?app=${id}`;
-    let appName = (!appName) ? 'Applications' : appName;
+    appName = (!appName) ? 'Applications' : appName;
     $.ajax({
         url: url,
         method: 'GET',
@@ -16,19 +16,18 @@ function drawGraph(id, appName) {
                 formattedData.push({ x: mDate, y: res[i]['count'] });
             }
 
-            window.chartColors = {"red":"rgb(255, 99, 132)","orange":"rgb(255, 159, 64)","yellow":"rgb(255, 205, 86)","green":"rgb(75, 192, 192)","blue":"rgb(54, 162, 235)","purple":"rgb(153, 102, 255)","grey":"rgb(201, 203, 207)"};
+            window.chartColors = {"red":"rgb(78,115,223)","orange":"rgb(255, 159, 64)","yellow":"rgb(255, 205, 86)","green":"rgb(75, 192, 192)","blue":"rgb(54, 162, 235)","purple":"rgb(153, 102, 255)","grey":"rgb(201, 203, 207)"};
 
             var color = Chart.helpers.color;
             var cfg = {
-                type: 'bar',
+                type: 'line',
                 data: {
                     datasets: [{
-                        label: `Application Wise Use Count (${appName})`,
+                        label:  `Use Count / App / Day (${appName})`,
                         backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
                         borderColor: window.chartColors.red,
                         data: formattedData,
                         type: 'line',
-                        pointRadius: 0,
                         fill: false,
                         lineTension: 0,
                         borderWidth: 2
@@ -48,6 +47,10 @@ function drawGraph(id, appName) {
                             scaleLabel: {
                                 display: true,
                                 labelString: 'User Count'
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                stepSize: 1
                             }
                         }]
                     },
