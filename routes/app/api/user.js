@@ -5,6 +5,8 @@ const _ 			= require('lodash');
 const jwt			= require('jsonwebtoken');
 const Application 	= require('../../../utils/Application');
 const apiMiddleware = require('../../../middleware/api').apiAuth;
+const tokenCache	= require('../../../db/redis').tokenCache;
+const redis			= require('../../../db/redis').redis;
 
 /**
  * Registering a new user for SDK
@@ -90,9 +92,16 @@ router.post('/login', async (req, res) => {
 		emailId: appUser['emailId'],
 		inlocusId: appUser['inlocusId']
 	}
-	let token = jwt.sign(payload, "jcwirrxNiX3iyMQ075xr5k8vC6hQbiSwc5JsvJbQCfsS1gdF+hg7/qNe9duZP5dclypByeqPE18AaoDI+Ghmmw==", { expiresIn: 60 * 60 * 24 * 365 });
-	
+	let token = jwt.sign(payload, "jcwirrxNiX3iyMQ075xr5k8vC6hQbiSwc5JsvJbQCfsS1gdF+hg7/qNe9duZP5dclypByeqPE18AaoDI+Ghmmw==", { expiresIn: 60 * 60 * 24 * 365 });	
+	// await tokenCache.set(appUser['deviceId'], JSON.stringify({token: token, expiresIn: '1 year'}));
+	await redis.set(`token:${appUser['deviceId']}`, token)
 	res.json({ token });
 });
+
+
+router.get('/refresh', apiMiddleware, async (req, res) => {
+	res.sendStatus(501);
+});
+
 
 module.exports = router;
