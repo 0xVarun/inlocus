@@ -4,6 +4,7 @@ const utils				= require('../../utils');
 const model				= require('../../models');
 const authMiddleware	= require('../../middleware/superadmin'); // change to auth
 const geolib			= require('geolib');
+const Op				= require('sequelize').Op;
 
 
 /**
@@ -110,15 +111,17 @@ router.get('/dwell', authMiddleware, async(req, res) => {
  * @desc: Application Heatmap
  */
 router.get('/heatmap', authMiddleware, async(req, res) => {
+	let mdata = await utils.Analytics.analyticsCount(req.user.id);
 	let heatmapType = req.query['type'];
 	let data = {};
 	if(!heatmapType) {
 		res.redirect('/');
 		return;
 	}
-	if (heatmapType == 'beacon') { data = await model.beacon.findAll({ include: { model: model.device } }); } 
-	if (heatmapType == 'location') { data = await model.location.findAll({ include: { model: model.device } }); } 
-	res.render(`admin/heatmap-${heatmapType}`, { title: 'Admin', layout: 'analytics', data: data });
+	let orCond = await utils.Analytics.getDeviceOrCondition(req.user.id);
+	if (heatmapType == 'beacon') { data = await model.beacon.findAll({ include: { model: model.device, where: { id: { [Op.or]: orCond } } } }); } 
+	if (heatmapType == 'location') { data = await model.location.findAll({ include: { model: model.device, where: { id: { [Op.or]: orCond } } } }); } 
+	res.render(`admin/heatmap-${heatmapType}`, { title: 'Admin', layout: 'analytics', data: data, mdata: mdata });
 })
 
 
@@ -129,12 +132,13 @@ router.get('/heatmap', authMiddleware, async(req, res) => {
  * @desc: User analytics
  */
 router.get('/user', authMiddleware, async(req, res) => {
+	let mdata = await utils.Analytics.analyticsCount(req.user.id);
 	let type = req.query['type'];
 	if(!type || type !== 'location') {
 		res.redirect('/');
 		return;
 	}
-	res.render('admin/usersbylocation', { title: 'Admin', layout: 'analytics' });
+	res.render('admin/usersbylocation', { title: 'Admin', layout: 'analytics', mdata });
 })
 
 
@@ -147,8 +151,9 @@ router.get('/user', authMiddleware, async(req, res) => {
  * @todo: UI design
  */
 router.get('/', authMiddleware, async (req, res) => {
+	let mdata = await utils.Analytics.analyticsCount(req.user.id);
 	let apps = await model.application.findAll({ where: { userId: req.user.id }, attributes: ["id", "name"] });
-	res.render('admin/analytics', { title: 'Admin', layout: 'analytics', apps: apps });
+	res.render('admin/analytics', { title: 'Admin', layout: 'analytics', apps: apps, mdata: mdata });
 });
 
 

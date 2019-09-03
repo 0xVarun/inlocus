@@ -118,3 +118,61 @@ module.exports.getAppUserLevelInfo = async (mdeviceId, userId) => {
 
 	return { title: 'Admin', layout: 'base', location: locations, tid: mdeviceId, device:deviceId, countClicked: countClicked, countSent: countSent, lastNotif: beaconCount, lastNotifc:locCount, beacons: beacons, lastBeacon };
 }
+
+
+module.exports.analyticsCount = async function(userId) {
+    let data = {}
+    let orCond = [];
+    let deviceList = await model.application.findAll({
+		where: { userId: { [Op.eq]: userId } },
+		include: [ {model: model.appuser, attributes: ["deviceId"]} ],
+		attributes: []
+    });
+    
+    if(deviceList[0]['appusers'].length == 0) {
+        data['deviceCount'] = 0;
+        data['clickCount'] = 0;
+        data['sentCount'] = 0;
+        data['unclickedCount'] = 0;
+    } else {
+        data['deviceCount'] = deviceList[0]['appusers'].length;
+        for(let i = 0; i < deviceList[0]['appusers'].length; i++) {
+            orCond.push(deviceList[0]['appusers'][i]['deviceId']);
+        }
+        let clickCount = await model.notify.count({
+            where: {
+                deviceId: { [Op.or]: orCond },
+                fstatus: { [Op.eq]: "CLICKED" }
+            }
+        });
+        let sentCount = await model.notify.count({
+            where: {
+                deviceId: { [Op.or]: orCond },
+                istatus: { [Op.eq]: "SENT" }
+            }
+        });
+        data['clickCount'] = clickCount;
+        data['sentCount'] = sentCount;
+        data['unclickedCount'] = Math.abs(sentCount - clickCount);
+    }
+
+    return data;
+}
+
+module.exports.getDeviceOrCondition = async (userId) => {
+	let orCond = [];
+	let deviceList = await model.application.findAll({
+		where: { userId: { [Op.eq]: userId } },
+		include: [ {model: model.appuser, attributes: ["deviceId"]} ],
+		attributes: []
+	});
+	if(deviceList[0]['appusers'].length == 0) {
+		return orCond;
+	} else {
+		for(let i = 0; i < deviceList[0]['appusers'].length; i++) {
+            orCond.push(deviceList[0]['appusers'][i]['deviceId']);
+		}
+		console.log(orCond);
+		return orCond;
+	}
+}
