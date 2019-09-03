@@ -12,6 +12,9 @@ $.ajax({
           data: [response['android'], response['iPhone']],
           backgroundColor: ['#78c257', '#36a2eb']
         }]
+      },
+      options: {
+        maintainAspectRatio: false  
       }
     });
   }
