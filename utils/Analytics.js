@@ -114,7 +114,8 @@ module.exports.getAppUserLevelInfo = async (mdeviceId, userId) => {
 	let locCount = await model.notify.count({ where: { deviceId: { [Op.eq]: mdeviceId }, type: { [Op.eq]: 'LOCATION' } } })
 	
 	let beacons = await await model.beacon.findAll({ where: { deviceId: { [Op.eq]: mdeviceId }} , order: [['createdAt', 'DESC']]});
-	let lastBeacon = `${beacons[0]['major']}, ${beacons[0]['major']}` || '';
+	let lastBeacon = ' ';
+ 	try { lastBeacon = `${beacons[0]['major']}, ${beacons[0]['major']}`; } catch(err) { lastBeacon = 'None' }
 
 	return { title: 'Admin', layout: 'base', location: locations, tid: mdeviceId, device:deviceId, countClicked: countClicked, countSent: countSent, lastNotif: beaconCount, lastNotifc:locCount, beacons: beacons, lastBeacon };
 }
