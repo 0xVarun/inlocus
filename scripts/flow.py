@@ -202,7 +202,7 @@ class Sensor(object):
 
 def main(args):
     if args.command == 'reg':
-        reg = Registration(
+        Registration(
             imei=args.imei,
             gaid=args.gaid,
             phone=args.phone,
@@ -210,11 +210,11 @@ def main(args):
             api_key=args.api_key
         )
     elif args.command == 'login':
-        login = Login()
+        Login()
     elif args.command == 'location':
-        sensor = Sensor(typeof=args.command,lat=args.lat, lng=args.lng, notify=args.notify)
+        Sensor(typeof=args.command,lat=args.lat, lng=args.lng, notify=args.notify)
     elif args.command == 'beacon':
-        sensor = Sensor(typeof=args.command,major=args.major, minor=args.minor, notify=args.notify)
+        Sensor(typeof=args.command,major=args.major, minor=args.minor, notify=args.notify)
     elif args.command == 'wifi':
         print('wifi') 
     else:
